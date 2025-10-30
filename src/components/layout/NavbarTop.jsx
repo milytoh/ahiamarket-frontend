@@ -1,7 +1,7 @@
 
 const NavbarTop = () => {
     return (
-      <div className=" flex items-center bg-primary fixed top-0 left-0 w-full p-4 pb-2 justify-between">
+      <div className=" flex items-center bg-primary fixed top-0 left-0 w-full p-4 pb-2 justify-between z-30">
         <h2 className="text-[#f6f7f8] text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pl-12">
           Ahiamarket
         </h2>

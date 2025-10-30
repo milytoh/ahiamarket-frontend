@@ -7,7 +7,7 @@ const Layout = (props) => {
   return (
     <>
       < NavbarTop/>
-      <main>
+      <main className="mt-20 ">
         <Outlet />
       </main>
       <NavbarBottom />
