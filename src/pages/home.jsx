@@ -1,3 +1,5 @@
+import ProductList from "../components/products/ProductList";
+
 const Home = () => {
   return (
     <div
@@ -211,7 +213,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      {/* mobile nav to add */}
+     <ProductList/>
     
     </div>
   );
