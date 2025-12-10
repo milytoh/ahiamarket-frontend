@@ -22,3 +22,19 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+
+# feat: new feature
+
+# fix: bug fix
+
+# refactor: code restructure (no new feature or bug fix)
+
+# docs: documentation changes
+
+# style: formatting, missing semi-colons, etc.
+
+# test: adding or improving tests
+
+# chore: maintenance tasks (build, dependencies)

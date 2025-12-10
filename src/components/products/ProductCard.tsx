@@ -1,4 +1,20 @@
-const ProductCard = (prop) => {
+import React from "react";
+
+interface ProductCardProp {
+  key: string;
+  name: string;
+  id: string;
+  vendor: string;
+  price: string;
+  previoursPrice: string;
+  image: string;
+  location: string;
+  rating: string;
+  payOnDelivery: boolean;
+  condition: string;
+}
+
+const ProductCard: React.FC<ProductCardProp> = (prop)  => {
   return (
     <div className="flex flex-col group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300">
       <div className="relative w-full aspect-square">
@@ -88,8 +104,7 @@ const ProductCard = (prop) => {
             <path d="M480-160 388-244q-104-94-170-166t-94-126q-30-54-30-110 0-90 59-149.5T299-855q56 0 104 25t77 70q29-45 77-70t104-25q91 0 150 59.5T870-701q0 56-30 110t-94 126q-66 72-170 166L480-160Zm0-104q91-81 151-139.5T764-550q51-59 71.5-99T856-701q0-63-42.5-105T708-848q-49 0-89.5 23T547-756l-67 90-67-90q-23-32-63.5-55T260-848q-63 0-105 42T113-701q0 38 21.5 78.5T206-550q59 69 119.5 127.5T480-264Z" />
           </svg>
         </button>
-          </div>
-          
+      </div>
     </div>
   );
 };
