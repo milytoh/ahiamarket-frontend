@@ -9,6 +9,7 @@ interface ProductCardProp {
   vendor: string;
   price: string;
   previoursPrice: string;
+  description: string
   image: string;
   location: string;
   rating: string;

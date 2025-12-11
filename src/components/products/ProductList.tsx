@@ -7,6 +7,8 @@ const productList = [
     vendor: "Mily Store",
     price: "30500",
     previoursPrice: "34000",
+    description:
+      "Fully typed props for icons and input. Works perfectly with Tailwind’s dark/light mode.",
     location: "Aba Osisioma",
     payOnDelivery: true,
     rating: "4.2",
@@ -21,6 +23,8 @@ const productList = [
     vendor: "Mily Store",
     price: "26000",
     previoursPrice: "34000",
+    description:
+      "Fully typed props for icons and input. Works perfectly with Tailwind’s dark/light mode.",
     payOnDelivery: false,
     location: "Aba Osisioma",
     rating: "3.9",
@@ -35,6 +39,8 @@ const productList = [
     vendor: "Mily Store",
     price: "30500",
     previoursPrice: "34000",
+    description:
+      "Fully typed props for icons and input. Works perfectly with Tailwind’s dark/light mode.",
     location: "Aba Osisioma",
     payOnDelivery: true,
     rating: "4.2",
@@ -49,6 +55,8 @@ const productList = [
     vendor: "Mily Store",
     price: "30500",
     previoursPrice: "34000",
+    description:
+      "Fully typed props for icons and input. Works perfectly with Tailwind’s dark/light mode.",
     location: "Aba Osisioma",
     payOnDelivery: true,
     rating: "4.2",
@@ -91,6 +99,7 @@ const ProductList = () => {
               vendor={product.vendor}
               price={product.price}
               previoursPrice={product.previoursPrice}
+              description= {product.description}
               image={product.image}
               location={product.location}
               rating={product.rating}
