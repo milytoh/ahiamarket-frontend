@@ -1,6 +1,8 @@
+import React from "react";
+
 import ProductList from "../components/products/ProductList";
 
-const Home = () => {
+const Home: React.FC = () => {
   return (
     <div
       className="relative font-manrope  flex h-auto min-h-screen w-full flex-col  justify-between group/design-root overflow-x-hidden"

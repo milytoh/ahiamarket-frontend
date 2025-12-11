@@ -1,13 +1,13 @@
 const NavbarBottom = () => {
   return (
     <div>
-      <div className="flex gap-2 fixed bottom-0 left-0 right-0  border-t border-[#e6f4f1] bg-[#f8fcfb] dark:bg-primary px-4 pb-3 pt-2">
+      <div className="flex gap-2  fixed bottom-0 left-0 right-0  border-t border-[#e6f4f1] bg-[#f8fcfb] dark:bg-primary px-4 pb-3 pt-2">
         <a
           className="just flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-[#0c1d19]"
           href="#"
         >
           <div
-            className="text-[#0c1d19] flex h-8 items-center justify-center"
+            className="text-[hsl(166,41%,8%)] flex h-8 items-center justify-center"
             data-icon="House"
             data-size="24px"
             data-weight="fill"
