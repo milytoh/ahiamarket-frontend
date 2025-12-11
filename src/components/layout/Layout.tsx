@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import NavbarBottom from "./NavbarBottom";
 import NavbarTop from "./NavbarTop";
 
-const Layout = (props) => {
+const Layout = () => {
   return (
     <>
       < NavbarTop/>

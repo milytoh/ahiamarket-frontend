@@ -16,8 +16,8 @@ interface ProductCardProp {
 
 const ProductCard: React.FC<ProductCardProp> = (prop)  => {
   return (
-    <div className="flex flex-col group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300">
-      <div className="relative w-full aspect-square">
+    <div className="flex flex-col  cursor-pointer group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300">
+      <div className="relative w-full h-56 md:h-48 aspect-square">
         {prop.payOnDelivery && (
           <div className="absolute top-2 left-2 z-10 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-md">
             {/* Pay on Delivery */}
@@ -32,8 +32,7 @@ const ProductCard: React.FC<ProductCardProp> = (prop)  => {
           data-alt="A modern wireless headphone"
           style={{
             backgroundImage: `url(${prop.image})`,
-            // backgroundImage:
-            //   "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCpCmmBwvblK9fDweMK5Rl2MF8OrhSkJPBsVvE1fsFjosQgpKQbxHmL9QYRuyhcbVvKmMhwzAsNuW_epRTTMm4b9Qva_axlXfvYDPYsWzbn83f3OIk-9p3Ff4mS4cc9586DFr1mPqm_oGZXLfEyPl6NSePbuNJ_djwKoaNupsmurdijNblgdVPdbx9Z9x4N_skRtQEFAxNaeH2VADnqb_SukvsMqQhSMfOIhQbHPLwmaMTUUFoESZJSwTMhis02mpWCRP4Tc4pNWJo')",
+
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
