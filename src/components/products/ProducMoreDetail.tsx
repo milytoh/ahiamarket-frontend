@@ -1,5 +1,7 @@
 import React from "react";
 
+import { FiChevronDown } from "react-icons/fi";
+
 const ProductMoreDetail: React.FC = () => {
   return (
     <div className="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
@@ -62,9 +64,8 @@ const ProductMoreDetail: React.FC = () => {
                     <p className="text-[#1F2937] dark:text-gray-100 text-base font-semibold leading-normal">
                       How is the product's authenticity verified?
                     </p>
-                    <span className="material-symbols-outlined text-[#1F2937] dark:text-gray-100 group-open:rotate-180 transition-transform">
-                      expand_more
-                    </span>
+
+                    <FiChevronDown className="text-[#1F2937] dark:text-gray-100 group-open:rotate-180 transition-transform" />
                   </summary>
                   <p className="text-gray-600 dark:text-gray-300 text-sm font-normal leading-normal pb-2 mt-2">
                     All products are sourced directly from authorized dealers
@@ -78,9 +79,7 @@ const ProductMoreDetail: React.FC = () => {
                     <p className="text-[#1F2937] dark:text-gray-100 text-base font-semibold leading-normal">
                       What are the shipping options and costs?
                     </p>
-                    <span className="material-symbols-outlined text-[#1F2937] dark:text-gray-100 group-open:rotate-180 transition-transform">
-                      expand_more
-                    </span>
+                    <FiChevronDown className="text-[#1F2937] dark:text-gray-100 group-open:rotate-180 transition-transform" />
                   </summary>
                   <p className="text-gray-600 dark:text-gray-300 text-sm font-normal leading-normal pb-2 mt-2">
                     We offer nationwide delivery with fees starting from ₦2,500,
@@ -94,9 +93,7 @@ const ProductMoreDetail: React.FC = () => {
                     <p className="text-[#1F2937] dark:text-gray-100 text-base font-semibold leading-normal">
                       Can I return this item if I change my mind?
                     </p>
-                    <span className="material-symbols-outlined text-[#1F2937] dark:text-gray-100 group-open:rotate-180 transition-transform">
-                      expand_more
-                    </span>
+                    <FiChevronDown className="text-[#1F2937] dark:text-gray-100 group-open:rotate-180 transition-transform" />
                   </summary>
                   <p className="text-gray-600 dark:text-gray-300 text-sm font-normal leading-normal pb-2 mt-2">
                     Yes, we offer a 7-Day Free Returns policy for most items in

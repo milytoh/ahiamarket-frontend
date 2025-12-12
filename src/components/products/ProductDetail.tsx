@@ -2,6 +2,11 @@ import React from "react";
 
 import ProductMoreDetail from "./ProducMoreDetail";
 
+import opayLogo from "@/assets/images/logos/opa.png";
+import palmpayLogo from "@/assets/images/logos/palm.png";
+import mastercardLogo from "@/assets/images/logos/master.png";
+import visaLogo from "@/assets/images/logos/visa.png";
+
 interface Product {
   name: string;
   id: string;
@@ -168,26 +173,26 @@ const ProductDetail: React.FC<ProducttDetailProp> = ({products, id}) => {
                   </span>
                 </label>
               </div>
-              <div className="flex items-center justify-start gap-4 mt-3 grayscale opacity-70">
+              <div className="flex items-center md:justify-start gap-4 mt-3 justify-center">
                 <img
-                  className="h-5"
+                  className="h-10  "
                   data-alt="Opay logo"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDB2_Kn2zU-ePtRKNaidkfkJ6WcP3ZaIQj3Xf-l_UY6KXWofcDdB2W0Iipu_JU7NhjGapES8NIPBFKXvz9OePbM6Z5y0hM3eQ2lQOCEOqdiAUe3FJmPOq_6SDP65cmw37owwPsqA-cOTs982Ezne4j3GYz8HKN8psqZ2CUQHv26z8hORCAT99epbcHCCdP9MGNffonnxHpsqy87vSWhKeOv0iAgz3TtjzP_srvLFRQWEDPRMSgKpQgnBY54ysbKoy484h_ngLkwp94"
+                  src={opayLogo}
                 />
                 <img
-                  className="h-5"
-                  data-alt="PalmPay logo"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2dBNMSUY46mXvOVJgOsr8amCOANlIVcYxZPCy6VY5zeWE8vA7gO__mpd_hIzABQ6ZE17Hf7nY1G2P8oqV8bRM0VwNArAV-awkaHXHDQD7G9YrojlERmgih_cecZHXkYRi_B7ZxJ2sHelF7XBeUSdpx7V7NOSihNhCRQdAgQ5Sp-ZQjLvcurFBzJb9Qhqb5qNR7K1hOfRq6qiBeQbV4d9f10En2naH74P5NWfVcW9o51euvqk_-khqDNjPRRnaZP5e15Fcg2d1xZo"
+                  className="h-10"
+                  data-alt="palmpay Logo"
+                  src={palmpayLogo}
                 />
                 <img
-                  className="h-4"
-                  data-alt="Verve logo"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBi87vypOc5aH3dIbMXzyJdoRPiHPF9Ni4SqDEQqrh2RAuJemvYtfP1y0sFT7bu46LFDQYY21UjW3q-_y25eAgHuubn1Iw0Ku1c39DXt0wVbtqghR2vehLrmWeJdm-rZNSGcJvftZgkDaLQXI3S1KPDEnebsdR1XcUg0IA4yOA0ofq9NltTcT4pfsgySpn4pQ4UqygIqnw1kc46QHEWjoi6TLizVh8Sm2wy_-2GYtxCikZ3RY9_n7e_1GaVlF7Bu9x0Iybc77VHdzc"
+                  className="h-10  "
+                  data-alt="mastercard log"
+                  src={mastercardLogo}
                 />
                 <img
-                  className="h-5"
-                  data-alt="Mastercard logo"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWGyZJpqplsZQCsFhyPHABOa5xeDT8ca19-AM4taG0NgtxI9uGqBMMhkmJaVs6z1sVQX1Z-fhKsyOhqwtDFOpRSTx11mg4XLsiRGu2gIAcAP1xoNvXS239gtdV6vg1HjtaUDkWXExE9EML8NDQveQ5qXxxpLbZyEkiSPQeQR1ac3JP8iV9UV3PHJq3Bp-6RIsbBT5uST7mg3drBYE-oWMtZVWdHJxc6H8BsmoiA2yLhdZwEaDlRgJYJXNeZ3eCW_CXY48GQoM1O40"
+                  className="h-10"
+                  data-alt="visa logo"
+                  src={visaLogo}
                 />
               </div>
             </div>
