@@ -1,5 +1,7 @@
 import React from "react";
 
+import ProductMoreDetail from "./ProducMoreDetail";
+
 interface Product {
   name: string;
   id: string;
@@ -34,8 +36,8 @@ const ProductDetail: React.FC<ProducttDetailProp> = ({products, id}) => {
                 className="bg-cover bg-center flex flex-col justify-between overflow-hidden bg-white rounded-lg shadow-sm min-h-[400px] md:min-h-[500px]"
                 data-alt="Ankara Print Laptop Bag on a clean background"
                 style={{
-                  // backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuA47ZBsRW9BQ9j4ysZOQdnP_PR3lA-K5WqxefFH1SWSeV73FX89FNh2bFbkY7A0HaKx_WL9nWI8pwKHtjYCY5Yb7v7WXmrVCW05zgjZZ7cyLDKrRMG2zEDCM6fjNdi01ZKQd7_8jhiTMtJj9zoHgITFz2rAvrEsuvHvf9Y-lBbFUrHF7T6CUEn6y7KhYUemBJnG-0-W2aSJ0NBrvrO6Rj1cmzXP3LrZInwJML35lxk-3qTbl9njd7JhcHvtWkQhY_DNkFRHQOP4PA4")`,
-                   backgroundImage: `url(${prod.image})`,
+                  backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuA47ZBsRW9BQ9j4ysZOQdnP_PR3lA-K5WqxefFH1SWSeV73FX89FNh2bFbkY7A0HaKx_WL9nWI8pwKHtjYCY5Yb7v7WXmrVCW05zgjZZ7cyLDKrRMG2zEDCM6fjNdi01ZKQd7_8jhiTMtJj9zoHgITFz2rAvrEsuvHvf9Y-lBbFUrHF7T6CUEn6y7KhYUemBJnG-0-W2aSJ0NBrvrO6Rj1cmzXP3LrZInwJML35lxk-3qTbl9njd7JhcHvtWkQhY_DNkFRHQOP4PA4")`,
+                  //  backgroundImage: `url(${prod.image})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                   backgroundRepeat: "no-repeat",
@@ -226,6 +228,7 @@ const ProductDetail: React.FC<ProducttDetailProp> = ({products, id}) => {
           </div>
         </div>
       ))}
+      <ProductMoreDetail />
     </div>
   );
 };
