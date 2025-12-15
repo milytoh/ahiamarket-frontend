@@ -32,7 +32,7 @@ const RegistrationForm: React.FC = () => {
     }));
   };
 
-
+ //form nandler
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
