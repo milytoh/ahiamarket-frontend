@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import { FaUserPlus } from "react-icons/fa6";
+import { HiOutlineUserAdd } from "react-icons/hi";
 
 
 const NavbarBottom = () => {
@@ -79,40 +80,21 @@ const NavbarBottom = () => {
             Cart
           </p>
         </a>
-        {/* <a
-          className="just flex flex-1 flex-col items-center justify-end gap-1 text-[#45a18b]"
-          href="#"
-        >
-          <div
-            className="text-[#45a18b] flex h-8 items-center justify-center"
-            data-icon="User"
-            data-size="24px"
-            data-weight="regular"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24px"
-              height="24px"
-              fill="currentColor"
-              viewBox="0 0 256 256"
-            >
-              <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
-            </svg>
-          </div>
-          <p className="text-[#45a18b] dark:text-white text-xs font-medium leading-normal tracking-[0.015em]">
-            Account
-          </p>
-        </a> */}
-        <Link
+
+        <NavLink
           to={"/signup"}
-          className="just flex flex-1 flex-col items-center justify-end gap-1 text-[#45a18b]"
+          className={({ isActive }) =>
+            isActive
+              ? "just flex flex-1 flex-col items-center justify-end gap-1 text-brand-orange"
+              : "just flex flex-1 flex-col items-center justify-end gap-1 text-primary"
+          }
         >
-          <FaUserPlus className="text-2xl text-primary dark:text-gray-200" />
+          <HiOutlineUserAdd className="text-2xl" />
 
           <p className="text-primary dark:text-white text-xs font-medium leading-normal tracking-[0.015em]">
             Signup
           </p>
-        </Link>
+        </NavLink>
       </div>
       <div className="h-5 bg-[#f8fcfb]"></div>
     </div>
