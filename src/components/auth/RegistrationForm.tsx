@@ -4,23 +4,81 @@ import { useState } from "react";
 
 import InputForm from "./InputForm";
 
+type FormData = {
+  fullName: string;
+  phoneNumber: string;
+  email: string;
+  password: string;
+};
+
 const RegistrationForm: React.FC = () => {
 
-  const [enteredFullname, setEnteredFullname] = useState(null);
-  const [enteredPhone, setEnteredPhone] = useState(null);
-  const [enteredEmal, setEnteredEmail] = useState(null);
-  
+  // form state
+  const [formData, setFormData] = useState<FormData>({
+    fullName: "",
+    email: "",
+    password: "",
+    phoneNumber: "",
+  });
 
+  // input event handler
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    console.log(name, value)
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // console.log("Form Data:", formData);
+
+    // Example: send to backend
+    // await login(formData)
+  };
+ 
 
   return (
     <>
-      <form className="space-y-6">
-      
-        <InputForm type="text" placeholder="Full Name" label="Full Name" name="full_name" />
-        <InputForm type="email" placeholder="Email Address" label=" Email Address" name="email" />
-        <InputForm type="tel" placeholder="Phone Number" label="Phone Number" name="phone_number" />
-        <InputForm type="password" placeholder="Create Password" label="Password" name="password"/>
-      
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <InputForm
+          type="text"
+          placeholder="Full Name"
+          label="Full Name"
+          name="fullName"
+          value={formData.fullName}
+          onChange={handleChange}
+        />
+        <InputForm
+          type="email"
+          placeholder="Email Address"
+          label=" Email Address"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+        <InputForm
+          type="tel"
+          placeholder="Phone Number"
+          label="Phone Number"
+          name="phonNumber"
+          value={formData.phoneNumber}
+          onChange={handleChange}
+        />
+        <InputForm
+          type="password"
+          placeholder="Create Password"
+          label="Password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+        />
+
         <div>
           <div className="flex items-center justify-between mb-1">
             <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
