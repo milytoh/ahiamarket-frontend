@@ -30,7 +30,7 @@ dist-ssr
 
 # fix: bug fix
 
-# refactor: code restructure (no new feature or bug fix)
+# rc: code restructure (no new feature or bug fix)
 
 # docs: documentation changes
 

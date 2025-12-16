@@ -2,102 +2,147 @@ import React from "react";
 
 import { useState } from "react";
 
+import { useForm } from "react-hook-form";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { registerSchema, RegisterFormData } from "@/utils/schemas/registrationSchema";
+
 import InputForm from "./InputForm";
 
-type FormData = {
-  fullName: string;
-  phoneNumber: string;
-  email: string;
-  password: string;
-};
+
+//Password strength logic
+type Strength = "Weak" | "Medium" | "Strong" | "Very Strong";
+
+function getPasswordStrength(password: string): {
+  label: Strength;
+  percent: number;
+  color: string;
+} {
+  let score = 0;
+
+  if (password.length >= 8) score++;
+  if (/[A-Z]/.test(password)) score++;
+  if (/[a-z]/.test(password)) score++;
+  if (/[0-9]/.test(password)) score++;
+  if (/[^A-Za-z0-9]/.test(password)) score++;
+
+  if (score <= 2) return { label: "Weak", percent: 25, color: "bg-red-500" };
+  if (score === 3)
+    return { label: "Medium", percent: 50, color: "bg-yellow-500" };
+  if (score === 4)
+    return { label: "Strong", percent: 75, color: "bg-blue-500" };
+
+  return { label: "Very Strong", percent: 100, color: "bg-green-500" };
+}
+
+
 
 const RegistrationForm: React.FC = () => {
 
-  // form state
-  const [formData, setFormData] = useState<FormData>({
-    fullName: "",
-    email: "",
-    password: "",
-    phoneNumber: "",
+  const [showPassword, setShowPassword] = useState(false);
+
+  // handling form and validation with Form hook and zod
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    watch
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      terms: false,
+    },
+    mode: "onChange", 
+    reValidateMode: "onChange",
   });
 
-  // input event handler
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const password = watch("password", "")
 
-    console.log(name, value)
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
- //form nandler
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // console.log("Form Data:", formData);
-
-    // Example: send to backend
-    // await login(formData)
-  };
  
+//// form submition
+   const onSubmit = (data: any) => {
+     console.log(data)
+  };
+  // getting password strength 
+  const strength = getPasswordStrength(password);
+
+  const showPasswordHandler = () => {
+   setShowPassword((prev) => !prev);
+ }
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <InputForm
           type="text"
           placeholder="Full Name"
           label="Full Name"
-          name="fullName"
-          value={formData.fullName}
-          onChange={handleChange}
+          {...register("fullName")}
+          error={errors.fullName?.message}
         />
         <InputForm
           type="email"
           placeholder="Email Address"
           label=" Email Address"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
+          {...register("email")}
+          error={errors.email?.message}
         />
         <InputForm
           type="tel"
           placeholder="Phone Number"
           label="Phone Number"
-          name="phonNumber"
-          value={formData.phoneNumber}
-          onChange={handleChange}
+          {...register("phoneNumber")}
+          error={errors.phoneNumber?.message}
         />
         <InputForm
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="Create Password"
           label="Password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
+          {...register("password")}
+          error={errors.password?.message}
+          onShowPwd={showPasswordHandler}
+          showPwd={showPassword}
         />
+        {!password && (
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                Password strength
+              </span>
+              <span className="text-xs font-bold" id="strength-text"></span>
+            </div>
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+              <div className="password-strength-bar" id="strength-bar"></div>
+            </div>
+          </div>
+        )}
 
-        <div>
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
-              Password strength
-            </span>
-            <span className="text-xs font-bold" id="strength-text"></span>
+        {password && (
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                Password strength
+              </span>
+              <span className="text-xs font-bold">{strength.label}</span>
+            </div>
+
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+              <div
+                className={`h-1.5 rounded-full transition-all duration-300 ${strength.color}`}
+                style={{ width: `${strength.percent}%` }}
+              />
+            </div>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-            <div className="password-strength-bar" id="strength-bar"></div>
-          </div>
-        </div>
+        )}
+
         <div className="flex items-start">
           <div className="flex items-center h-5">
             <input
               aria-describedby="terms-description"
               className="h-4 w-4 rounded border-gray-300 dark:border-gray-600  dark:bg-gray-800 text-primary focus:ring-primary dark:focus:ring-offset-background-dark"
               id="terms"
-              name="terms"
               type="checkbox"
+              {...register("terms")}
             />
           </div>
           <div className="ml-3 text-sm">
@@ -114,6 +159,9 @@ const RegistrationForm: React.FC = () => {
             </label>
           </div>
         </div>
+        {errors && (
+          <p className="text-red-500 text-sm">{errors.terms?.message}</p>
+        )}
         <button
           className="w-full bg-primary text-white font-bold py-4 px-4 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-background-dark transition duration-300 ease-in-out"
           type="submit"
