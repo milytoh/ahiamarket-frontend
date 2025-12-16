@@ -3,9 +3,9 @@ import React from "react";
 import { useState } from "react";
 
 import { useForm } from "react-hook-form";
-import { FiEye, FiEyeOff } from "react-icons/fi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema, RegisterFormData } from "@/utils/schemas/registrationSchema";
+import { useApi } from "@/hooks/useApi";
 
 import InputForm from "./InputForm";
 
@@ -35,40 +35,57 @@ function getPasswordStrength(password: string): {
   return { label: "Very Strong", percent: 100, color: "bg-green-500" };
 }
 
+interface RegisterPayload {
+  fullName: string;
+  email: string;
+  password: string;
+  terms: boolean
+
+}
+
+interface RegisterResponse {
+  success: boolean;
+  message: string;
+}
+
 
 
 const RegistrationForm: React.FC = () => {
-
   const [showPassword, setShowPassword] = useState(false);
+
+  //using custom hook
+  const { post, loading, error } = useApi<RegisterPayload, RegisterResponse>(
+    "/register"
+  );
 
   // handling form and validation with Form hook and zod
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    watch
+    watch,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       terms: false,
     },
-    mode: "onChange", 
+    mode: "onChange",
     reValidateMode: "onChange",
   });
 
-  const password = watch("password", "")
+  const password = watch("password", "");
 
- 
-//// form submition
-   const onSubmit = (data: any) => {
-     console.log(data)
-  };
-  // getting password strength 
+  // getting password strength
   const strength = getPasswordStrength(password);
 
   const showPasswordHandler = () => {
-   setShowPassword((prev) => !prev);
- }
+    setShowPassword((prev) => !prev);
+  };
+
+  //// form submition
+  const onSubmit = async (data: any) => {
+    const response = await post(data);
+  };
 
   return (
     <>
