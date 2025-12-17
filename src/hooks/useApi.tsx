@@ -10,10 +10,13 @@ export function useApi<TBody = any, TResponse = any>(url: string) {
     setLoading(true);
     setError(null);
     try {
+      
       const res = await api.post<TResponse>(url, body, config);
-      return res.data;
+      console.log("dddddd", res)
+      
     } catch (err: any) {
-      setError(err.message || "Something went wrong");
+      
+      setError(err || "Something went wrong");
       throw err;
     } finally {
       setLoading(false);

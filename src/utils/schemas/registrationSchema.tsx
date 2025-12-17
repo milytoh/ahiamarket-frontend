@@ -7,7 +7,7 @@ export const registerSchema = z.object({
 
   email: z.string().email("Invalid email address"),
 
-  phoneNumber: z.string().min(10, "Provide a valid phone number"),
+  // phoneNumber: z.string().min(10, "Provide a valid phone number"),
 
   password: z
     .string()

@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema, RegisterFormData } from "@/utils/schemas/registrationSchema";
 import { useApi } from "@/hooks/useApi";
+import googlelogo from "@/assets/images/logos/google.jfif"
+import fblogo from "@/assets/images/logos/fb.jfif"
 
 import InputForm from "./InputForm";
 
@@ -55,7 +57,7 @@ const RegistrationForm: React.FC = () => {
 
   //using custom hook
   const { post, loading, error } = useApi<RegisterPayload, RegisterResponse>(
-    "/register"
+    "http://localhost:3000/api/account/signup"
   );
 
   // handling form and validation with Form hook and zod
@@ -64,6 +66,7 @@ const RegistrationForm: React.FC = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
+    reset
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -84,11 +87,20 @@ const RegistrationForm: React.FC = () => {
 
   //// form submition
   const onSubmit = async (data: any) => {
-    const response = await post(data);
-  };
+    
+   console.log(data)
+     const response = await post(data);
+     console.log(response)
+ 
 
+    // reset()
+  };
+  
   return (
     <>
+    {error && (
+     <p className=" flex justify-center items-center text-red-500 text-medium mb-6 -mt-2">{error}</p>
+         )}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <InputForm
           type="text"
@@ -104,13 +116,13 @@ const RegistrationForm: React.FC = () => {
           {...register("email")}
           error={errors.email?.message}
         />
-        <InputForm
+        {/* <InputForm
           type="tel"
           placeholder="Phone Number"
           label="Phone Number"
           {...register("phoneNumber")}
           error={errors.phoneNumber?.message}
-        />
+        /> */}
         <InputForm
           type={showPassword ? "text" : "password"}
           placeholder="Create Password"
@@ -118,7 +130,7 @@ const RegistrationForm: React.FC = () => {
           {...register("password")}
           error={errors.password?.message}
           onShowPwd={showPasswordHandler}
-          showPwd={showPassword}
+          showpwd={showPassword}
         />
         {!password && (
           <div>
@@ -185,6 +197,27 @@ const RegistrationForm: React.FC = () => {
         >
           Create Account
         </button>
+        {/* or signup width google */}
+        {/* <div className="flex flex-col "> 
+          <
+        </ div> */}
+
+        <div className="flex items-center gap-4">
+<hr className="flex-grow border-gray-300 dark:border-gray-600"/>
+<span className="text-gray-500 dark:text-gray-400 text-sm">Or sign up with</span>
+<hr className="flex-grow border-gray-300 dark:border-gray-600"/>
+</div>
+<div className="flex flex-col sm:flex-row gap-4">
+<button className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+<img alt="Google logo" className="w-6 h-6 mr-3" src={googlelogo}/>
+                                Sign up with Google
+                            </button>
+<button className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+<img alt="Facebook logo" className="w-6 h-6 mr-3" src={fblogo}/>
+                                Sign up with Facebook
+                            </button>
+</div>
+
         <p className="text-sm text-center text-gray-500 dark:text-gray-400">
           Already have an account?
           <a className="font-medium text-primary hover:underline" href="#">

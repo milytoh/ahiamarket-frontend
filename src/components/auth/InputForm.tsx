@@ -8,10 +8,10 @@ type InputFormProp = {
   type?: string;
   error?: string;
   onShowPwd?: () => void;
-  showPwd?: boolean
+  showpwd?: boolean
 };
 
-const InputForm: React.FC<InputFormProp> = ({ label, error, ...props }) => {
+const InputForm: React.FC<InputFormProp> = ({ label, error, showpwd, onShowPwd, ...props }) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -23,10 +23,10 @@ const InputForm: React.FC<InputFormProp> = ({ label, error, ...props }) => {
       {label == "Password" && (
         <button
           type="button"
-          onClick={props.onShowPwd}
+          onClick={onShowPwd}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
         >
-          {props.showPwd ? <FiEyeOff /> : <FiEye />}
+          {showpwd ? <FiEyeOff /> : <FiEye />}
         </button>
       )}
       <label

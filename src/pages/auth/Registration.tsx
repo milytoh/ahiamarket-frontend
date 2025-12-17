@@ -4,7 +4,7 @@ import RegistrationForm from "@/components/auth/RegistrationForm"
 
 const RegistrationPage: React.FC = () => {
     return (
-      <div className="relative flex h-auto min-h-screen w-full flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div className="relative flex h-auto min-h-screen w-full flex-col items-center justify-center p-4 sm:p-6 lg:p-8 mb-12">
         {/* <header className="absolute top-0 left-0 p-6">
           <h1 className="text-2xl font-bold text-primary">Ahiamarket</h1>
         </header> */}
