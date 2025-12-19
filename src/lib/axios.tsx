@@ -26,13 +26,10 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   response => response,
   error => {
-    const message =
-      error?.response?.data?.message ||
-      error.message ||
-      "Something went wrong";
-
-    return Promise.reject(message);
+    // Just pass the whole error through
+    return Promise.reject(error);
   }
+
 );
 
 export default api;

@@ -4,13 +4,15 @@ import { useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerSchema, RegisterFormData } from "@/utils/schemas/registrationSchema";
+import {
+  registerSchema,
+  RegisterFormData,
+} from "@/utils/schemas/registrationSchema";
 import { useApi } from "@/hooks/useApi";
-import googlelogo from "@/assets/images/logos/google.jfif"
-import fblogo from "@/assets/images/logos/fb.jfif"
+import googlelogo from "@/assets/images/logos/google.jfif";
+import fblogo from "@/assets/images/logos/fb.jfif";
 
 import InputForm from "./InputForm";
-
 
 //Password strength logic
 type Strength = "Weak" | "Medium" | "Strong" | "Very Strong";
@@ -41,16 +43,13 @@ interface RegisterPayload {
   fullName: string;
   email: string;
   password: string;
-  terms: boolean
-
+  terms: boolean;
 }
 
 interface RegisterResponse {
   success: boolean;
   message: string;
 }
-
-
 
 const RegistrationForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -66,7 +65,7 @@ const RegistrationForm: React.FC = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
-    reset
+    reset,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -88,19 +87,33 @@ const RegistrationForm: React.FC = () => {
   //// form submition
   const onSubmit = async (data: any) => {
     
-   console.log(data)
-     const response = await post(data);
-     console.log(response)
- 
-
+    const response = await post(data);
+    console.log(response);
+    console.log(error, "jjjjjjj")
     // reset()
   };
-  
+
+
+
   return (
     <>
-    {error && (
-     <p className=" flex justify-center items-center text-red-500 text-medium mb-6 -mt-2">{error}</p>
-         )}
+     <div className="mb-6 -mt-6 flex flex-col justify-center items-center">
+      
+       {error?.errors && error.errors.length > 0 && (
+      <ul className="text-red-500 text-sm mt-2">
+        {error.errors.map((e: any, i: number) => (
+          <li key={i}>
+            {e.field}: {e.message}
+          </li>
+        ))}
+      </ul>
+    )}
+
+    {error?.message && !error.errors && (
+      <p className="text-red-500 text-sm mt-2">{error.message}</p>
+    )}
+      
+       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <InputForm
           type="text"
@@ -192,10 +205,11 @@ const RegistrationForm: React.FC = () => {
           <p className="text-red-500 text-sm">{errors.terms?.message}</p>
         )}
         <button
-          className="w-full bg-primary text-white font-bold py-4 px-4 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-background-dark transition duration-300 ease-in-out"
+          className={`w-full ${loading?  "bg-primary/50": "bg-primary"} text-white font-bold py-4 px-4 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-background-dark transition duration-300 ease-in-out`}
           type="submit"
         >
           Create Account
+
         </button>
         {/* or signup width google */}
         {/* <div className="flex flex-col "> 
@@ -203,20 +217,22 @@ const RegistrationForm: React.FC = () => {
         </ div> */}
 
         <div className="flex items-center gap-4">
-<hr className="flex-grow border-gray-300 dark:border-gray-600"/>
-<span className="text-gray-500 dark:text-gray-400 text-sm">Or sign up with</span>
-<hr className="flex-grow border-gray-300 dark:border-gray-600"/>
-</div>
-<div className="flex flex-col sm:flex-row gap-4">
-<button className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-<img alt="Google logo" className="w-6 h-6 mr-3" src={googlelogo}/>
-                                Sign up with Google
-                            </button>
-<button className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-<img alt="Facebook logo" className="w-6 h-6 mr-3" src={fblogo}/>
-                                Sign up with Facebook
-                            </button>
-</div>
+          <hr className="flex-grow border-gray-300 dark:border-gray-600" />
+          <span className="text-gray-500 dark:text-gray-400 text-sm">
+            Or sign up with
+          </span>
+          <hr className="flex-grow border-gray-300 dark:border-gray-600" />
+        </div>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <button className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            <img alt="Google logo" className="w-6 h-6 mr-3" src={googlelogo} />
+            Sign up with Google
+          </button>
+          <button className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            <img alt="Facebook logo" className="w-6 h-6 mr-3" src={fblogo} />
+            Sign up with Facebook
+          </button>
+        </div>
 
         <p className="text-sm text-center text-gray-500 dark:text-gray-400">
           Already have an account?
@@ -227,7 +243,7 @@ const RegistrationForm: React.FC = () => {
       </form>
       {/* <!-- OTP Modal (hidden by default) --> */}
       <div
-        className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 hidden"
+        className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 "
         id="otp-modal"
       >
         <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-lg p-8 max-w-sm w-full text-center">
