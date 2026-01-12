@@ -9,10 +9,14 @@ import {
   RegisterFormData,
 } from "@/utils/schemas/registrationSchema";
 import { useApi } from "@/hooks/useApi";
+
+import InputForm from "./InputForm";
+import OtpForm from "./OtpForm"
+
 import googlelogo from "@/assets/images/logos/google.jfif";
 import fblogo from "@/assets/images/logos/fb.jfif";
 
-import InputForm from "./InputForm";
+
 
 //Password strength logic
 type Strength = "Weak" | "Medium" | "Strong" | "Very Strong";
@@ -53,6 +57,7 @@ interface RegisterResponse {
 
 const RegistrationForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showOtp, setShowOtp] = useState(false)
 
   //using custom hook
   const { post, loading, error } = useApi<RegisterPayload, RegisterResponse>(
@@ -89,31 +94,39 @@ const RegistrationForm: React.FC = () => {
     
     const response = await post(data);
     console.log(response);
-    console.log(error, "jjjjjjj")
+    
+    // showing otp form if registration was successful
+    if (!error) {
+      setShowOtp((pr) => true)
+    }
+    
     // reset()
   };
+
+  //hide otp form
+  const onCloseOtp = () =>{
+    setShowOtp((pre) => false)
+  }
 
 
 
   return (
     <>
-     <div className="mb-6 -mt-6 flex flex-col justify-center items-center">
-      
-       {error?.errors && error.errors.length > 0 && (
-      <ul className="text-red-500 text-sm mt-2">
-        {error.errors.map((e: any, i: number) => (
-          <li key={i}>
-            {e.field}: {e.message}
-          </li>
-        ))}
-      </ul>
-    )}
+      <div className="mb-6 -mt-6 flex flex-col justify-center items-center">
+        {error?.errors && error.errors.length > 0 && (
+          <ul className="text-red-500 text-sm mt-2">
+            {error.errors.map((e: any, i: number) => (
+              <li key={i}>
+                {e.field}: {e.message}
+              </li>
+            ))}
+          </ul>
+        )}
 
-    {error?.message && !error.errors && (
-      <p className="text-red-500 text-sm mt-2">{error.message}</p>
-    )}
-      
-       </div>
+        {error?.message && !error.errors && (
+          <p className="text-red-500 text-sm mt-2">{error.message}</p>
+        )}
+      </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <InputForm
           type="text"
@@ -205,11 +218,12 @@ const RegistrationForm: React.FC = () => {
           <p className="text-red-500 text-sm">{errors.terms?.message}</p>
         )}
         <button
-          className={`w-full ${loading?  "bg-primary/50": "bg-primary"} text-white font-bold py-4 px-4 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-background-dark transition duration-300 ease-in-out`}
+          className={`w-full ${
+            loading ? "bg-primary/50" : "bg-primary"
+          } text-white font-bold py-4 px-4 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-background-dark transition duration-300 ease-in-out`}
           type="submit"
         >
           Create Account
-
         </button>
         {/* or signup width google */}
         {/* <div className="flex flex-col "> 
@@ -242,60 +256,8 @@ const RegistrationForm: React.FC = () => {
         </p>
       </form>
       {/* <!-- OTP Modal (hidden by default) --> */}
-      <div
-        className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center p-4 "
-        id="otp-modal"
-      >
-        <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-lg p-8 max-w-sm w-full text-center">
-          <h2 className="text-2xl font-bold mb-4 text-text-light dark:text-text-dark">
-            Verify Your Email
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            We've sent a One-Time Password to your email. Please enter it below.
-          </p>
-          <div className="flex justify-center gap-2 mb-6">
-            <input
-              className="w-12 h-14 text-center text-2xl font-semibold rounded-lg border border-gray-300 dark:border-gray-700 focus:border-accent focus:ring-accent form-input"
-              maxLength={1}
-              type="text"
-            />
-            <input
-              className="w-12 h-14 text-center text-2xl font-semibold rounded-lg border border-gray-300 dark:border-gray-700 focus:border-accent focus:ring-accent form-input"
-              maxLength={1}
-              type="text"
-            />
-            <input
-              className="w-12 h-14 text-center text-2xl font-semibold rounded-lg border border-gray-300 dark:border-gray-700 focus:border-accent focus:ring-accent form-input"
-              maxLength={1}
-              type="text"
-            />
-            <input
-              className="w-12 h-14 text-center text-2xl font-semibold rounded-lg border border-gray-300 dark:border-gray-700 focus:border-accent focus:ring-accent form-input"
-              maxLength={1}
-              type="text"
-            />
-            <input
-              className="w-12 h-14 text-center text-2xl font-semibold rounded-lg border border-gray-300 dark:border-gray-700 focus:border-accent focus:ring-accent form-input"
-              maxLength={1}
-              type="text"
-            />
-            <input
-              className="w-12 h-14 text-center text-2xl font-semibold rounded-lg border border-gray-300 dark:border-gray-700 focus:border-accent focus:ring-accent form-input"
-              maxLength={1}
-              type="text"
-            />
-          </div>
-          <button className="w-full bg-primary text-white font-bold py-3 px-4 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-background-dark transition duration-300 ease-in-out">
-            Verify
-          </button>
-          <button
-            className="mt-4 text-sm text-gray-500 dark:text-gray-400 hover:underline"
-            id="close-modal"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
+
+      {showOtp && <OtpForm onCloseOtForm={onCloseOtp} />}
     </>
   );
 };

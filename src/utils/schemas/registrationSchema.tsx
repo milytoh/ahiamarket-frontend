@@ -22,5 +22,10 @@ export const registerSchema = z.object({
 });
 
 
+export const otpSchema = z.object({
+  otpValue: z.number().min(1, "in")
+})
+
+
 // Auto-infer TypeScript type
 export type RegisterFormData = z.infer<typeof registerSchema>;

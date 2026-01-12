@@ -9,7 +9,7 @@ export interface ApiError {
 
 export function useApi<TBody = any, TResponse = any>(url: string) {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<ApiError | null>(null);
 
 
 
