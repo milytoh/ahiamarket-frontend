@@ -20,7 +20,7 @@ export function useApi<TBody = any, TResponse = any>(url: string) {
   try {
     const res = await api.post<TResponse>(url, body, config);
 
-    console.log(res, "ggg")
+    
     return res.data;
   } catch (err: any) {
     

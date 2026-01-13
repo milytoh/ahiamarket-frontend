@@ -57,7 +57,7 @@ interface RegisterResponse {
 
 const RegistrationForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showOtp, setShowOtp] = useState(false)
+  const [showOtp, setShowOtp] = useState(true)
 
   //using custom hook
   const { post, loading, error } = useApi<RegisterPayload, RegisterResponse>(
@@ -68,7 +68,7 @@ const RegistrationForm: React.FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors , isSubmitting },
     watch,
     reset,
   } = useForm<RegisterFormData>({

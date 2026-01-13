@@ -1,7 +1,6 @@
 // schemas/register.schema.ts
 import { z } from "zod";
 
-
 export const registerSchema = z.object({
   fullName: z.string().min(3, "Full name must be at least 3 characters"),
 
@@ -21,11 +20,16 @@ export const registerSchema = z.object({
   }),
 });
 
-
+// otp form validation schema
 export const otpSchema = z.object({
-  otpValue: z.number().min(1, "in")
-})
-
+  input1: z.string(),
+  input2: z.string(),
+  input3: z.string(),
+  input4: z.string(),
+  input5: z.string(),
+  input6: z.string(),
+});
 
 // Auto-infer TypeScript type
 export type RegisterFormData = z.infer<typeof registerSchema>;
+export type OtpFormData = z.infer<typeof otpSchema>
