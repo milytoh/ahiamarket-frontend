@@ -57,7 +57,8 @@ interface RegisterResponse {
 
 const RegistrationForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showOtp, setShowOtp] = useState(true)
+  const [showOtp, setShowOtp] = useState(false);
+  const [email, setEmail] = useState<string>("")
 
   //using custom hook
   const { post, loading, error } = useApi<RegisterPayload, RegisterResponse>(
@@ -89,14 +90,15 @@ const RegistrationForm: React.FC = () => {
     setShowPassword((prev) => !prev);
   };
 
+ 
   //// form submition
   const onSubmit = async (data: any) => {
-    
+    console.log(data.email)
     const response = await post(data);
-    console.log(response);
     
     // showing otp form if registration was successful
     if (!error) {
+      setEmail((prv) => data.email)
       setShowOtp((pr) => true)
     }
     
@@ -257,7 +259,7 @@ const RegistrationForm: React.FC = () => {
       </form>
       {/* <!-- OTP Modal (hidden by default) --> */}
 
-      {showOtp && <OtpForm onCloseOtForm={onCloseOtp} />}
+      {showOtp && <OtpForm onCloseOtForm={onCloseOtp} email={email } />}
     </>
   );
 };

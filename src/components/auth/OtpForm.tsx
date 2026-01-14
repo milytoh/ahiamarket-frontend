@@ -1,5 +1,7 @@
 import react from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import { useApi } from "@/hooks/useApi";
 
 import OtpInput from "./OtpInput";
@@ -10,6 +12,7 @@ import { otpSchema, OtpFormData } from "@/utils/schemas/registrationSchema";
 
 interface OtpData {
   onCloseOtForm: () => void;
+  email: string
 }
 
 interface RegisterResponse {
@@ -22,7 +25,9 @@ interface OtpDataPlayload {
   otp: string;
 }
 
-const OtpForm: react.FC<OtpData> = ({ onCloseOtForm }) => {
+const OtpForm: react.FC<OtpData> = ({ onCloseOtForm, email }) => {
+  const navigate = useNavigate()
+ 
   //using custom hook
   const { post, loading, error } = useApi<OtpDataPlayload, RegisterResponse>(
     "http://localhost:3000/api/account/email/verify"
@@ -41,19 +46,27 @@ const OtpForm: react.FC<OtpData> = ({ onCloseOtForm }) => {
     // reValidateMode: "onChange",
   });
 
+
+  // otp input value submit
   const onSubmit = async (data: any) => {
     console.log("check...");
     const otpDataArr = Object.values(data);
-    const otpData = otpDataArr.toString();
-
-    console.log(otpData);
-
+    
+  
+    
+    const otpData = String(otpDataArr.join(""));
+    console
     const response = await post({
-      email: "milytohgold@gmail.com",
+      email: email,
       otp: otpData,
     });
 
-    console.log(response);
+    console.log(response)
+
+    if (!error) {
+        navigate("/login", { replace: true });
+    }
+
   };
 
   return (
@@ -69,6 +82,7 @@ const OtpForm: react.FC<OtpData> = ({ onCloseOtForm }) => {
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             We've sent a One-Time Password to your email. Please enter it below.
           </p>
+          {/* error message */}
           <div className="mb-6 -mt-6 flex flex-col justify-center items-center">
             {error?.errors && error.errors.length > 0 && (
               <ul className="text-red-500 text-sm mt-2">
@@ -84,6 +98,7 @@ const OtpForm: react.FC<OtpData> = ({ onCloseOtForm }) => {
               <p className="text-red-500 text-sm mt-2">{error.message}</p>
             )}
           </div>
+          {/* otp inputs */}
           <div className="flex justify-center gap-1 mb-6 px-6">
             <OtpInput {...register("input1")} />
             <OtpInput {...register("input2")} />
