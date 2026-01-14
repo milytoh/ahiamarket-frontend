@@ -5,8 +5,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  registerSchema,
-  RegisterFormData,
+  loginSchema,
+    
+  LoginFormData
 } from "@/utils/schemas/registrationSchema";
 import { useApi } from "@/hooks/useApi";
 
@@ -18,36 +19,11 @@ import fblogo from "@/assets/images/logos/fb.jfif";
 
 
 
-//Password strength logic
-type Strength = "Weak" | "Medium" | "Strong" | "Very Strong";
-
-function getPasswordStrength(password: string): {
-  label: Strength;
-  percent: number;
-  color: string;
-} {
-  let score = 0;
-
-  if (password.length >= 8) score++;
-  if (/[A-Z]/.test(password)) score++;
-  if (/[a-z]/.test(password)) score++;
-  if (/[0-9]/.test(password)) score++;
-  if (/[^A-Za-z0-9]/.test(password)) score++;
-
-  if (score <= 2) return { label: "Weak", percent: 25, color: "bg-red-500" };
-  if (score === 3)
-    return { label: "Medium", percent: 50, color: "bg-yellow-500" };
-  if (score === 4)
-    return { label: "Strong", percent: 75, color: "bg-blue-500" };
-
-  return { label: "Very Strong", percent: 100, color: "bg-green-500" };
-}
-
 interface RegisterPayload {
-  fullName: string;
+  
   email: string;
   password: string;
-  terms: boolean;
+  
 }
 
 interface RegisterResponse {
@@ -57,8 +33,7 @@ interface RegisterResponse {
 
 const LoginForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showOtp, setShowOtp] = useState(false);
-  const [email, setEmail] = useState<string>("")
+  
 
   //using custom hook
   const { post, loading, error } = useApi<RegisterPayload, RegisterResponse>(
@@ -72,19 +47,13 @@ const LoginForm: React.FC = () => {
     formState: { errors , isSubmitting },
     watch,
     reset,
-  } = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: {
-      terms: false,
-    },
-    mode: "onChange",
-    reValidateMode: "onChange",
+  } = useForm<LoginFormData>({
+   resolver: zodResolver(loginSchema),
+  
+    // mode: "onChange",
+    // reValidateMode: "onChange",
   });
 
-  const password = watch("password", "");
-
-  // getting password strength
-  const strength = getPasswordStrength(password);
 
   const showPasswordHandler = () => {
     setShowPassword((prev) => !prev);
@@ -93,21 +62,7 @@ const LoginForm: React.FC = () => {
  
   //// form submition
   const onSubmit = async (data: any) => {
-    console.log(data.email)
-    const response = await post(data);
-    
-    // showing otp form if registration was successful
-    if (!error) {
-      setEmail((prv) => data.email)
-      setShowOtp((pr) => true)
-    }
-    
-    // reset()
-  };
-
-  //hide otp form
-  const onCloseOtp = () =>{
-    setShowOtp((pre) => false)
+   console.log(data)
   }
 
 
@@ -130,13 +85,7 @@ const LoginForm: React.FC = () => {
         )}
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <InputForm
-          type="text"
-          placeholder="Full Name"
-          label="Full Name"
-          {...register("fullName")}
-          error={errors.fullName?.message}
-        />
+     
         <InputForm
           type="email"
           placeholder="Email Address"
@@ -144,13 +93,7 @@ const LoginForm: React.FC = () => {
           {...register("email")}
           error={errors.email?.message}
         />
-        {/* <InputForm
-          type="tel"
-          placeholder="Phone Number"
-          label="Phone Number"
-          {...register("phoneNumber")}
-          error={errors.phoneNumber?.message}
-        /> */}
+      
         <InputForm
           type={showPassword ? "text" : "password"}
           placeholder="Create Password"
@@ -160,72 +103,14 @@ const LoginForm: React.FC = () => {
           onShowPwd={showPasswordHandler}
           showpwd={showPassword}
         />
-        {!password && (
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                Password strength
-              </span>
-              <span className="text-xs font-bold" id="strength-text"></span>
-            </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-              <div className="password-strength-bar" id="strength-bar"></div>
-            </div>
-          </div>
-        )}
 
-        {password && (
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                Password strength
-              </span>
-              <span className="text-xs font-bold">{strength.label}</span>
-            </div>
-
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-              <div
-                className={`h-1.5 rounded-full transition-all duration-300 ${strength.color}`}
-                style={{ width: `${strength.percent}%` }}
-              />
-            </div>
-          </div>
-        )}
-
-        <div className="flex items-start">
-          <div className="flex items-center h-5">
-            <input
-              aria-describedby="terms-description"
-              className="h-4 w-4 rounded border-gray-300 dark:border-gray-600  dark:bg-gray-800 text-primary focus:ring-primary dark:focus:ring-offset-background-dark"
-              id="terms"
-              type="checkbox"
-              {...register("terms")}
-            />
-          </div>
-          <div className="ml-3 text-sm">
-            <label className="text-gray-500 dark:text-gray-400" htmlFor="terms">
-              I agree to the{" "}
-              <a className="font-medium text-primary hover:underline" href="#">
-                Terms &amp; Conditions
-              </a>{" "}
-              and{" "}
-              <a className="font-medium text-primary hover:underline" href="#">
-                Privacy Policy
-              </a>
-              .
-            </label>
-          </div>
-        </div>
-        {errors && (
-          <p className="text-red-500 text-sm">{errors.terms?.message}</p>
-        )}
         <button
           className={`w-full ${
             loading ? "bg-primary/50" : "bg-primary"
           } text-white font-bold py-4 px-4 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-background-dark transition duration-300 ease-in-out`}
           type="submit"
         >
-          Create Account
+          Login
         </button>
         {/* or signup width google */}
         {/* <div className="flex flex-col "> 
@@ -235,31 +120,31 @@ const LoginForm: React.FC = () => {
         <div className="flex items-center gap-4">
           <hr className="flex-grow border-gray-300 dark:border-gray-600" />
           <span className="text-gray-500 dark:text-gray-400 text-sm">
-            Or sign up with
+            Or Login up with
           </span>
           <hr className="flex-grow border-gray-300 dark:border-gray-600" />
         </div>
         <div className="flex flex-col sm:flex-row gap-4">
           <button className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
             <img alt="Google logo" className="w-6 h-6 mr-3" src={googlelogo} />
-            Sign up with Google
+           Login with Google
           </button>
           <button className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
             <img alt="Facebook logo" className="w-6 h-6 mr-3" src={fblogo} />
-            Sign up with Facebook
+            Login with Facebook
           </button>
         </div>
 
         <p className="text-sm text-center text-gray-500 dark:text-gray-400">
-          Already have an account?
+         Don't have an account?
           <a className="font-medium text-primary hover:underline" href="#">
-            Sign In
+            Sign up
           </a>
         </p>
       </form>
       {/* <!-- OTP Modal (hidden by default) --> */}
-
-      {showOtp && <OtpForm onCloseOtForm={onCloseOtp} email={email } />}
+{/* 
+      {showOtp && <OtpForm onCloseOtForm={onCloseOtp} email={email } />} */}
     </>
   );
 };

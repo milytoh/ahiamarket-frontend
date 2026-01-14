@@ -30,6 +30,12 @@ export const otpSchema = z.object({
   input6: z.string(),
 });
 
+
+export const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(3, "password should be above 3 character")
+});
 // Auto-infer TypeScript type
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type OtpFormData = z.infer<typeof otpSchema>
+export type LoginFormData = z.infer<typeof loginSchema>
