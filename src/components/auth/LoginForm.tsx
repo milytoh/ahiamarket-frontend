@@ -16,17 +16,18 @@ import OtpForm from "./OtpForm"
 
 import googlelogo from "@/assets/images/logos/google.jfif";
 import fblogo from "@/assets/images/logos/fb.jfif";
+import { email } from "zod";
 
 
 
-interface RegisterPayload {
+interface LoginPayload {
   
   email: string;
   password: string;
   
 }
 
-interface RegisterResponse {
+interface LoginResponse {
   success: boolean;
   message: string;
 }
@@ -36,8 +37,8 @@ const LoginForm: React.FC = () => {
   
 
   //using custom hook
-  const { post, loading, error } = useApi<RegisterPayload, RegisterResponse>(
-    "http://localhost:3000/api/account/signup"
+  const { post, loading, error } = useApi<LoginPayload, LoginResponse>(
+    "http://localhost:3000/api/account/login"
   );
 
   // handling form and validation with Form hook and zod
@@ -62,7 +63,14 @@ const LoginForm: React.FC = () => {
  
   //// form submition
   const onSubmit = async (data: any) => {
-   console.log(data)
+      console.log(data)
+      
+      const response = await post({
+          email: data?.email,
+          password: data?.password
+      });
+
+      console.log(response)
   }
 
 
