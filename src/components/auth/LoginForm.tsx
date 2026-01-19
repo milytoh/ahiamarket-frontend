@@ -17,6 +17,7 @@ import OtpForm from "./OtpForm"
 import googlelogo from "@/assets/images/logos/google.jfif";
 import fblogo from "@/assets/images/logos/fb.jfif";
 import { email } from "zod";
+import { Link, NavLink } from "react-router-dom";
 
 
 
@@ -145,9 +146,9 @@ const LoginForm: React.FC = () => {
 
         <p className="text-sm text-center text-gray-500 dark:text-gray-400">
          Don't have an account?
-          <a className="font-medium text-primary hover:underline" href="#">
-            Sign up
-          </a>
+           <NavLink to={"/signup"} className="font-medium text-primary hover:underline" >
+                      Sign up
+                    </NavLink >
         </p>
       </form>
       {/* <!-- OTP Modal (hidden by default) --> */}
