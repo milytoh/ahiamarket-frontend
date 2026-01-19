@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
+import { authService } from "../../services/authService";
 import type { LoginPayload } from "./authTypes";
 
 export const loginUser = createAsyncThunk(
