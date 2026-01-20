@@ -1,31 +1,26 @@
 import React from "react";
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  loginSchema,
-    
-  LoginFormData
-} from "@/utils/schemas/registrationSchema";
+import { loginSchema, LoginFormData } from "@/utils/schemas/registrationSchema";
 import { useApi } from "@/hooks/useApi";
 
 import InputForm from "./InputForm";
-import OtpForm from "./OtpForm"
+import OtpForm from "./OtpForm";
 
 import googlelogo from "@/assets/images/logos/google.jfif";
 import fblogo from "@/assets/images/logos/fb.jfif";
-import { email } from "zod";
 import { Link, NavLink } from "react-router-dom";
 
-
+import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { loginUser } from "@/features/auth/authThunk";
 
 interface LoginPayload {
-  
   email: string;
   password: string;
-  
 }
 
 interface LoginResponse {
@@ -35,46 +30,41 @@ interface LoginResponse {
 
 const LoginForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
-  
-
-  //using custom hook
-  // const { post, loading, error } = useApi<LoginPayload, LoginResponse>(
-  //   "http://localhost:3000/api/account/login"
-  // );
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { loading, error } = useAppSelector((state) => state.auth);
 
   // handling form and validation with Form hook and zod
   const {
     register,
     handleSubmit,
-    formState: { errors , isSubmitting },
+    formState: { errors, isSubmitting },
     watch,
     reset,
   } = useForm<LoginFormData>({
-   resolver: zodResolver(loginSchema),
-  
-    // mode: "onChange",
-    // reValidateMode: "onChange",
-  });
+    resolver: zodResolver(loginSchema),
 
+  });
 
   const showPasswordHandler = () => {
     setShowPassword((prev) => !prev);
   };
 
- 
   //// form submition
   const onSubmit = async (data: any) => {
-      console.log(data)
-      
-      const response = await post({
-          email: data?.email,
-          password: data?.password
-      });
+    console.log(data);
+   const result = await dispatch(
+     loginUser(data),
+   );
 
-      console.log(response)
-  }
+    
+    console.log(result)
 
+   if (loginUser.fulfilled.match(result)) {
+     navigate("/");
+   }
 
+  };
 
   return (
     <>
@@ -94,7 +84,6 @@ const LoginForm: React.FC = () => {
         )}
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-     
         <InputForm
           type="email"
           placeholder="Email Address"
@@ -102,7 +91,7 @@ const LoginForm: React.FC = () => {
           {...register("email")}
           error={errors.email?.message}
         />
-      
+
         <InputForm
           type={showPassword ? "text" : "password"}
           placeholder="Create Password"
@@ -136,7 +125,7 @@ const LoginForm: React.FC = () => {
         <div className="flex flex-col sm:flex-row gap-4">
           <button className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
             <img alt="Google logo" className="w-6 h-6 mr-3" src={googlelogo} />
-           Login with Google
+            Login with Google
           </button>
           <button className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
             <img alt="Facebook logo" className="w-6 h-6 mr-3" src={fblogo} />
@@ -145,14 +134,17 @@ const LoginForm: React.FC = () => {
         </div>
 
         <p className="text-sm text-center text-gray-500 dark:text-gray-400">
-         Don't have an account?
-           <NavLink to={"/signup"} className="font-medium text-primary hover:underline" >
-                      Sign up
-                    </NavLink >
+          Don't have an account?
+          <NavLink
+            to={"/signup"}
+            className="font-medium text-primary hover:underline"
+          >
+            Sign up
+          </NavLink>
         </p>
       </form>
       {/* <!-- OTP Modal (hidden by default) --> */}
-{/* 
+      {/* 
       {showOtp && <OtpForm onCloseOtForm={onCloseOtp} email={email } />} */}
     </>
   );
