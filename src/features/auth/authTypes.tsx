@@ -1,6 +1,7 @@
 export interface User {
   id: string;
   email: string;
+  token: string
 }
 
 export interface ApiError {
@@ -14,6 +15,7 @@ export interface AuthState {
   user: User | null;
   loading: boolean;
   error: ApiError | null;
+    isAuthenticated: boolean,
 }
 
 export interface LoginPayload {
