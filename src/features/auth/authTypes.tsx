@@ -3,14 +3,22 @@ export interface User {
   email: string;
 }
 
+export interface ApiError {
+  message: string;
+  errors?: { field: string; message: string }[];
+}
+
 export interface AuthState {
-  user: User | null;
+
   token: string | null;
+  user: User | null;
   loading: boolean;
-  error: string | null;
+  error: ApiError | null;
 }
 
 export interface LoginPayload {
   email: string;
   password: string;
 }
+
+

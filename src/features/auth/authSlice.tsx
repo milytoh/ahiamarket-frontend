@@ -1,38 +1,45 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { AuthState } from "./authTypes";
+import type { AuthState, User } from "./authTypes";
+import { loginUser } from "./authThunk";
+
+
+
 
 const initialState: AuthState = {
-  user: null,
+  user:null,
   token: null,
   loading: false,
   error: null,
 };
 
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    loginStart(state) {
-      state.loading = true;
-      state.error = null;
-    },
-    loginSuccess(state, action) {
-      state.loading = false;
-      state.user = action.payload.user;
-      state.token = action.payload.token;
-    },
-    loginFailure(state, action) {
-      state.loading = false;
-      state.error = action.payload;
-    },
-    logout(state) {
+    logout: (state) => {
       state.user = null;
-      state.token = null;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? null;
+      });
   },
 });
 
-export const { loginStart, loginSuccess, loginFailure, logout } =
+
+export const {  logout } =
   authSlice.actions;
 
 export default authSlice.reducer;
