@@ -1,4 +1,6 @@
-import { Link, NavLink } from "react-router-dom";
+import {  NavLink } from "react-router-dom";
+
+import { useAppSelector } from "@/store/hook";
 
 import { FaUserPlus } from "react-icons/fa6";
 import { HiOutlineUserAdd } from "react-icons/hi";
@@ -8,6 +10,12 @@ import { HiOutlineLogin } from "react-icons/hi";
 
 
 const NavbarBottom = () => {
+   const isAuthenticated = useAppSelector(
+     (state) => state.auth.isAuthenticated,
+  );
+  
+  
+
   return (
     <div>
       <div className="flex gap-2  fixed bottom-0 left-0 right-0  border-t border-[#e6f4f1] bg-[#f8fcfb] dark:bg-primary px-4 pb-3 pt-2">
@@ -75,7 +83,7 @@ const NavbarBottom = () => {
           </p>
         </NavLink>
 
-        <NavLink
+        {!isAuthenticated && <NavLink
           to={"/signup"}
           className={({ isActive }) =>
             isActive
@@ -88,7 +96,7 @@ const NavbarBottom = () => {
           <p className="text-primary dark:text-white text-xs font-medium leading-normal tracking-[0.015em]">
             Signup
           </p>
-        </NavLink>
+        </NavLink> }
       </div>
       <div className="h-5 bg-[#f8fcfb]"></div>
     </div>

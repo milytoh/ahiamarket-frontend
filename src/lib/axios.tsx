@@ -26,6 +26,11 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   response => response,
   error => {
+    // auto logout when token expire
+     if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+    }
     // Just pass the whole error through
     return Promise.reject(error);
   }

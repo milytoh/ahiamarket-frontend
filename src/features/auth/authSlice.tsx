@@ -3,14 +3,16 @@ import type { AuthState, User } from "./authTypes";
 import { loginUser } from "./authThunk";
 
 
+/// hydrated logic
+const token = localStorage.getItem("token");
 
 
 const initialState: AuthState = {
   user:null,
-  token: null,
+  token: token,
   loading: false,
   error: null,
-  isAuthenticated: false
+  isAuthenticated: !!token
 };
 
 
@@ -32,7 +34,8 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload;
         state.token = action.payload.token;
-        state.isAuthenticated = true
+        state.isAuthenticated = true;
+        localStorage.setItem("token", action.payload.token);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
