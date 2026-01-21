@@ -1,4 +1,6 @@
-import {  Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
+
 import Layout from "@/components/layout/Layout";
 import Home from "@/pages/Home";
 import ProductDetail from "@/pages/ProductDetail";
@@ -17,8 +19,12 @@ const AppRoutes = () => {
           <Route path="/product/detail/:id" element={<ProductDetail />} />
           <Route path="/signup" element={<RegistrationPage />} />
           <Route path="/login" element={<LoginPage />} />
+
+          <Route element={<ProtectedRoute />}>
+            {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+            {/* add more protected routes here */}
+          </Route>
         </Route>
-       
       </Routes>
     );
 }

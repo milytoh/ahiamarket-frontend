@@ -1,48 +1,55 @@
-import {  NavLink } from "react-router-dom";
+import { NavLink, replace } from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
 
 import { useAppSelector } from "@/store/hook";
+import { useAppDispatch } from "@/store/hook";
 
 import { FaUserPlus } from "react-icons/fa6";
 import { HiOutlineUserAdd } from "react-icons/hi";
 import { HiOutlineLogin } from "react-icons/hi";
+import { HiOutlineLogout } from "react-icons/hi";
+import { HiOutlineShoppingCart } from "react-icons/hi";
+import { HiOutlineHome } from "react-icons/hi";
 
 
 
+import { logout } from "@/features/auth/authSlice";
 
 const NavbarBottom = () => {
-   const isAuthenticated = useAppSelector(
-     (state) => state.auth.isAuthenticated,
-  );
-  
-  
+  const navigate = useNavigate();
+
+  const dispatch = useAppDispatch()
+
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+
+  const logoutHandler =  () => {
+
+ 
+    dispatch(logout());
+
+    navigate("/login")
+      
+      
+  };
 
   return (
     <div>
       <div className="flex gap-2  fixed bottom-0 left-0 right-0  border-t border-[#e6f4f1] bg-[#f8fcfb] dark:bg-primary px-4 pb-3 pt-2">
-        <a
-          className="just flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-[#0c1d19]"
-          href="#"
+        <NavLink
+          to={"/"}
+          className={({ isActive }) =>
+            isActive
+              ? "just flex flex-1 flex-col items-center justify-end gap-1 text-brand-orange"
+              : "just flex flex-1 flex-col items-center justify-end gap-1 text-primary"
+          }
         >
-          <div
-            className="text-[hsl(166,41%,8%)] flex h-8 items-center justify-center"
-            data-icon="House"
-            data-size="24px"
-            data-weight="fill"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24px"
-              height="24px"
-              fill="currentColor"
-              viewBox="0 0 256 256"
-            >
-              <path d="M224,115.55V208a16,16,0,0,1-16,16H168a16,16,0,0,1-16-16V168a8,8,0,0,0-8-8H112a8,8,0,0,0-8,8v40a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V115.55a16,16,0,0,1,5.17-11.78l80-75.48.11-.11a16,16,0,0,1,21.53,0,1.14,1.14,0,0,0,.11.11l80,75.48A16,16,0,0,1,224,115.55Z"></path>
-            </svg>
-          </div>
-          <p className="text-[#0c1d19] text-xs font-medium leading-normal tracking-[0.015em]">
+          <HiOutlineHome className="text-2xl" />
+
+          <p className="text-primary dark:text-white text-xs font-medium leading-normal tracking-[0.015em]">
             Home
           </p>
-        </a>
+        </NavLink>
         <a
           className="just flex flex-1 flex-col items-center justify-end gap-1 text-[#45a18b]"
           href="#"
@@ -64,39 +71,68 @@ const NavbarBottom = () => {
             </svg>
           </div>
           <p className="text-[#45a18b] dark:text-white text-xs font-medium leading-normal tracking-[0.015em]">
-            Shop
+            search
           </p>
         </a>
 
         <NavLink
-          to={"/login"}
+          to={"/cart"}
           className={({ isActive }) =>
             isActive
               ? "just flex flex-1 flex-col items-center justify-end gap-1 text-brand-orange"
               : "just flex flex-1 flex-col items-center justify-end gap-1 text-primary"
           }
         >
-          <HiOutlineLogin className="text-2xl" />
+          <HiOutlineShoppingCart className="text-2xl" />
 
           <p className="text-primary dark:text-white text-xs font-medium leading-normal tracking-[0.015em]">
-            Login
+            Cart
           </p>
         </NavLink>
 
-        {!isAuthenticated && <NavLink
-          to={"/signup"}
-          className={({ isActive }) =>
-            isActive
-              ? "just flex flex-1 flex-col items-center justify-end gap-1 text-brand-orange"
-              : "just flex flex-1 flex-col items-center justify-end gap-1 text-primary"
-          }
-        >
-          <HiOutlineUserAdd className="text-2xl" />
+        {!isAuthenticated && (
+          <NavLink
+            to={"/login"}
+            className={({ isActive }) =>
+              isActive
+                ? "just flex flex-1 flex-col items-center justify-end gap-1 text-brand-orange"
+                : "just flex flex-1 flex-col items-center justify-end gap-1 text-primary"
+            }
+          >
+            <HiOutlineLogin className="text-2xl" />
 
-          <p className="text-primary dark:text-white text-xs font-medium leading-normal tracking-[0.015em]">
-            Signup
-          </p>
-        </NavLink> }
+            <p className="text-primary dark:text-white text-xs font-medium leading-normal tracking-[0.015em]">
+              Login
+            </p>
+          </NavLink>
+        )}
+
+        {!isAuthenticated && (
+          <NavLink
+            to={"/signup"}
+            className={({ isActive }) =>
+              isActive
+                ? "just flex flex-1 flex-col items-center justify-end gap-1 text-brand-orange"
+                : "just flex flex-1 flex-col items-center justify-end gap-1 text-primary"
+            }
+          >
+            <HiOutlineUserAdd className="text-2xl" />
+
+            <p className="text-primary dark:text-white text-xs font-medium leading-normal tracking-[0.015em]">
+              Signup
+            </p>
+          </NavLink>
+        )}
+
+        {isAuthenticated && (
+          <div className="just flex flex-1 flex-col items-center justify-end gap-1 text-primary">
+            <HiOutlineLogout className="text-2xl" onClick={logoutHandler} />
+
+            <p className="text-primary dark:text-white text-xs font-medium leading-normal tracking-[0.015em]">
+              Logout
+            </p>
+          </div>
+        )}
       </div>
       <div className="h-5 bg-[#f8fcfb]"></div>
     </div>

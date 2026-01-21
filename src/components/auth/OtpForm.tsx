@@ -52,8 +52,6 @@ const OtpForm: react.FC<OtpData> = ({ onCloseOtForm, email }) => {
     console.log("check...");
     const otpDataArr = Object.values(data);
     
-  
-    
     const otpData = String(otpDataArr.join(""));
     console
     const response = await post({
@@ -61,7 +59,6 @@ const OtpForm: react.FC<OtpData> = ({ onCloseOtForm, email }) => {
       otp: otpData,
     });
 
-    console.log(response)
 
     if (!error) {
         navigate("/login", { replace: true });

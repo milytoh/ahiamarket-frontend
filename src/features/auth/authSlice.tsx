@@ -2,19 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { AuthState, User } from "./authTypes";
 import { loginUser } from "./authThunk";
 
-
 /// hydrated logic
 const token = localStorage.getItem("token");
 
-
 const initialState: AuthState = {
-  user:null,
+  user: null,
   token: token,
   loading: false,
   error: null,
-  isAuthenticated: !!token
+  isAuthenticated: !!token,
 };
-
 
 const authSlice = createSlice({
   name: "auth",
@@ -22,6 +19,10 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.user = null;
+      localStorage.removeItem("token");
+      state.token = null;
+      state.isAuthenticated = false;
+      state.loading = false;
     },
   },
   extraReducers: (builder) => {
@@ -44,8 +45,6 @@ const authSlice = createSlice({
   },
 });
 
-
-export const {  logout } =
-  authSlice.actions;
+export const { logout } = authSlice.actions;
 
 export default authSlice.reducer;

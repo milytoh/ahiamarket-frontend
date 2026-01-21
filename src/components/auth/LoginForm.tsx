@@ -57,14 +57,18 @@ const LoginForm: React.FC = () => {
      loginUser(data),
    );
 
-    
-    console.log(result)
 
    if (loginUser.fulfilled.match(result)) {
      navigate("/");
    }
 
   };
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+  };
+
+
 
   return (
     <>
@@ -123,7 +127,7 @@ const LoginForm: React.FC = () => {
           <hr className="flex-grow border-gray-300 dark:border-gray-600" />
         </div>
         <div className="flex flex-col sm:flex-row gap-4">
-          <button className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+          <button onClick={handleGoogleLogin} className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
             <img alt="Google logo" className="w-6 h-6 mr-3" src={googlelogo} />
             Login with Google
           </button>
