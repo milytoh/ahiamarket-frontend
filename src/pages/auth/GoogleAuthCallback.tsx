@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store/hook";
 import { setCredentials } from "@/features/auth/authSlice";
 
+import Spinner from "@/components/ui/Spinner";
+
 const GoogleAuthCallback = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -23,7 +25,12 @@ const GoogleAuthCallback = () => {
     navigate("/", { replace: true });
   }, []);
 
-  return <p>Signing you in...</p>;
+    return (
+      <div className="flex justify-center items-center">
+        Signing you in...
+        <Spinner size="lg" />
+      </div>
+    );
 };
 
 export default GoogleAuthCallback;

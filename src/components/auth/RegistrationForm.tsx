@@ -16,6 +16,7 @@ import OtpForm from "./OtpForm"
 import googlelogo from "@/assets/images/logos/google.jfif";
 import fblogo from "@/assets/images/logos/fb.jfif";
 import { Link, NavLink } from "react-router-dom";
+import Spinner from "../ui/Spinner";
 
 
 
@@ -110,6 +111,12 @@ const RegistrationForm: React.FC = () => {
   const onCloseOtp = () =>{
     setShowOtp((pre) => false)
   }
+
+  // google auth redirect url
+  const handleGoogleSignup = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/account/auth/google`;
+  };
+
 
 
 
@@ -226,7 +233,14 @@ const RegistrationForm: React.FC = () => {
           } text-white font-bold py-4 px-4 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-background-dark transition duration-300 ease-in-out`}
           type="submit"
         >
-          Create Account
+          {loading && (
+            <div className="flex justify-center items-center">
+              {" "}
+              <Spinner size="md" />{" "}
+            </div>
+          )}
+
+          {!loading && <p> Create Account </p>}
         </button>
         {/* or signup width google */}
         {/* <div className="flex flex-col "> 
@@ -241,7 +255,10 @@ const RegistrationForm: React.FC = () => {
           <hr className="flex-grow border-gray-300 dark:border-gray-600" />
         </div>
         <div className="flex flex-col sm:flex-row gap-4">
-          <button className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+          <button
+            onClick={handleGoogleSignup}
+            className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
             <img alt="Google logo" className="w-6 h-6 mr-3" src={googlelogo} />
             Sign up with Google
           </button>
@@ -253,14 +270,17 @@ const RegistrationForm: React.FC = () => {
 
         <p className="text-sm text-center text-gray-500 dark:text-gray-400">
           Already have an account?
-          <NavLink to={"/login"} className="font-medium text-primary hover:underline" >
+          <NavLink
+            to={"/login"}
+            className="font-medium text-primary hover:underline"
+          >
             Sign In
-          </NavLink >
+          </NavLink>
         </p>
       </form>
       {/* <!-- OTP Modal (hidden by default) --> */}
 
-      {showOtp && <OtpForm onCloseOtForm={onCloseOtp} email={email } />}
+      {showOtp && <OtpForm onCloseOtForm={onCloseOtp} email={email} />}
     </>
   );
 };

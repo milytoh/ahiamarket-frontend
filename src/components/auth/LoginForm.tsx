@@ -10,6 +10,7 @@ import { useApi } from "@/hooks/useApi";
 
 import InputForm from "./InputForm";
 import OtpForm from "./OtpForm";
+import Spinner from "../ui/Spinner";
 
 import googlelogo from "@/assets/images/logos/google.jfif";
 import fblogo from "@/assets/images/logos/fb.jfif";
@@ -43,7 +44,6 @@ const LoginForm: React.FC = () => {
     reset,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
-
   });
 
   const showPasswordHandler = () => {
@@ -53,22 +53,17 @@ const LoginForm: React.FC = () => {
   //// form submition
   const onSubmit = async (data: any) => {
     console.log(data);
-   const result = await dispatch(
-     loginUser(data),
-   );
+    const result = await dispatch(loginUser(data));
 
-
-   if (loginUser.fulfilled.match(result)) {
-     navigate("/");
-   }
-
+    if (loginUser.fulfilled.match(result)) {
+      navigate("/");
+    }
   };
 
+  // google auth redirect url
   const handleGoogleLogin = () => {
     window.location.href = `${import.meta.env.VITE_API_URL}/account/auth/google`;
   };
-
-
 
   return (
     <>
@@ -112,7 +107,14 @@ const LoginForm: React.FC = () => {
           } text-white font-bold py-4 px-4 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-background-dark transition duration-300 ease-in-out`}
           type="submit"
         >
-          Login
+          {loading && (
+            <div className="flex justify-center items-center">
+              {" "}
+              <Spinner size="md" />{" "}
+            </div>
+          )}
+
+          {!loading && <p> Login</p>}
         </button>
         {/* or signup width google */}
         {/* <div className="flex flex-col "> 
@@ -127,7 +129,10 @@ const LoginForm: React.FC = () => {
           <hr className="flex-grow border-gray-300 dark:border-gray-600" />
         </div>
         <div className="flex flex-col sm:flex-row gap-4">
-          <button onClick={handleGoogleLogin} className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+          <button
+            onClick={handleGoogleLogin}
+            className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
             <img alt="Google logo" className="w-6 h-6 mr-3" src={googlelogo} />
             Login with Google
           </button>
