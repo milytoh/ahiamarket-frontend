@@ -65,7 +65,7 @@ const LoginForm: React.FC = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+    window.location.href = `${import.meta.env.VITE_API_URL}/account/auth/google`;
   };
 
 
@@ -93,7 +93,7 @@ const LoginForm: React.FC = () => {
           placeholder="Email Address"
           label=" Email Address"
           {...register("email")}
-          error={errors.email?.message}
+          // error={errors.email?.message}
         />
 
         <InputForm
@@ -101,7 +101,7 @@ const LoginForm: React.FC = () => {
           placeholder="Create Password"
           label="Password"
           {...register("password")}
-          error={errors.password?.message}
+          // error={errors.password?.message}
           onShowPwd={showPasswordHandler}
           showpwd={showPassword}
         />
