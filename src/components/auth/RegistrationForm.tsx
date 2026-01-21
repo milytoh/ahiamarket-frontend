@@ -242,10 +242,7 @@ const RegistrationForm: React.FC = () => {
 
           {!loading && <p> Create Account </p>}
         </button>
-        {/* or signup width google */}
-        {/* <div className="flex flex-col "> 
-          <
-        </ div> */}
+          
 
         <div className="flex items-center gap-4">
           <hr className="flex-grow border-gray-300 dark:border-gray-600" />

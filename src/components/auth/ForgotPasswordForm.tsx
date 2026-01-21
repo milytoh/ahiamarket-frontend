@@ -29,7 +29,7 @@ interface LoginResponse {
   message: string;
 }
 
-const LoginForm: React.FC = () => {
+const ForgotPasswordForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -55,9 +55,7 @@ const LoginForm: React.FC = () => {
     console.log(data);
     const result = await dispatch(loginUser(data));
 
-    if (loginUser.fulfilled.match(result)) {
-      navigate("/");
-    }
+    
   };
 
   // google auth redirect url
@@ -91,15 +89,7 @@ const LoginForm: React.FC = () => {
           // error={errors.email?.message}
         />
 
-        <InputForm
-          type={showPassword ? "text" : "password"}
-          placeholder="Create Password"
-          label="Password"
-          {...register("password")}
-          // error={errors.password?.message}
-          onShowPwd={showPasswordHandler}
-          showpwd={showPassword}
-        />
+       
 
         <button
           className={`w-full ${
@@ -116,52 +106,13 @@ const LoginForm: React.FC = () => {
 
           {!loading && <p> Login</p>}
         </button>
-       <p className="text-sm text-center text-gray-500 dark:text-gray-400">
-                 
-                 <NavLink
-                   to={"/forgotpassword"}
-                   className="font-medium text-primary hover:underline"
-                 >
-                   Forgot Password?
-                 </NavLink>
-               </p>
+     
+       
 
-        <div className="flex items-center gap-4">
-          <hr className="flex-grow border-gray-300 dark:border-gray-600" />
-          <span className="text-gray-500 dark:text-gray-400 text-sm">
-            Or Login with
-          </span>
-          <hr className="flex-grow border-gray-300 dark:border-gray-600" />
-        </div>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <button
-            onClick={handleGoogleLogin}
-            className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-          >
-            <img alt="Google logo" className="w-6 h-6 mr-3" src={googlelogo} />
-            Login with Google
-          </button>
-          <button className="flex items-center justify-center flex-1 min-w-0 resize-none overflow-hidden rounded-lg bg-white dark:bg-gray-800 h-12 p-4 text-base font-medium leading-normal text-text-light dark:text-text-dark border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-            <img alt="Facebook logo" className="w-6 h-6 mr-3" src={fblogo} />
-            Login with Facebook
-          </button>
-        </div>
-
-        <p className="text-sm text-center text-gray-500 dark:text-gray-400">
-          Don't have an account?
-          <NavLink
-            to={"/signup"}
-            className="font-medium text-primary hover:underline"
-          >
-            Sign up
-          </NavLink>
-        </p>
       </form>
-      {/* <!-- OTP Modal (hidden by default) --> */}
-      {/* 
-      {showOtp && <OtpForm onCloseOtForm={onCloseOtp} email={email } />} */}
+     
     </>
   );
 };
 
-export default LoginForm;
+export default ForgotPasswordForm;
