@@ -2,12 +2,11 @@ import React from "react";
 
 import { useState } from "react";
 
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  forgotpasswordSchema,
-  ForgotPasswordData,
+  restPasswordSchema,
+  ResetPasswordData,
 } from "@/utils/schemas/registrationSchema";
 
 import { useApi } from "@/hooks/useApi";
@@ -17,7 +16,6 @@ import Spinner from "../ui/Spinner";
 
 interface PRequestPayload {
   email: string;
- 
 }
 
 interface Response {
@@ -25,28 +23,37 @@ interface Response {
   message: string;
 }
 
-const ForgotPasswordForm: React.FC = () => {
-    const [successMsg, setSuccessMsg]  = useState<string | null>(null)
- 
+interface ResetPassword {
+  id: string | null,
+  token: string | null
+}
+
+const ResetPasswordForm: React.FC<ResetPassword> = () => {
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+
   //using custom hook
-   const { post, loading, error } = useApi<PRequestPayload, Response>(
-     `${import.meta.env.VITE_API_URL}/account/request-password-reset`,
-   );
+  const { post, loading, error } = useApi<PRequestPayload, Response>(
+    `${import.meta.env.VITE_API_URL}/account/request-password-reset`,
+  );
 
   // handling form and validation with Form hook and zod
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<ForgotPasswordData>({
-    resolver: zodResolver(forgotpasswordSchema),
+  } = useForm<ResetPasswordData>({
+    resolver: zodResolver(restPasswordSchema),
   });
 
+  const showPasswordHandler = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   //// form submition
-    const onSubmit = async (data: any) => {
-        const response = await post(data);
-        setSuccessMsg((prev) => response.message)
-  
+  const onSubmit = async (data: any) => {
+    const response = await post(data);
+    setSuccessMsg((prev) => response.message);
   };
 
   return (
@@ -71,11 +78,13 @@ const ForgotPasswordForm: React.FC = () => {
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <InputForm
-          type="email"
-          placeholder="Email Address"
-          label=" Email Address"
-          {...register("email")}
-          error={errors.email?.message}
+          type={showPassword ? "text" : "password"}
+          placeholder="Create Password"
+          label="Password"
+          {...register("password")}
+          // error={errors.password?.message}
+          onShowPwd={showPasswordHandler}
+          showpwd={showPassword}
         />
 
         <button
@@ -91,11 +100,11 @@ const ForgotPasswordForm: React.FC = () => {
             </div>
           )}
 
-          {!loading && <p> Request</p>}
+          {!loading && <p> Confirm</p>}
         </button>
       </form>
     </>
   );
 };
 
-export default ForgotPasswordForm;
+export default ResetPasswordForm;

@@ -35,7 +35,24 @@ export const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(3, "password should be above 3 character")
 });
+
+export const forgotpasswordSchema = z.object({
+  email: z.string().email("Invalid email address"),
+});
+
+export const restPasswordSchema = z.object({
+  password: z
+    .string()
+    .min(8, "password must must be up to 8 characters")
+    .regex(/[A-Z]/, "Must include uppercase letter")
+    .regex(/[0-9]/, "Must include number")
+    .regex(/[^A-Za-z0-9]/, "Must include special character"),
+});
+
+
 // Auto-infer TypeScript type
 export type RegisterFormData = z.infer<typeof registerSchema>;
 export type OtpFormData = z.infer<typeof otpSchema>
 export type LoginFormData = z.infer<typeof loginSchema>
+export type ForgotPasswordData = z.infer<typeof forgotpasswordSchema>
+export type ResetPasswordData = z.infer<typeof restPasswordSchema>;
