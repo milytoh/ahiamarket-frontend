@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,13 +29,15 @@ interface ResetPassword {
   token: string | null
 }
 
-const ResetPasswordForm: React.FC<ResetPassword> = () => {
+const ResetPasswordForm: React.FC<ResetPassword> = ({id,token}) => {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
+  const navigate = useNavigate();
+
   //using custom hook
-  const { post, loading, error } = useApi<PRequestPayload, Response>(
-    `${import.meta.env.VITE_API_URL}/account/request-password-reset`,
+  const { patch, loading, error } = useApi<PRequestPayload, Response>(
+    `${import.meta.env.VITE_API_URL}/account/resetPassword?id=${id}&token=${token}`,
   );
 
   // handling form and validation with Form hook and zod
@@ -52,8 +55,13 @@ const ResetPasswordForm: React.FC<ResetPassword> = () => {
 
   //// form submition
   const onSubmit = async (data: any) => {
-    const response = await post(data);
+    const response = await patch(data);
     setSuccessMsg((prev) => response.message);
+
+    if (!error) {
+       navigate("/login", { replace: true });
+    }
+
   };
 
   return (
@@ -82,7 +90,7 @@ const ResetPasswordForm: React.FC<ResetPassword> = () => {
           placeholder="Create Password"
           label="Password"
           {...register("password")}
-          // error={errors.password?.message}
+          error={errors.password?.message}
           onShowPwd={showPasswordHandler}
           showpwd={showPassword}
         />
