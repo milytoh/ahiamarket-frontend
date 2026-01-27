@@ -277,7 +277,7 @@ const RegistrationForm: React.FC = () => {
       </form>
       {/* <!-- OTP Modal (hidden by default) --> */}
 
-      {showOtp && <OtpForm onCloseOtForm={onCloseOtp} email={email} />}
+      {showOtp && <OtpForm onCloseOtForm={onCloseOtp} email={email} naviTo="login"/>}
     </>
   );
 };

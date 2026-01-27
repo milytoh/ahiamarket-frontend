@@ -9,10 +9,12 @@ import { useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { otpSchema, OtpFormData } from "@/utils/schemas/registrationSchema";
+import Spinner from "../ui/Spinner";
 
 interface OtpData {
   onCloseOtForm: () => void;
-  email: string
+  email: string,
+  naviTo?: string
 }
 
 interface RegisterResponse {
@@ -25,7 +27,7 @@ interface OtpDataPlayload {
   otp: string;
 }
 
-const OtpForm: react.FC<OtpData> = ({ onCloseOtForm, email }) => {
+const OtpForm: react.FC<OtpData> = ({ onCloseOtForm, email, naviTo }) => {
   const navigate = useNavigate()
  
   //using custom hook
@@ -53,16 +55,23 @@ const OtpForm: react.FC<OtpData> = ({ onCloseOtForm, email }) => {
     const otpDataArr = Object.values(data);
     
     const otpData = String(otpDataArr.join(""));
-    console
+
+    console.log(email, "gggggggggg")
+    
     const response = await post({
       email: email,
       otp: otpData,
     });
 
 
-    if (!error) {
-        navigate("/login", { replace: true });
+    if (!error && naviTo=== "login") {
+      return  navigate("/login", { replace: true });
     }
+
+    if (!error && naviTo === "home") {
+       onCloseOtForm()
+       return navigate("/login", { replace: true });
+     }
 
   };
 
@@ -77,7 +86,7 @@ const OtpForm: react.FC<OtpData> = ({ onCloseOtForm, email }) => {
             Verify Your Email
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            We've sent a One-Time Password to your email. Please enter it below.
+            We've sent a code to your email. Please enter it below.
           </p>
           {/* error message */}
           <div className="mb-6 -mt-6 flex flex-col justify-center items-center">
@@ -108,7 +117,13 @@ const OtpForm: react.FC<OtpData> = ({ onCloseOtForm, email }) => {
             type="submit"
             className="w-full bg-primary text-white font-bold py-3 px-4 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-background-dark transition duration-300 ease-in-out"
           >
-            Verify
+            {loading && (
+              <div className="flex justify-center items-center">
+                {" "}
+                <Spinner size="md" />{" "}
+              </div>
+            )}
+            {!loading && <p> Verify</p>}
           </button>
           <button
             className="mt-4 text-sm text-gray-500 dark:text-gray-400 hover:underline"

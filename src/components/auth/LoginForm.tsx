@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useForm } from "react-hook-form";
@@ -11,6 +11,7 @@ import { useApi } from "@/hooks/useApi";
 import InputForm from "./InputForm";
 import OtpForm from "./OtpForm";
 import Spinner from "../ui/Spinner";
+
 
 import googlelogo from "@/assets/images/logos/google.jfif";
 import fblogo from "@/assets/images/logos/fb.jfif";
@@ -31,6 +32,8 @@ interface LoginResponse {
 
 const LoginForm: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showOtpForm, setShowOtpForm] = useState(false);
+  const [email, setEmail] = useState<string>("");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { loading, error } = useAppSelector((state) => state.auth);
@@ -52,17 +55,40 @@ const LoginForm: React.FC = () => {
 
   //// form submition
   const onSubmit = async (data: any) => {
-    console.log(data);
     const result = await dispatch(loginUser(data));
-
+  
+      setEmail(data.email);
+    
     if (loginUser.fulfilled.match(result)) {
       navigate("/");
     }
   };
 
+  
   // google auth redirect url
   const handleGoogleLogin = () => {
     window.location.href = `${import.meta.env.VITE_API_URL}/account/auth/google`;
+  };
+
+  // if (error && error?.message === "please verify your email to continue") {
+  //   setShowOtpForm((pre) =>  true)
+  // }
+
+  useEffect(() => {
+    if (
+      error?.message === "please verify your email to continue" 
+      
+    ) {
+      setShowOtpForm(true);
+    }
+  }, [error]);
+
+
+  
+
+  //hide otp form
+  const onCloseOtp = () => {
+    setShowOtpForm((pre) => false);
   };
 
   return (
@@ -116,15 +142,16 @@ const LoginForm: React.FC = () => {
 
           {!loading && <p> Login</p>}
         </button>
-       <p className="text-sm text-center text-gray-500 dark:text-gray-400">
-                 
-                 <NavLink
-                   to={"/forgotpassword"}
-                   className="font-medium text-primary hover:underline"
-                 >
-                   Forgot Password?
-                 </NavLink>
-               </p>
+        <p className="text-sm text-center text-gray-500 dark:text-gray-400">
+          <NavLink
+            to={"/forgotpassword"}
+            className="font-medium text-primary hover:underline"
+          >
+            Forgot Password?
+          </NavLink>
+        </p>
+
+    
 
         <div className="flex items-center gap-4">
           <hr className="flex-grow border-gray-300 dark:border-gray-600" />
@@ -158,10 +185,10 @@ const LoginForm: React.FC = () => {
         </p>
       </form>
       {/* <!-- OTP Modal (hidden by default) --> */}
-      {/* 
-      {showOtp && <OtpForm onCloseOtForm={onCloseOtp} email={email } />} */}
+
+      {showOtpForm && <OtpForm onCloseOtForm={onCloseOtp} email={email} naviTo="home"/>}
     </>
   );
-};
+};;
 
 export default LoginForm;
