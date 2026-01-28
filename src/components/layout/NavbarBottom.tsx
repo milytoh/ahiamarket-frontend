@@ -6,11 +6,15 @@ import { useAppSelector } from "@/store/hook";
 import { useAppDispatch } from "@/store/hook";
 
 import { FaUserPlus } from "react-icons/fa6";
-import { HiOutlineUserAdd } from "react-icons/hi";
-import { HiOutlineLogin } from "react-icons/hi";
-import { HiOutlineLogout } from "react-icons/hi";
-import { HiOutlineShoppingCart } from "react-icons/hi";
-import { HiOutlineHome } from "react-icons/hi";
+import {
+  HiOutlineUserAdd,
+  HiOutlineLogin,
+  HiOutlineLogout,
+  HiOutlineShoppingCart,
+  HiOutlineHome,
+  HiOutlineUserCircle,
+} from "react-icons/hi";
+
 
 
 
@@ -75,21 +79,6 @@ const NavbarBottom = () => {
           </p>
         </a>
 
-        <NavLink
-          to={"/cart"}
-          className={({ isActive }) =>
-            isActive
-              ? "just flex flex-1 flex-col items-center justify-end gap-1 text-brand-orange"
-              : "just flex flex-1 flex-col items-center justify-end gap-1 text-primary"
-          }
-        >
-          <HiOutlineShoppingCart className="text-2xl" />
-
-          <p className="text-primary dark:text-white text-xs font-medium leading-normal tracking-[0.015em]">
-            Cart
-          </p>
-        </NavLink>
-
         {!isAuthenticated && (
           <NavLink
             to={"/login"}
@@ -132,6 +121,23 @@ const NavbarBottom = () => {
               Logout
             </p>
           </div>
+        )}
+
+        {isAuthenticated && (
+          <NavLink
+            to={"/profile"}
+            className={({ isActive }) =>
+              isActive
+                ? "just flex flex-1 flex-col items-center justify-end gap-1 text-brand-orange"
+                : "just flex flex-1 flex-col items-center justify-end gap-1 text-primary"
+            }
+          >
+            <HiOutlineUserCircle className="text-2xl" />
+
+            <p className="text-primary dark:text-white text-xs font-medium leading-normal tracking-[0.015em]">
+              Profile
+            </p>
+          </NavLink>
         )}
       </div>
       <div className="h-5 bg-[#f8fcfb]"></div>

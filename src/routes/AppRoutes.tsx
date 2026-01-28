@@ -9,6 +9,7 @@ import LoginPage from "@/pages/auth/Login";
 import GoogleAuthCallback from "@/pages/auth/GoogleAuthCallback";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
+import Profile from "@/pages/profile/ProfileCheck"
 
 
 
@@ -25,6 +26,8 @@ const AppRoutes = () => {
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           <Route path="/account/request-password-reset" element={<ResetPassword />} />
           <Route path="/auth/callback" element={<GoogleAuthCallback />} />
+          <Route path="/profile" element={<Profile />} />
+
 
 
           <Route element={<ProtectedRoute />}>
