@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
-import MobileNav from "./components/MobileNav";
-import ProfileHero from "./components/ProfileHero";
-import StatsCards from "./components/StatsCards";
-import PersonalInfo from "./components/PersonalInfo";
-import TrustScore from "./components/TrustScore";
-import DeliveryAddresses from "./components/DeliveryAddresses";
-import WalletCTA from "./components/WalletCTA";
+
+import Header from "@/components/profile/Header";
+
+import Sidebar from "@/components/profile/SideBer";
+import MobileNav from "@/components/profile/MobileNav";
+import ProfileHero from "@/components/profile/ProfileHero";
+import StatsCards from "@/components/profile/StatsCards";
+
+
+import PersonalInfo from "@/components/profile/Personalinfo";
+import TrustScore from "@/components/profile/Trustscore";
+import DeliveryAddresses from "@/components/profile/Deliveryaddresses";
+import WalletCTA from "@/components/profile/Walletcta";
 
 const Profile: React.FC = () => {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);

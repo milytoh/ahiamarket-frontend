@@ -9,7 +9,7 @@ import LoginPage from "@/pages/auth/Login";
 import GoogleAuthCallback from "@/pages/auth/GoogleAuthCallback";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
-import Profile from "@/pages/profile/ProfileCheck"
+import Profile from "@/pages/profile/Profile";
 
 
 
