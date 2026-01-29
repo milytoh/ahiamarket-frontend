@@ -1,7 +1,8 @@
 import React from "react";
+import { MdPayments, MdStars, MdCalendarToday } from "react-icons/md";
 
 interface TrustScoreItem {
-  icon: string;
+  icon: React.ReactNode;
   label: string;
   value: string;
   isPrimary: boolean;
@@ -10,19 +11,19 @@ interface TrustScoreItem {
 const TrustScore: React.FC = () => {
   const items: TrustScoreItem[] = [
     {
-      icon: "payments",
+      icon: <MdPayments className="text-xl" />,
       label: "Payment History",
       value: "Excellent",
       isPrimary: true,
     },
     {
-      icon: "stars",
+      icon: <MdStars className="text-xl" />,
       label: "Review Authenticity",
       value: "98% Positive",
       isPrimary: true,
     },
     {
-      icon: "calendar_today",
+      icon: <MdCalendarToday className="text-xl" />,
       label: "Account Tenure",
       value: "6 Months",
       isPrimary: false,
@@ -41,9 +42,7 @@ const TrustScore: React.FC = () => {
           <div key={index} className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <div className="size-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary shrink-0">
-                <span className="material-symbols-outlined text-[20px]">
-                  {item.icon}
-                </span>
+                {item.icon}
               </div>
               <p className="text-charcoal/80 text-sm font-bold">{item.label}</p>
             </div>

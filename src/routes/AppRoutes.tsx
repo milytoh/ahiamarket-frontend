@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 
 import Layout from "@/components/layout/Layout";
+import ProfileLayout from "@/components/layout/ProfileLayout";
 import Home from "@/pages/Home";
 import ProductDetail from "@/pages/ProductDetail";
 import RegistrationPage from "@/pages/auth/Registration";
@@ -11,32 +12,36 @@ import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import Profile from "@/pages/profile/Profile";
 
-
-
 const AppRoutes = () => {
-    
-    return (
-      <Routes>
-        {/* app layout */}
-        <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/product/detail/:id" element={<ProductDetail />} />
-          <Route path="/signup" element={<RegistrationPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/forgotpassword" element={<ForgotPassword />} />
-          <Route path="/account/request-password-reset" element={<ResetPassword />} />
-          <Route path="/auth/callback" element={<GoogleAuthCallback />} />
-          <Route path="/profile" element={<Profile />} />
+  return (
+    <Routes>
+      {/* app layout */}
+      <Route element={<Layout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/product/detail/:id" element={<ProductDetail />} />
+        <Route path="/signup" element={<RegistrationPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
+        <Route
+          path="/account/request-password-reset"
+          element={<ResetPassword />}
+        />
+        <Route path="/auth/callback" element={<GoogleAuthCallback />} />
+        <Route path="/profile" element={<Profile />} />
 
-
-
-          <Route element={<ProtectedRoute />}>
-            {/* <Route path="/dashboard" element={<Dashboard />} /> */}
-            {/* add more protected routes here */}
-          </Route>
+        <Route element={<ProtectedRoute />}>
+          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+          {/* add more protected routes here */}
         </Route>
-      </Routes>
-    );
-}
+      </Route>
 
-export default AppRoutes
+      {/* profile layout */}
+      
+      <Route path="/profile" element={<ProfileLayout />}>
+         <Route index element={<Profile />} />
+      </Route>
+    </Routes>
+  );
+};
+
+export default AppRoutes;

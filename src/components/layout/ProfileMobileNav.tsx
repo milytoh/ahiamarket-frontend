@@ -32,7 +32,7 @@ const NavItem = ({ icon, label, onClick }: NavItemProps) => (
   </button>
 );
 
-const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
+const ProfileMobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
 
@@ -179,4 +179,4 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default MobileNav;
+export default ProfileMobileNav;

@@ -1,4 +1,10 @@
 import React from "react";
+import {
+  HiOutlineBars3,
+  HiOutlineMagnifyingGlass,
+  HiOutlineBell,
+  HiOutlineShoppingCart,
+} from "react-icons/hi2";
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -7,6 +13,7 @@ interface HeaderProps {
 const ProfileHeader: React.FC<HeaderProps> = ({ onMenuClick }) => {
   return (
     <header className="flex items-center justify-between whitespace-nowrap border-b border-slate-100 bg-white px-4 md:px-8 py-4 sticky top-0 z-50 shadow-sm">
+      {/* LEFT */}
       <div className="flex items-center gap-4 lg:gap-12">
         <div className="flex items-center gap-3 text-primary">
           <button
@@ -14,9 +21,10 @@ const ProfileHeader: React.FC<HeaderProps> = ({ onMenuClick }) => {
             onClick={onMenuClick}
             aria-label="Open menu"
           >
-            <span className="material-symbols-outlined text-[24px]">menu</span>
+            <HiOutlineBars3 className="w-6 h-6" />
           </button>
 
+          {/* LOGO */}
           <div className="size-9 shrink-0">
             <svg
               fill="none"
@@ -29,18 +37,19 @@ const ProfileHeader: React.FC<HeaderProps> = ({ onMenuClick }) => {
               />
             </svg>
           </div>
+
           <h2 className="text-charcoal text-xl font-extrabold leading-tight tracking-tight hidden sm:block">
             AhiaMarket
           </h2>
         </div>
 
+        {/* SEARCH */}
         <div className="hidden md:flex items-center w-full max-w-md h-11">
           <div className="flex w-full items-stretch rounded-xl h-full bg-slate-100 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
             <div className="text-slate-400 flex items-center justify-center pl-4">
-              <span className="material-symbols-outlined text-[20px]">
-                search
-              </span>
+              <HiOutlineMagnifyingGlass className="w-5 h-5" />
             </div>
+
             <input
               className="form-input w-full border-none bg-transparent h-full placeholder:text-slate-400 px-4 pl-2 text-sm font-normal focus:ring-0"
               placeholder="Search products, orders or help..."
@@ -49,41 +58,32 @@ const ProfileHeader: React.FC<HeaderProps> = ({ onMenuClick }) => {
         </div>
       </div>
 
+      {/* RIGHT */}
       <div className="flex items-center gap-3 lg:gap-6">
         <nav className="hidden xl:flex items-center gap-6">
-          <a
-            className="text-charcoal/70 text-sm font-semibold hover:text-primary transition-colors"
-            href="#"
-          >
+          <a className="text-charcoal/70 text-sm font-semibold hover:text-primary transition-colors">
             Marketplace
           </a>
-          <a
-            className="text-charcoal/70 text-sm font-semibold hover:text-primary transition-colors"
-            href="#"
-          >
+          <a className="text-charcoal/70 text-sm font-semibold hover:text-primary transition-colors">
             Help
           </a>
-          <a
-            className="text-charcoal/70 text-sm font-semibold hover:text-primary transition-colors"
-            href="#"
-          >
+          <a className="text-charcoal/70 text-sm font-semibold hover:text-primary transition-colors">
             Support
           </a>
         </nav>
 
+        {/* ICON BUTTONS */}
         <div className="flex gap-2 sm:gap-3 md:border-l border-slate-100 md:pl-6">
           <button className="flex items-center justify-center rounded-xl h-10 w-10 bg-slate-50 text-charcoal/60 hover:text-primary hover:bg-primary/5 transition-all">
-            <span className="material-symbols-outlined text-[22px]">
-              notifications
-            </span>
+            <HiOutlineBell className="w-[22px] h-[22px]" />
           </button>
+
           <button className="flex items-center justify-center rounded-xl h-10 w-10 bg-slate-50 text-charcoal/60 hover:text-primary hover:bg-primary/5 transition-all">
-            <span className="material-symbols-outlined text-[22px]">
-              shopping_cart
-            </span>
+            <HiOutlineShoppingCart className="w-[22px] h-[22px]" />
           </button>
         </div>
 
+        {/* AVATAR */}
         <div
           className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-slate-100 ring-2 ring-transparent hover:ring-primary/20 transition-all cursor-pointer shrink-0"
           style={{
