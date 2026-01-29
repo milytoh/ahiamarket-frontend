@@ -5,16 +5,23 @@ import {
   HiOutlineWallet,
   HiOutlineHeart,
   HiOutlineCog6Tooth,
+  
 } from "react-icons/hi2";
+
+import {
+  
+  HiOutlineLogout,
+  
+} from "react-icons/hi";
 
 const ProfileSidebar: React.FC = () => {
   return (
     <aside
       className="
-        hidden lg:flex w-72 flex-col
+        hidden lg:flex w-72 flex-col 
         bg-white p-6 border-r border-slate-100
-        sticky top-[76px]
-        h-[calc(100vh-76px)]
+        sticky top-0
+        h-[calc(100vh)]
         shrink-0
       "
     >
@@ -69,6 +76,16 @@ const ProfileSidebar: React.FC = () => {
           </button>
         </div>
       </div>
+      <button
+        onClick={() => {
+         
+          // logout logic
+        }}
+        className="flex items-center justify-center gap-3 w-full px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition"
+      >
+        <HiOutlineLogout className="text-xl" />
+        <span className="text-sm font-semibold">Logout</span>
+      </button>
     </aside>
   );
 };
