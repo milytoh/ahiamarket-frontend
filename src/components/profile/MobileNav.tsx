@@ -1,46 +1,84 @@
 import React, { useEffect } from "react";
+import {
+  HiOutlineUser,
+  HiOutlineLogout,
+  HiOutlineShoppingBag,
+  HiOutlineHeart,
+  HiOutlineCog,
+  HiOutlineHome,
+  HiOutlineSupport,
+} from "react-icons/hi";
 
 interface MobileNavProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+
+interface NavItemProps {
+  icon: React.ReactNode;
+  label: string;
+  onClick?: () => void;
+}
+
+const NavItem = ({ icon, label, onClick }: NavItemProps) => (
+  <button
+    onClick={onClick}
+    className="flex items-center gap-3 w-full px-4 py-3 rounded-xl
+    text-slate-500 hover:bg-slate-50 hover:text-charcoal transition"
+  >
+    <span className="text-xl">{icon}</span>
+    <span className="text-sm font-semibold">{label}</span>
+  </button>
+);
+
 const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
   useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+
     if (isOpen) {
       document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
     }
-    return () => {
-      document.body.style.overflow = "unset";
+
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
     };
-  }, [isOpen]);
+
+    document.addEventListener("keydown", handleEsc);
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, [isOpen, onClose]);
 
   return (
     <>
       {/* Backdrop */}
-      <div
-        className={`fixed inset-0 bg-black/50 z-[60] lg:hidden transition-opacity duration-300 ${
-          isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
-        onClick={onClose}
-      />
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-[60] lg:hidden"
+          onClick={onClose}
+        />
+      )}
 
-      {/* Slide-in Menu */}
-      <div
-        className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white z-[70] lg:hidden transform transition-transform duration-300 ease-in-out shadow-2xl ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+      {/* Drawer */}
+      <aside
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!isOpen}
+        className={`fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-white z-[70] lg:hidden
+        transform transition-transform duration-300 ease-in-out shadow-2xl
+        ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-slate-100">
+          <header className="flex items-center justify-between p-6 border-b border-slate-100">
             <div className="flex items-center gap-3 text-primary">
-              <div className="size-8 shrink-0">
+              <div className="size-8">
                 <svg
-                  fill="none"
                   viewBox="0 0 48 48"
+                  fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -49,164 +87,94 @@ const MobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
                   />
                 </svg>
               </div>
-              <h2 className="text-charcoal text-lg font-extrabold">
+              <h2 className="text-lg font-extrabold text-charcoal">
                 AhiaMarket
               </h2>
             </div>
+
             <button
               onClick={onClose}
-              className="p-2 -mr-2 text-charcoal/60 hover:text-charcoal transition-colors"
               aria-label="Close menu"
+              className="p-2 text-charcoal/60 hover:text-charcoal"
             >
-              <span className="material-symbols-outlined text-[24px]">
-                close
-              </span>
+              ✕
             </button>
-          </div>
+          </header>
 
-          {/* Profile Section */}
-          <div className="p-6 border-b border-slate-100">
+          {/* Profile */}
+          <section className="p-6 border-b border-slate-100">
             <div className="flex items-center gap-4">
               <div
-                className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-14 border-2 border-primary shadow-sm shrink-0"
+                className="size-14 rounded-full bg-cover bg-center border-2 border-primary"
                 style={{
-                  backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuBQmbU8DE3q2Io_Em_DYQombC7zJw8oXSmHsCcPhebOQchzAu6tkeEoAuWEmYSURe82gtJQdO9CEQQHmxnJGynYGzg7HRQSHP37fWbE_J4ckvnxcFdOM0Hpza2WAtZQYdSHieGxxLgx-aZIlN_Boi6lrsq4Bq0N7sGzzZ2zgAFWZlUpkpi3XeB0vsxWJgXNF9QxmlM0JtZOLuCb4pH0bFnjjXsVhO5wP76NFaKsTS1rWzsws9Fom7iFs_Pelh0K6fVzwJxp9DryhfWZ")`,
+                  backgroundImage: 'url("https://i.pravatar.cc/150?img=32")',
                 }}
               />
-              <div className="flex flex-col overflow-hidden">
-                <h1 className="text-charcoal text-base font-bold leading-none mb-1.5 truncate">
-                  Alex Johnson
-                </h1>
-                <p className="text-primary text-[10px] font-bold uppercase tracking-widest truncate">
+              <div>
+                <p className="font-bold text-charcoal">Alex Johnson</p>
+                <p className="text-[10px] font-bold uppercase text-primary tracking-widest">
                   Premium Member
                 </p>
               </div>
             </div>
-          </div>
+          </section>
 
-          {/* Search Bar (Mobile) */}
-          <div className="p-4 md:hidden border-b border-slate-100">
-            <div className="flex w-full items-stretch rounded-xl h-11 bg-slate-100 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
-              <div className="text-slate-400 flex items-center justify-center pl-4">
-                <span className="material-symbols-outlined text-[20px]">
-                  search
-                </span>
-              </div>
-              <input
-                className="form-input w-full border-none bg-transparent h-full placeholder:text-slate-400 px-4 pl-2 text-sm font-normal focus:ring-0"
-                placeholder="Search..."
+          {/* Navigation */}
+          <nav className="flex-1 overflow-y-auto p-4 space-y-1">
+            <NavItem
+              icon={<HiOutlineUser />}
+              label="Profile"
+              onClick={onClose}
+            />
+            <NavItem
+              icon={<HiOutlineShoppingBag />}
+              label="Orders"
+              onClick={onClose}
+            />
+            <NavItem
+              icon={<HiOutlineHeart />}
+              label="Favorites"
+              onClick={onClose}
+            />
+            <NavItem
+              icon={<HiOutlineCog />}
+              label="Settings"
+              onClick={onClose}
+            />
+
+            <div className="pt-4 mt-4 border-t border-slate-100">
+              <NavItem
+                icon={<HiOutlineHome />}
+                label="Marketplace"
+                onClick={onClose}
               />
-            </div>
-          </div>
-
-          {/* Navigation Links */}
-          <nav className="flex-1 overflow-y-auto p-4">
-            <div className="flex flex-col gap-1.5 mb-6">
-              <a
-                className="flex items-center gap-3 px-4 py-3 rounded-xl sidebar-link-active transition-all"
-                href="#"
+              <NavItem
+                icon={<HiOutlineSupport />}
+                label="Support"
                 onClick={onClose}
-              >
-                <span className="material-symbols-outlined text-[22px] fill-[1]">
-                  person
-                </span>
-                <p className="text-sm font-bold">Account Profile</p>
-              </a>
-              <a
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-charcoal transition-all"
-                href="#"
-                onClick={onClose}
-              >
-                <span className="material-symbols-outlined text-[22px]">
-                  package
-                </span>
-                <p className="text-sm font-semibold">Order History</p>
-              </a>
-              <a
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-charcoal transition-all"
-                href="#"
-                onClick={onClose}
-              >
-                <span className="material-symbols-outlined text-[22px]">
-                  account_balance_wallet
-                </span>
-                <p className="text-sm font-semibold">Wallet &amp; Payments</p>
-              </a>
-              <a
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-charcoal transition-all"
-                href="#"
-                onClick={onClose}
-              >
-                <span className="material-symbols-outlined text-[22px]">
-                  favorite
-                </span>
-                <p className="text-sm font-semibold">My Favorites</p>
-              </a>
-              <a
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-charcoal transition-all"
-                href="#"
-                onClick={onClose}
-              >
-                <span className="material-symbols-outlined text-[22px]">
-                  settings
-                </span>
-                <p className="text-sm font-semibold">Settings</p>
-              </a>
-            </div>
-
-            {/* Top Navigation Links (visible on mobile) */}
-            <div className="xl:hidden border-t border-slate-100 pt-4 mb-4">
-              <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest px-4 mb-3">
-                Quick Links
-              </p>
-              <div className="flex flex-col gap-1.5">
-                <a
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-charcoal transition-all"
-                  href="#"
-                  onClick={onClose}
-                >
-                  <span className="material-symbols-outlined text-[20px]">
-                    store
-                  </span>
-                  <p className="text-sm font-semibold">Marketplace</p>
-                </a>
-                <a
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-charcoal transition-all"
-                  href="#"
-                  onClick={onClose}
-                >
-                  <span className="material-symbols-outlined text-[20px]">
-                    help
-                  </span>
-                  <p className="text-sm font-semibold">Help</p>
-                </a>
-                <a
-                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 hover:text-charcoal transition-all"
-                  href="#"
-                  onClick={onClose}
-                >
-                  <span className="material-symbols-outlined text-[20px]">
-                    support_agent
-                  </span>
-                  <p className="text-sm font-semibold">Support</p>
-                </a>
-              </div>
+              />
             </div>
           </nav>
 
-          {/* Bottom CTA */}
-          <div className="p-4 border-t border-slate-100">
-            <div className="bg-primary/5 p-4 rounded-2xl border border-primary/10">
-              <p className="text-[11px] text-charcoal/70 font-medium mb-3 leading-relaxed">
-                Unlock priority delivery and exclusive marketplace deals.
-              </p>
-              <button className="w-full rounded-xl h-10 px-4 bg-primary text-white text-sm font-bold hover:bg-[#00a383] transition-all shadow-md shadow-primary/20">
-                Upgrade to Pro
-              </button>
-            </div>
-          </div>
+          {/* Bottom Actions */}
+          <footer className="p-4 border-t border-slate-100 space-y-2">
+            <button className="w-full h-10 rounded-xl bg-primary text-white font-bold hover:bg-[#00a383] transition">
+              Upgrade to Pro
+            </button>
+
+            <button
+              onClick={() => {
+                onClose();
+                // logout logic
+              }}
+              className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition"
+            >
+              <HiOutlineLogout className="text-xl" />
+              <span className="text-sm font-semibold">Logout</span>
+            </button>
+          </footer>
         </div>
-      </div>
+      </aside>
     </>
   );
 };
