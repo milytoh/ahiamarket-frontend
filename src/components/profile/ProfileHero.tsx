@@ -1,11 +1,36 @@
 import React from "react";
+import { UserProfile } from "@/pages/profile/Profile";
+
 import {
   HiCheckBadge,
   HiOutlinePencilSquare,
   HiOutlineShare,
 } from "react-icons/hi2";
 
-const ProfileHero: React.FC = () => {
+const ProfileHero: React.FC<UserProfile> = ({
+  fullName,
+  email,
+  memberSince,
+  trustScore,
+}) => {
+  const formattedMemberSince = new Date(memberSince).toLocaleDateString(
+    "en-US",
+    {
+      month: "short",
+      year: "numeric",
+    },
+  );
+
+  const clampScore = (score: number) => Math.min(Math.max(score, 0), 100);
+
+  const getTrustColor = (score: number) => {
+    if (score >= 80) return "bg-primary";
+    if (score >= 50) return "bg-yellow-400";
+    return "bg-red-400";
+  };
+
+  const score = clampScore(trustScore!);
+
   return (
     <div className="bg-white p-6 md:p-8 rounded-2xl border border-slate-100 shadow-sm">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-8">
@@ -26,23 +51,36 @@ const ProfileHero: React.FC = () => {
 
           <div className="flex flex-col">
             <h1 className="text-charcoal text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight mb-1">
-              Alex Johnson
+              {fullName}
             </h1>
 
             <p className="text-slate-400 text-sm md:text-base font-semibold">
-              Member since Oct 2023 •{" "}
+              Member since {formattedMemberSince}{" "}
               <span className="text-primary">Premium Tier</span>
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-3 mt-4">
               <div className="h-2.5 w-full sm:w-40 bg-slate-100 rounded-full overflow-hidden">
                 <div
-                  className="bg-primary h-full rounded-full"
-                  style={{ width: "80%" }}
+                  className={`h-full rounded-full transition-all duration-500 ease-out ${getTrustColor(
+                    score,
+                  )}`}
+                  style={{ width: `${score}%` }}
                 />
               </div>
               <p className="text-primary text-sm font-extrabold whitespace-nowrap">
-                850 Trust Score
+                <span
+                  className={
+                    score >= 80
+                      ? "text-primary"
+                      : score >= 50
+                        ? "text-yellow-500"
+                        : "text-red-500"
+                  }
+                >
+                  {score}%
+                </span>{" "}
+                Trust Score
               </p>
             </div>
           </div>
