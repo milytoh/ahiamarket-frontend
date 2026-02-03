@@ -96,7 +96,7 @@ const Profile: React.FC = () => {
         memberSince={profile?.user.memberSince!}
         trustScore={profile?.trustScore!.value!}
       />
-      <StatsCards />
+      <StatsCards stats={profile?.stats!} wallet={profile?.wallet!} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
         <PersonalInfo />

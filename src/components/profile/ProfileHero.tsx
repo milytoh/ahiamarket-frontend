@@ -50,7 +50,7 @@ const ProfileHero: React.FC<UserProfile> = ({
           </div>
 
           <div className="flex flex-col">
-            <h1 className="text-charcoal text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight mb-1">
+            <h1 className="text-brand-orange text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight mb-1">
               {fullName}
             </h1>
 

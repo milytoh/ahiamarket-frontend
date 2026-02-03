@@ -33,7 +33,7 @@ const TrustScore: React.FC = () => {
   return (
     <section className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
       <div className="px-6 md:px-8 py-5 border-b border-slate-50">
-        <h3 className="text-charcoal text-lg font-bold">
+        <h3 className="text-brand-orange text-lg font-bold">
           Trust Score Breakdown
         </h3>
       </div>
@@ -44,11 +44,11 @@ const TrustScore: React.FC = () => {
               <div className="size-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary shrink-0">
                 {item.icon}
               </div>
-              <p className="text-charcoal/80 text-sm font-bold">{item.label}</p>
+              <p className="text-brand-orange/80 text-sm font-bold">{item.label}</p>
             </div>
             <p
               className={`text-sm font-extrabold whitespace-nowrap ${
-                item.isPrimary ? "text-primary" : "text-charcoal/40"
+                item.isPrimary ? "text-primary" : "text-primary"
               }`}
             >
               {item.value}

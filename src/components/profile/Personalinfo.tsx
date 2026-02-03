@@ -18,7 +18,7 @@ const PersonalInfo: React.FC = () => {
     <section className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between px-6 md:px-8 py-5 border-b border-slate-50">
-        <h3 className="text-charcoal text-lg font-bold">
+        <h3 className="text-brand-orange text-lg font-bold">
           Personal Information
         </h3>
 
@@ -38,7 +38,7 @@ const PersonalInfo: React.FC = () => {
             <p className="text-slate-400 text-[10px] font-extrabold uppercase tracking-widest mb-1.5">
               {field.label}
             </p>
-            <p className="text-charcoal text-sm font-bold truncate">
+            <p className="text-brand-orange text-sm font-bold truncate">
               {field.value}
             </p>
           </div>
