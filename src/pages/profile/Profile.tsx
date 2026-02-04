@@ -13,6 +13,8 @@ import WalletCTA from "@/components/profile/Walletcta";
 /// skeleton ui
 import ProfileHeroSkeleton from "@/components/ui/skeletons/profile/index/Profileheroskeleton";
 import StatsCardsSkeleton from "@/components/ui/skeletons/profile/index/Statscardsskeleton";
+import PersonalInfoSkeleton from "@/components/ui/skeletons/profile/index/Personalinfoskeleton";
+import TrustScoreSkeleton from "@/components/ui/skeletons/profile/index/TrustScoreSkeleton";
 
 interface ApiResponse<T> {
   success: boolean;
@@ -117,11 +119,19 @@ const Profile: React.FC = () => {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-        <PersonalInfo info={profile?.user!} />
-        <TrustScore
-          excellenct={excellenct}
-          accountTenure={profile?.user.memberSince!}
-        />
+        {loading ? (
+          <PersonalInfoSkeleton />
+        ) : (
+          <PersonalInfo info={profile?.user!} />
+        )}
+        {loading ? (
+          <TrustScoreSkeleton />
+        ) : (
+          <TrustScore
+            excellenct={excellenct}
+            accountTenure={profile?.user.memberSince!}
+          />
+        )}
       </div>
 
       <DeliveryAddresses />
