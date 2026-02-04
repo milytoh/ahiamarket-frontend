@@ -10,6 +10,10 @@ import TrustScore from "@/components/profile/Trustscore";
 import DeliveryAddresses from "@/components/profile/Deliveryaddresses";
 import WalletCTA from "@/components/profile/Walletcta";
 
+/// skeleton ui
+import ProfileHeroSkeleton from "@/components/ui/skeletons/profile/index/Profileheroskeleton";
+import StatsCardsSkeleton from "@/components/ui/skeletons/profile/index/Statscardsskeleton";
+
 interface ApiResponse<T> {
   success: boolean;
   message: string;
@@ -95,18 +99,29 @@ const Profile: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 md:space-y-8">
-      <ProfileHero
-        fullName={profile?.user.fullName!}
-        email={profile?.user.email!}
-        id={profile?.user.id!}
-        memberSince={profile?.user.memberSince!}
-        trustScore={profile?.trustScore!.value!}
-      />
-      <StatsCards stats={profile?.stats!} wallet={profile?.wallet!} />
+      {loading ? (
+        <ProfileHeroSkeleton />
+      ) : (
+        <ProfileHero
+          fullName={profile?.user.fullName!}
+          email={profile?.user.email!}
+          id={profile?.user.id!}
+          memberSince={profile?.user.memberSince!}
+          trustScore={profile?.trustScore!.value!}
+        />
+      )}
+      {loading ? (
+        <StatsCardsSkeleton />
+      ) : (
+        <StatsCards stats={profile?.stats!} wallet={profile?.wallet!} />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-        <PersonalInfo info={profile?.user!}/>
-        <TrustScore excellenct={ excellenct} accountTenure={profile?.user.memberSince!} />
+        <PersonalInfo info={profile?.user!} />
+        <TrustScore
+          excellenct={excellenct}
+          accountTenure={profile?.user.memberSince!}
+        />
       </div>
 
       <DeliveryAddresses />
