@@ -1,16 +1,23 @@
 import React from "react";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
+import { type UserProfile } from "@/pages/profile/Profile";
 
 interface InfoField {
   label: string;
   value: string;
 }
 
-const PersonalInfo: React.FC = () => {
+
+ 
+interface InfoProp {
+  info: UserProfile
+}
+
+const PersonalInfo: React.FC<InfoProp> = ({info}) => {
   const fields: InfoField[] = [
-    { label: "Full Name", value: "Alex Johnson" },
-    { label: "Email Address", value: "alex.j@example.com" },
-    { label: "Phone Number", value: "+1 (555) 012-3456" },
+    { label: "Full Name", value: `${info?.fullName}` },
+    { label: "Email Address", value: `${info?.email}` },
+    { label: "Phone Number", value: "********" },
     { label: "Preferred Language", value: "English (US)" },
   ];
 

@@ -8,13 +8,54 @@ interface TrustScoreItem {
   isPrimary: boolean;
 }
 
-const TrustScore: React.FC = () => {
+
+interface TscoreProp {
+  excellenct: {
+    value: string,
+    isPrimary: boolean
+  }
+
+  review?: {
+    value: string
+    isPrimary: boolean
+  }
+
+  accountTenure: string
+}
+
+
+
+
+
+const TrustScore: React.FC<TscoreProp> = ({ excellenct, accountTenure }) => {
+
+  // time and date format function
+function getAccountTenure(timestamp: number): string {
+  const now = Date.now();
+  const diff = now - timestamp;
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const months = Math.floor(days / 30);
+  const years = Math.floor(months / 12);
+
+  if (years > 0) {
+    return `${years} Year${years > 1 ? "s" : ""}`;
+  }
+
+  if (months > 0) {
+    return `${months} Month${months > 1 ? "s" : ""}`;
+  }
+
+  return `${days} Day${days > 1 ? "s" : ""}`;
+}
+
+  
   const items: TrustScoreItem[] = [
     {
       icon: <MdPayments className="text-xl" />,
       label: "Payment History",
-      value: "Excellent",
-      isPrimary: true,
+      value: `${excellenct.value}`,
+      isPrimary: excellenct.isPrimary
     },
     {
       icon: <MdStars className="text-xl" />,
@@ -25,7 +66,7 @@ const TrustScore: React.FC = () => {
     {
       icon: <MdCalendarToday className="text-xl" />,
       label: "Account Tenure",
-      value: "6 Months",
+      value: `${getAccountTenure(Number(accountTenure))}`,
       isPrimary: false,
     },
   ];

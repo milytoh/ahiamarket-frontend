@@ -87,6 +87,12 @@ const Profile: React.FC = () => {
     fetchProfile();
   }, []);
 
+  const excellenct = {
+    value: profile?.trustScore.breakdown[0].value!,
+    isPrimary: profile?.trustScore.breakdown[0].isPrimary!
+
+  }
+
   return (
     <div className="max-w-5xl mx-auto space-y-6 md:space-y-8">
       <ProfileHero
@@ -99,8 +105,8 @@ const Profile: React.FC = () => {
       <StatsCards stats={profile?.stats!} wallet={profile?.wallet!} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-        <PersonalInfo />
-        <TrustScore />
+        <PersonalInfo info={profile?.user!}/>
+        <TrustScore excellenct={ excellenct} accountTenure={profile?.user.memberSince!} />
       </div>
 
       <DeliveryAddresses />
