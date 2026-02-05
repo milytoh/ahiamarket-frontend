@@ -1,5 +1,5 @@
 import React from "react";
-import WalletSummary from "./WalletSummary";
+import WalletSummary from "@/components/profile/wallet/WalletSummary";
 import WalletStats from "./WalletStats";
 import WalletTransactions from "./WalletTransactions";
 
