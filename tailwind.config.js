@@ -16,6 +16,7 @@ export default {
         "brand-orange": "#F7941D",
         "text-main": "#333333",
         "border-light": "#E0E0E0",
+        "accent-orange": "#ff6f00",
       },
       fontFamily: {
         display: ["Work Sans"],

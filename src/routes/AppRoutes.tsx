@@ -11,6 +11,7 @@ import GoogleAuthCallback from "@/pages/auth/GoogleAuthCallback";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import ResetPassword from "@/pages/auth/ResetPassword";
 import Profile from "@/pages/profile/Profile";
+import Wallet from "@/pages/profile/Wallet";
 
 const AppRoutes = () => {
   return (
@@ -36,9 +37,11 @@ const AppRoutes = () => {
       </Route>
 
       {/* profile layout */}
-      
-      <Route path="/profile" element={<ProfileLayout />}>
-         <Route index element={<Profile />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/profile" element={<ProfileLayout />}>
+          <Route index element={<Profile />} />
+          <Route path="/profile/wallet" element={<Wallet/>}  />
+        </Route>
       </Route>
     </Routes>
   );
