@@ -3,12 +3,12 @@ import React from "react";
 import { useApi } from "@/hooks/useApi";
 import { useEffect, useState } from "react";
 
-import ProfileHero from "@/components/profile/ProfileHero";
-import StatsCards from "@/components/profile/StatsCards";
-import PersonalInfo from "@/components/profile/Personalinfo";
-import TrustScore from "@/components/profile/Trustscore";
-import DeliveryAddresses from "@/components/profile/Deliveryaddresses";
-import WalletCTA from "@/components/profile/Walletcta";
+import ProfileHero from "@/components/profile/index/ProfileHero";
+import StatsCards from "@/components/profile/index/StatsCards";
+import PersonalInfo from "@/components/profile/index/Personalinfo";
+import TrustScore from "@/components/profile/index/Trustscore";
+import DeliveryAddresses from "@/components/profile/index/Deliveryaddresses";
+import WalletCTA from "@/components/profile/index/Walletcta";
 
 import ErrorState from "@/components/ui/Error";
 import ErrorEmptyState from "@/components/ui/ErrorEmptyState";
@@ -109,7 +109,7 @@ const Profile: React.FC = () => {
    );
   }
   
-   if (!profile && !loading) {
+   if (!profile && !loading && error) {
      return (
        <ErrorEmptyState
          title="No profile data"
