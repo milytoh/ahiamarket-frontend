@@ -10,6 +10,10 @@ import TrustScore from "@/components/profile/Trustscore";
 import DeliveryAddresses from "@/components/profile/Deliveryaddresses";
 import WalletCTA from "@/components/profile/Walletcta";
 
+import ErrorState from "@/components/ui/Error";
+import ErrorEmptyState from "@/components/ui/ErrorEmptyState";
+
+
 /// skeleton ui
 import ProfileHeroSkeleton from "@/components/ui/skeletons/profile/index/Profileheroskeleton";
 import StatsCardsSkeleton from "@/components/ui/skeletons/profile/index/Statscardsskeleton";
@@ -98,6 +102,21 @@ const Profile: React.FC = () => {
     isPrimary: profile?.trustScore.breakdown[0].isPrimary!
 
   }
+
+ if (error) {
+   return (
+     <ErrorState title="Failed to load profile" message={error.message} onRetry={get} />
+   );
+  }
+  
+   if (!profile && !loading) {
+     return (
+       <ErrorEmptyState
+         title="No profile data"
+         message="We couldn’t find your profile information."
+       />
+     );
+   }
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 md:space-y-8">
