@@ -1,76 +1,68 @@
-// import React from "react";
-// import WalletSummary from "@/components/profile/wallet/WalletSummary";
-// import WalletStats from "@/components/profile/wallet/WalletStats";
-// import WalletTransactions from "@/components/profile/wallet/WalletTransactions";
-
-// const Wallet: React.FC = () => {
-//   return (
-//     <main className="flex-1 p-6 md:p-8 lg:p-10">
-//       {/* Breadcrumb */}
-//       <div className="flex flex-wrap gap-2 mb-6">
-//         <span className="text-slate-400 text-sm">Profile</span>
-//         <span className="text-slate-300">/</span>
-//         <span className="text-slate-900 text-sm font-bold">Wallet</span>
-//       </div>
-
-//       {/* Page Header */}
-//       <div className="flex flex-wrap justify-between items-end gap-4 mb-8">
-//         <div>
-//           <h1 className="text-slate-900 text-4xl font-black">
-//             Wallet Summary
-//           </h1>
-//           <p className="text-slate-500">
-//             Securely manage your funds and track your spending.
-//           </p>
-//         </div>
-
-//         <div className="flex gap-4">
-//           <button className="h-12 px-6 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/20">
-//             Deposit Funds
-//           </button>
-//           <button className="h-12 px-6 rounded-xl bg-accent-orange text-white font-bold shadow-lg shadow-accent-orange/20">
-//             Withdraw
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Content */}
-//       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
-//         <WalletSummary />
-//         <WalletStats />
-//       </div>
-
-//       <WalletTransactions />
-//     </main>
-//   );
-// };
-
-// export default Wallet;
 
 
+import WalletBalance from "@/components/profile/wallet/Walletbalance";
+import WalletStats from "@/components/profile/wallet/Walletstats";
+import RecentActivities from "@/components/profile/wallet/RecenActivities";
 
-import React from "react";
-import Breadcrumb from "@/components/profile/wallet/Breadcrumb";
-import WalletHeader from "./components/wallet/WalletHeader";
-import WalletBalance from "./components/wallet/WalletBalance";
-import WalletStats from "./components/wallet/WalletStats";
-import RecentActivities from "./components/wallet/RecentActivities";
+import {
+  MdVerified,
+  MdStars,
+  MdAddCircleOutline,
+  MdOutbox,
+  MdTimer,
+} from "react-icons/md";
 
-const WalletPage: React.FC = () => {
+
+const Wallet: React.FC = () => {
   return (
-    <main className="flex-1 p-4 md:p-8 lg:p-10 overflow-hidden">
-      <Breadcrumb />
+    <main className="flex-1 px-4 md:px-8 lg:px-1 py-6 w-[]">
+      {/* CONTENT WRAPPER */}
+      <div className="max-w-7xl mx-auto w-full">
+        {/* Breadcrumb */}
+        <div className="flex flex-wrap gap-2 mb-6 text-sm">
+          <span className="text-slate-400">Home</span>
+          <span className="text-slate-300">/</span>
+          <span className="text-slate-400">Profile</span>
+          <span className="text-slate-300">/</span>
+          <span className="text-slate-900 font-bold">Wallet</span>
+        </div>
 
-      <WalletHeader />
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between gap-6 mb-8">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-black tracking-tight">
+              Wallet Summary
+            </h1>
+            <p className="text-slate-500 mt-1">
+              Securely manage your funds and track your spending history.
+            </p>
+          </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-10">
-        <WalletBalance />
-        <WalletStats />
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <button className="h-12 px-6 rounded-xl bg-primary text-white font-bold flex items-center justify-center gap-2 shadow-primary/20 shadow-lg">
+              <MdAddCircleOutline className='text-sm' />
+              Deposit Funds
+            </button>
+            <button className="text-sm h-12 px-6 rounded-xl bg-accent-orange text-white font-bold flex items-center justify-center gap-2 shadow-accent-orange/20 shadow-lg">
+              <MdOutbox />
+              Withdraw
+            </button>
+          </div>
+        </div>
+
+        {/* Wallet Cards */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-10">
+          <WalletBalance />
+          <WalletStats />
+        </div>
+
+        {/* Activities */}
+        <RecentActivities />
       </div>
-
-      <RecentActivities />
     </main>
   );
 };
 
-export default WalletPage;
+export default Wallet;
+
+

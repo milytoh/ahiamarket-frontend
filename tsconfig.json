@@ -20,5 +20,9 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "src/components/profile/wallet/ActivityRow.tsx",
+    "src/components/profile/wallet/n/.tsx"
+  ]
 }

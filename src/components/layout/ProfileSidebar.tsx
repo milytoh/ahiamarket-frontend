@@ -41,7 +41,7 @@ const ProfileSidebar: React.FC = () => {
   return (
     <aside
       className="
-        hidden lg:flex w-72 flex-col 
+        hidden lg:flex w-[25%] flex-col 
         bg-white p-6 border-r border-slate-100
         sticky top-0
         h-[calc(100vh)]
