@@ -19,25 +19,25 @@ const activities: Activity[] = [
     type: "credit",
     title: "Wallet Funding",
     date: "Jan 12, 2026",
-    amount: "+$250.00",
+    amount: "+₦250900.00",
   },
   {
     type: "pending",
     title: "Withdrawal Request",
     date: "Jan 11, 2026",
-    amount: "-$120.00",
+    amount: "-₦12000.00",
   },
   {
     type: "debit",
     title: "Order Payment",
     date: "Jan 10, 2026",
-    amount: "-$75.50",
+    amount: "-₦75334.50",
   },
   {
     type: "credit",
     title: "Refund",
     date: "Jan 05, 2026",
-    amount: "+$40.00",
+    amount: "+₦40999.00",
   },
 ];
 

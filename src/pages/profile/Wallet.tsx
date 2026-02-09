@@ -1,19 +1,27 @@
 
+import { useApi } from "@/hooks/useApi";
+import { useEffect, useState } from "react";
+
 
 import WalletBalance from "@/components/profile/wallet/Walletbalance";
 import WalletStats from "@/components/profile/wallet/Walletstats";
 import RecentActivities from "@/components/profile/wallet/RecenActivities";
 
 import {
-  MdVerified,
-  MdStars,
+ 
   MdAddCircleOutline,
   MdOutbox,
-  MdTimer,
 } from "react-icons/md";
 
 
 const Wallet: React.FC = () => {
+ //using custom hook
+  const { get, loading, error } = useApi<ProfileResponse>(
+    "http://localhost:3000/api/user/profile",
+  );
+
+
+
   return (
     <main className="flex-1 px-4 md:px-8 lg:px-1 py-6 w-[]">
       {/* CONTENT WRAPPER */}
