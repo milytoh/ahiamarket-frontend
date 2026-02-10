@@ -10,3 +10,8 @@ Minor updates or cleanup	chore	chore(ui): update comments and spacing
 | Improve image quality/size | `chore(assets)` | `chore(assets): optimize images`         |
 | Change image used in UI    | `feat(ui)`      | `feat(ui): update hero background image` |
 | Fix a broken image         | `fix(assets)`   | `fix(assets): fix missing product image` |
+
+async function setupIndexes(db) {
+  await db.collection("wallets").createIndex({ ownerId: 1 });
+  await db.collection("transactions").createIndex({ userId: 1, createdAt: -1 });
+}

@@ -14,9 +14,42 @@ import {
 } from "react-icons/md";
 
 
+ type TransactionType = "deposit" | "withdrawal";
+ type TransactionStatus = "success" | "pending" | "failed";
+
+ interface Wallet {
+  balance: number;
+  currency: string;
+}
+
+ interface WalletStats {
+  totalTransactions: number;
+  totalDeposits: number;
+  totalWithdrawals: number;
+  pendingTransactions: number;
+}
+
+ interface WalletActivity {
+  _id: string;
+  type: TransactionType;
+  status: TransactionStatus;
+  amount: number;
+  currency: string;
+  reference: string;
+  createdAt: string;
+}
+
+ interface WalletResponse {
+  wallet: Wallet;
+  stats: WalletStats;
+  recentActivities: WalletActivity[];
+}
+
+
+
 const Wallet: React.FC = () => {
  //using custom hook
-  const { get, loading, error } = useApi<ProfileResponse>(
+  const { get, loading, error } = useApi<WalletResponse>(
     "http://localhost:3000/api/user/profile",
   );
 
