@@ -1,59 +1,91 @@
-
 import { useApi } from "@/hooks/useApi";
 import { useEffect, useState } from "react";
-
 
 import WalletBalance from "@/components/profile/wallet/Walletbalance";
 import WalletStats from "@/components/profile/wallet/Walletstats";
 import RecentActivities from "@/components/profile/wallet/RecenActivities";
 
-import {
- 
-  MdAddCircleOutline,
-  MdOutbox,
-} from "react-icons/md";
+//skeleton
+import RecentActivitiesSkeleton from "@/components/ui/skeletons/profile/wallet/RecentActivitiesSkeleton";
+import WalletBalanceSkeleton from "@/components/ui/skeletons/profile/wallet/WalletBalanceSkeleton";
+import WalletStatsSkeleton from "@/components/ui/skeletons/profile/wallet/WalletStatsSkeleton";
 
+import ErrorState from "@/components/ui/Error";
+import ErrorEmptyState from "@/components/ui/ErrorEmptyState";
 
- type TransactionType = "deposit" | "withdrawal";
- type TransactionStatus = "success" | "pending" | "failed";
+import { MdAddCircleOutline, MdOutbox } from "react-icons/md";
 
- interface Wallet {
+type TransactionType = "deposit" | "withdrawal" | "credit";
+type TransactionStatus = "success" | "pending" | "failed";
+
+interface Wallet {
   balance: number;
   currency: string;
 }
 
- interface WalletStats {
+interface WalletStats {
   totalTransactions: number;
   totalDeposits: number;
   totalWithdrawals: number;
   pendingTransactions: number;
+  successfulTransactions: number;
 }
 
- interface WalletActivity {
-  _id: string;
+interface WalletActivity {
+  _id?: string;
   type: TransactionType;
   status: TransactionStatus;
   amount: number;
-  currency: string;
   reference: string;
-  createdAt: string;
+  date: string;
 }
 
- interface WalletResponse {
+interface WalletPlayload {
   wallet: Wallet;
   stats: WalletStats;
   recentActivities: WalletActivity[];
 }
 
 
+interface WalletResponse {
+  success: boolean
+  message: string,
+  profileWallet :WalletPlayload
+}
+
+
 
 const Wallet: React.FC = () => {
- //using custom hook
+  const [walletData, setWalletData] = useState<WalletResponse | null>(null);
+
+  //using custom hook
   const { get, loading, error } = useApi<WalletResponse>(
-    "http://localhost:3000/api/user/profile",
+    "http://localhost:3000/api/user/profile/wallet",
   );
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await get();
+        setWalletData(response);
+        console.log(response);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
+    fetchProfile();
+  }, []);
+
+  if (error) {
+    return (
+      <ErrorState
+        title="Failed to load Wallet Summary"
+        message={error.message}
+        onRetry={get}
+      />
+    );
+  }
 
   return (
     <main className="flex-1 px-4 md:px-8 lg:px-1 py-6 w-[]">
@@ -81,7 +113,7 @@ const Wallet: React.FC = () => {
 
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
             <button className="h-12 px-6 rounded-xl bg-primary text-white font-bold flex items-center justify-center gap-2 shadow-primary/20 shadow-lg">
-              <MdAddCircleOutline className='text-sm' />
+              <MdAddCircleOutline className="text-sm" />
               Deposit Funds
             </button>
             <button className="text-sm h-12 px-6 rounded-xl bg-accent-orange text-white font-bold flex items-center justify-center gap-2 shadow-accent-orange/20 shadow-lg">
@@ -93,17 +125,23 @@ const Wallet: React.FC = () => {
 
         {/* Wallet Cards */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-10">
-          <WalletBalance />
-          <WalletStats />
+          {loading ? (
+            <WalletBalanceSkeleton />
+          ) : (
+            <WalletBalance
+              pending={walletData?.profileWallet.stats.pendingTransactions!}
+              totalBalance={walletData?.profileWallet.wallet.balance!}
+              successfullTrans={walletData?.profileWallet.stats.successfulTransactions!}
+            />
+          )}
+          {loading ? <WalletStatsSkeleton /> : <WalletStats />}
         </div>
 
         {/* Activities */}
-        <RecentActivities />
+        {loading ? <RecentActivitiesSkeleton /> : <RecentActivities activities={ walletData?.profileWallet.recentActivities! } />}
       </div>
     </main>
   );
 };
 
 export default Wallet;
-
-

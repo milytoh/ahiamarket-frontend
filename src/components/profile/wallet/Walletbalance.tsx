@@ -12,7 +12,15 @@ import {
   MdTimer,
 } from "react-icons/md";
 
-const WalletBalance: React.FC = () => {
+
+interface WalletBalanceProp {
+  totalBalance: number,
+  pending: number,
+  successfullTrans: number
+}
+
+
+const WalletBalance: React.FC<WalletBalanceProp> = ({totalBalance, pending, successfullTrans}) => {
   return (
     <section className="xl:col-span-2 bg-white border border-slate-100 rounded-2xl shadow-soft p-6 md:p-8 relative overflow-hidden">
       <HiOutlineWallet className="absolute top-6 right-6 text-[120px] text-primary opacity-5 hidden sm:block" />
@@ -22,7 +30,7 @@ const WalletBalance: React.FC = () => {
           Total Balance
         </p>
         <h3 className="text-primary text-4xl md:text-4xl font-black mt-1">
-          ₦12,450.00
+          ₦ {totalBalance}
         </h3>
       </div>
 
@@ -30,15 +38,15 @@ const WalletBalance: React.FC = () => {
         <BalanceItem
           icon={<MdTimer />}
           label="On-hold Funds"
-          value="₦1,200.00"
+          value={`₦ ${pending}`}
           bg="bg-blue-50"
           color="text-blue-600"
         />
 
         <BalanceItem
           icon={<HiOutlineShoppingBag />}
-          label="Total Spent"
-          value="₦45,890.00"
+          label="Successful Transactions"
+          value={`₦ ${successfullTrans}`}
           bg="bg-primary/10"
           color="text-primary"
         />

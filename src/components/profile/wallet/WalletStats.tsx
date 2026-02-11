@@ -69,7 +69,7 @@ const WalletStats: React.FC = () => {
           <p className="text-xs uppercase font-bold text-slate-500">
             Reward Points
           </p>
-          <p className="text-2xl font-black text-slate-900">2,840</p>
+          <p className="text-2xl font-black text-slate-900">*****</p>
         </div>
       </div>
 

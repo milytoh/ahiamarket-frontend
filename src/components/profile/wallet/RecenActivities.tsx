@@ -5,43 +5,63 @@ import {
   HiClock,
 } from "react-icons/hi2";
 
-type ActivityType = "credit" | "debit" | "pending";
+type TransactionStatus = "success" | "pending" | "failed";
+
+type TransactionType = "deposit" | "withdrawal" |"credit";
 
 interface Activity {
-  type: ActivityType;
-  title: string;
+  
+  _id?: string,
+  type: TransactionType;
+  title?: string;
   date: string;
-  amount: string;
+  amount: number;
+  status: TransactionStatus;
+  reference: string;
 }
 
-const activities: Activity[] = [
-  {
-    type: "credit",
-    title: "Wallet Funding",
-    date: "Jan 12, 2026",
-    amount: "+₦250900.00",
-  },
-  {
-    type: "pending",
-    title: "Withdrawal Request",
-    date: "Jan 11, 2026",
-    amount: "-₦12000.00",
-  },
-  {
-    type: "debit",
-    title: "Order Payment",
-    date: "Jan 10, 2026",
-    amount: "-₦75334.50",
-  },
-  {
-    type: "credit",
-    title: "Refund",
-    date: "Jan 05, 2026",
-    amount: "+₦40999.00",
-  },
-];
 
-const RecentActivities: React.FC = () => {
+
+//  reference: 1,
+//             type: 1,
+//             amount: 1,
+//             status: 1,
+//             createdAt: 1,
+
+// const activities: Activity[] = [
+//   {
+//     type: "credit",
+//     title: "Wallet Funding",
+//     date: "Jan 12, 2026",
+//     amount: "+₦250900.00",
+//   },
+//   {
+//     type: "pending",
+//     title: "Withdrawal Request",
+//     date: "Jan 11, 2026",
+//     amount: "-₦12000.00",
+//   },
+//   {
+//     type: "debit",
+//     title: "Order Payment",
+//     date: "Jan 10, 2026",
+//     amount: "-₦75334.50",
+//   },
+//   {
+//     type: "credit",
+//     title: "Refund",
+//     date: "Jan 05, 2026",
+//     amount: "+₦40999.00",
+//   },
+// ];
+
+interface RecenActivitiesProp {
+  activities: Activity[]
+}
+
+const RecentActivities: React.FC<RecenActivitiesProp> = ({activities}) => {
+  
+
   return (
     <section className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
       {/* Header */}
@@ -53,10 +73,10 @@ const RecentActivities: React.FC = () => {
 
       {/* Activities */}
       <div className="divide-y divide-slate-50">
-        {activities.map((activity, index) => {
+        {activities?.map((activity, index) => {
           const isCredit = activity.type === "credit";
-          const isDebit = activity.type === "debit";
-          const isPending = activity.type === "pending";
+          const isDebit = activity.type === "withdrawal";
+          const isPending = activity.status === "pending";
 
           return (
             <div
