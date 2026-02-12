@@ -13,6 +13,9 @@ import WalletStatsSkeleton from "@/components/ui/skeletons/profile/wallet/Wallet
 import ErrorState from "@/components/ui/Error";
 import ErrorEmptyState from "@/components/ui/ErrorEmptyState";
 
+import Modal from "@/components/ui/Modal";
+import DepositForm from "@/components/profile/wallet/DepositForm";
+
 import { MdAddCircleOutline, MdOutbox } from "react-icons/md";
 
 type TransactionType = "deposit" | "withdrawal" | "credit";
@@ -57,6 +60,8 @@ interface WalletResponse {
 
 const Wallet: React.FC = () => {
   const [walletData, setWalletData] = useState<WalletResponse | null>(null);
+  const [isDepositOpen, setIsDepositOpen] = useState(false);
+  
 
   //using custom hook
   const { get, loading, error } = useApi<WalletResponse>(
@@ -89,6 +94,17 @@ const Wallet: React.FC = () => {
 
   return (
     <main className="flex-1 px-4 md:px-8 lg:px-1 py-6 w-[]">
+        {/* Deposit Modal */}
+      <Modal
+        isOpen={isDepositOpen}
+        onClose={() => setIsDepositOpen(false)}
+        title="Deposit Funds"
+        subtitle="Top up your wallet to continue shopping securely."
+      >
+        <DepositForm onClose={() => setIsDepositOpen(false)} />
+      </Modal>
+
+
       {/* CONTENT WRAPPER */}
       <div className="max-w-7xl mx-auto w-full">
         {/* Breadcrumb */}
@@ -112,7 +128,7 @@ const Wallet: React.FC = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-            <button className="h-12 px-6 rounded-xl bg-primary text-white font-bold flex items-center justify-center gap-2 shadow-primary/20 shadow-lg">
+            <button onClick={() => setIsDepositOpen(true)} className="h-12 px-6 rounded-xl bg-primary text-white font-bold flex items-center justify-center gap-2 shadow-primary/20 shadow-lg">
               <MdAddCircleOutline className="text-sm" />
               Deposit Funds
             </button>

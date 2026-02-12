@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+
+
 import {
   Wallet,
   Smartphone,
@@ -19,6 +21,7 @@ type PaymentMethod = "opay" | "palmpay" | "bank" | "card";
 const DepositForm: React.FC<Props> = ({ onClose }) => {
   const [amount, setAmount] = useState<number>(5000);
   const [method, setMethod] = useState<PaymentMethod>("opay");
+  const [amoutValid, setAmountValid] = useState(true)
 
   const formatCurrency = (value: number) => {
     return value.toLocaleString("en-NG");
@@ -32,6 +35,12 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
       method,
     });
 
+    if( amount < 100) {
+       setAmountValid(false);
+
+       return;
+    }
+
     // integrate Paystack here later
 
     onClose();
@@ -40,7 +49,14 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="px-6 sm:px-10 pb-10 flex flex-col gap-8"
+      className= "
+    flex flex-col
+    overflow-y-auto
+    px-5 sm:px-8
+    pb-8
+    pt-6
+    gap-8
+  "
     >
       {/* Amount */}
       <div className="flex flex-col gap-2">
@@ -58,15 +74,22 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
               type="number"
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
-              className="flex w-full rounded-xl text-charcoal focus:outline-0 
-                         focus:ring-2 focus:ring-primary/40 focus:border-primary 
-                         border border-slate-200 bg-slate-50/50 h-16 
-                         pl-12 pr-6 text-2xl font-extrabold transition-all"
+              className="
+  flex w-full rounded-xl text-charcoal
+  focus:outline-0 focus:ring-2 focus:ring-primary/40
+  border border-slate-200 bg-slate-50/50
+  h-14 sm:h-16
+  pl-12 pr-6
+  text-xl sm:text-2xl
+  font-extrabold
+  transition-all
+"
               placeholder="0.00"
               required
             />
           </div>
         </label>
+        {!amoutValid && <p className="text-red-700">  invalid amount, should be 100 naira and above </p>}
       </div>
 
       {/* Payment Methods */}
@@ -75,7 +98,7 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
           Select Payment Method
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 xs:grid-cols-2 gap-4">
           {/* Opay */}
           <button
             type="button"
@@ -87,12 +110,12 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
             }`}
           >
             <div className="flex justify-between w-full mb-3">
-              <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center shadow-sm border border-slate-100">
+              <div className="w-5 h-5 rounded-lg bg-white flex items-center justify-center shadow-sm border border-slate-100">
                 <Wallet className="text-primary" size={24} />
               </div>
 
               {method === "opay" && (
-                <CheckCircle className="text-primary" size={20} />
+                <CheckCircle className="text-accent-orange" size={20} />
               )}
             </div>
 
@@ -115,12 +138,12 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
             }`}
           >
             <div className="flex justify-between w-full mb-3">
-              <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center">
+              <div className="w-5 h-5 rounded-lg bg-slate-50 flex items-center justify-center">
                 <Smartphone size={24} />
               </div>
 
               {method === "palmpay" && (
-                <CheckCircle className="text-primary" size={20} />
+                <CheckCircle className="text-accent-orange" size={20} />
               )}
             </div>
 
@@ -143,12 +166,12 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
             }`}
           >
             <div className="flex justify-between w-full mb-3">
-              <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center">
+              <div className="w-5 h-5 rounded-lg bg-slate-50 flex items-center justify-center">
                 <Landmark size={24} />
               </div>
 
               {method === "bank" && (
-                <CheckCircle className="text-primary" size={20} />
+                <CheckCircle className="text-accent-orange" size={20} />
               )}
             </div>
 
@@ -171,12 +194,12 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
             }`}
           >
             <div className="flex justify-between w-full mb-3">
-              <div className="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center">
+              <div className="w-5 h-5 rounded-lg bg-slate-50 flex items-center justify-center">
                 <CreditCard size={24} />
               </div>
 
               {method === "card" && (
-                <CheckCircle className="text-primary" size={20} />
+                <CheckCircle className="text-accent-orange" size={20} />
               )}
             </div>
 
@@ -203,6 +226,7 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
           <span>Proceed to Pay ₦{formatCurrency(amount)}</span>
           <ArrowRight size={20} />
         </button>
+        {!amoutValid && <p className="text-red-700">  invalid amount, should be 100 naira and above </p>}
 
         {/* Security Info */}
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 opacity-50">
