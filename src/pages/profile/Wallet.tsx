@@ -119,7 +119,7 @@ const Wallet: React.FC = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between gap-6 mb-8">
           <div>
-            <h1 className="text-3xl md:text-4xl font-black tracking-tight">
+            <h1 className="text-3xl md:text-3xl font-black tracking-tight">
               Wallet Summary
             </h1>
             <p className="text-slate-500 mt-1">

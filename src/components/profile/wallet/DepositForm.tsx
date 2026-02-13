@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+import { useApi } from "@/hooks/useApi";
+ 
 
 import {
   Wallet,
@@ -12,6 +14,8 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
+import Spinner from "@/components/ui/Spinner";
+
 interface Props {
   onClose: () => void;
 }
@@ -21,13 +25,19 @@ type PaymentMethod = "opay" | "palmpay" | "bank" | "card";
 const DepositForm: React.FC<Props> = ({ onClose }) => {
   const [amount, setAmount] = useState<number>(5000);
   const [method, setMethod] = useState<PaymentMethod>("opay");
-  const [amoutValid, setAmountValid] = useState(true)
+  const [amoutValid, setAmountValid] = useState(true);
+
+  //using custom hook
+  const { post, loading, error } = useApi(
+    "http://localhost:3000/api/wallet/fund",
+  );
+
 
   const formatCurrency = (value: number) => {
     return value.toLocaleString("en-NG");
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     console.log({
@@ -43,20 +53,22 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
 
     // integrate Paystack here later
 
+      try {
+        const response = await post({amount});
+        console.log("kkkkkk")
+        console.log(response);
+        window.location.href = response?.data?.data?.authorization_url
+      } catch (err) {
+        console.error(err);
+      }
+
     onClose();
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className= "
-    flex flex-col
-    overflow-y-auto
-    px-5 sm:px-8
-    pb-8
-    pt-6
-    gap-8
-  "
+      className= "flex flex-col overflow-y-auto px-5 sm:px-8 pb-8 pt-6 gap-8 "
     >
       {/* Amount */}
       <div className="flex flex-col gap-2">
@@ -223,8 +235,10 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
                      shadow-primary/20 transition-all flex items-center 
                      justify-center gap-3"
         >
-          <span>Proceed to Pay ₦{formatCurrency(amount)}</span>
-          <ArrowRight size={20} />
+
+          {loading && <Spinner/>}
+          {!loading && <span>Proceed to Pay ₦{formatCurrency(amount)}</span>}
+          {!loading && <ArrowRight size={20} />}
         </button>
         {!amoutValid && <p className="text-red-700">  invalid amount, should be 100 naira and above </p>}
 
