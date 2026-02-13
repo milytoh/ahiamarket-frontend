@@ -42,8 +42,8 @@ const AppRoutes = () => {
         <Route path="/profile" element={<ProfileLayout />}>
           <Route index element={<Profile />} />
           <Route path="/profile/wallet" element={<Wallet />} />
-          <Route path="/payment/verify" element={<PaymentVerify/>} />
         </Route>
+        <Route path="/payment/verify" element={<PaymentVerify />} />
       </Route>
     </Routes>
   );
