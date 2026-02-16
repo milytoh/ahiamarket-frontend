@@ -1,6 +1,7 @@
 import { useEffect, useState} from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useApi } from "@/hooks/useApi";
+import Spinner from "@/components/ui/Spinner";
 
 
 const PaymentVerify = () => {
@@ -8,15 +9,17 @@ const PaymentVerify = () => {
     const navigate = useNavigate();
     const [url, setUri] = useState("")
 
-    //using custom hook
-     const { get, loading, error } = useApi(
+  const reference = searchParams.get("reference");
+
+  const { get, loading, error } = useApi(
+     `http://localhost:3000/api/paystack/callback?reference=${reference}`
       
-     ); 
+  );
 
   useEffect(() => {
     const verifyPayment = async () => {
       const reference = searchParams.get("reference");
-      console.log(reference, "referrrrrr")
+      
    setUri(reference!);
       if (!reference) {
         navigate("/profile/wallet");
@@ -24,7 +27,7 @@ const PaymentVerify = () => {
       }
             
       try {
-        await get();
+       const response = await get();
 
         // After verification
         navigate("/profile/wallet");
@@ -37,8 +40,9 @@ const PaymentVerify = () => {
   }, []);
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex flex-col items-center justify-center h-screen">
       <p className="text-primary text-lg font-semibold">Verifying payment...</p>
+      <Spinner/>
     </div>
   );
 };

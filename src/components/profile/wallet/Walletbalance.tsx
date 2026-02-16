@@ -19,6 +19,10 @@ interface WalletBalanceProp {
   successfullTrans: number
 }
 
+const formatPrice = (amount: number) => {
+  return new Intl.NumberFormat("en-NG").format(amount);
+};
+
 
 const WalletBalance: React.FC<WalletBalanceProp> = ({totalBalance, pending, successfullTrans}) => {
   return (
@@ -30,7 +34,7 @@ const WalletBalance: React.FC<WalletBalanceProp> = ({totalBalance, pending, succ
           Total Balance
         </p>
         <h3 className="text-primary text-4xl md:text-4xl font-black mt-1">
-          ₦ {totalBalance}
+          ₦ {formatPrice(totalBalance)}
         </h3>
       </div>
 

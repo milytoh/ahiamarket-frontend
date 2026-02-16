@@ -14,7 +14,7 @@ interface Activity {
   _id?: string,
   type: TransactionType;
   title?: string;
-  date: string;
+  createdAt: string;
   amount: number;
   status: TransactionStatus;
   reference: string;
@@ -59,8 +59,34 @@ interface RecenActivitiesProp {
   activities: Activity[]
 }
 
+const formatPrice = (amount: number) => {
+  return new Intl.NumberFormat("en-NG").format(amount);
+};
+
+export const formatRelativeTime = (dateString: string) => {
+  const now = new Date();
+  const date = new Date(dateString);
+
+  const diffInMs = now.getTime() - date.getTime();
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+  if (diffInDays === 0) return "Today";
+  if (diffInDays === 1) return "Yesterday";
+  if (diffInDays < 30) return `${diffInDays} days ago`;
+
+  const diffInMonths = Math.floor(diffInDays / 30);
+  if (diffInMonths < 12)
+    return `${diffInMonths} ${diffInMonths === 1 ? "month" : "months"} ago`;
+
+  const diffInYears = Math.floor(diffInMonths / 12);
+  return `${diffInYears} ${diffInYears === 1 ? "year" : "years"} ago`;
+};
+
+
+
+
 const RecentActivities: React.FC<RecenActivitiesProp> = ({activities}) => {
-  
+   console.log(activities)
 
   return (
     <section className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
@@ -74,7 +100,7 @@ const RecentActivities: React.FC<RecenActivitiesProp> = ({activities}) => {
       {/* Activities */}
       <div className="divide-y divide-slate-50">
         {activities?.map((activity, index) => {
-          const isCredit = activity.type === "credit";
+          const isCredit = activity.type ===  "credit" || "deposit";
           const isDebit = activity.type === "withdrawal";
           const isPending = activity.status === "pending";
 
@@ -91,8 +117,8 @@ const RecentActivities: React.FC<RecenActivitiesProp> = ({activities}) => {
                     isCredit
                       ? "bg-green-100 text-green-600"
                       : isDebit
-                      ? "bg-red-100 text-red-600"
-                      : "bg-amber-100 text-amber-600"
+                        ? "bg-red-100 text-red-600"
+                        : "bg-amber-100 text-amber-600"
                   }`}
                 >
                   {isCredit && <HiArrowDownLeft className="text-lg" />}
@@ -103,10 +129,10 @@ const RecentActivities: React.FC<RecenActivitiesProp> = ({activities}) => {
                 {/* Info */}
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-brand-orange truncate">
-                    {activity.title}
+                    {activity.type}
                   </p>
                   <p className="text-xs text-slate-400 font-medium">
-                    {activity.date}
+                    {formatRelativeTime(activity.createdAt)}
                   </p>
                 </div>
               </div>
@@ -118,11 +144,11 @@ const RecentActivities: React.FC<RecenActivitiesProp> = ({activities}) => {
                   isCredit
                     ? "text-green-600"
                     : isDebit
-                    ? "text-red-600"
-                    : "text-amber-600"
+                      ? "text-red-600"
+                      : "text-amber-600"
                 }`}
               >
-                {activity.amount}
+                ₦ {formatPrice(activity.amount)}
               </p>
             </div>
           );

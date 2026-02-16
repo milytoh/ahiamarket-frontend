@@ -40,7 +40,7 @@ interface WalletActivity {
   status: TransactionStatus;
   amount: number;
   reference: string;
-  date: string;
+  createdAt: string;
 }
 
 interface WalletPlayload {
