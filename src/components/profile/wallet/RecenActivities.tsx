@@ -64,29 +64,37 @@ const formatPrice = (amount: number) => {
 };
 
 export const formatRelativeTime = (dateString: string) => {
+  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
+
   const now = new Date();
   const date = new Date(dateString);
+  const diffInSeconds = Math.floor((date.getTime() - now.getTime()) / 1000);
 
-  const diffInMs = now.getTime() - date.getTime();
-  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  const divisions = [
+    { amount: 60, name: "seconds" },
+    { amount: 60, name: "minutes" },
+    { amount: 24, name: "hours" },
+    { amount: 30, name: "days" },
+    { amount: 12, name: "months" },
+    { amount: Infinity, name: "years" },
+  ];
 
-  if (diffInDays === 0) return "Today";
-  if (diffInDays === 1) return "Yesterday";
-  if (diffInDays < 30) return `${diffInDays} days ago`;
+  let duration = diffInSeconds;
 
-  const diffInMonths = Math.floor(diffInDays / 30);
-  if (diffInMonths < 12)
-    return `${diffInMonths} ${diffInMonths === 1 ? "month" : "months"} ago`;
-
-  const diffInYears = Math.floor(diffInMonths / 12);
-  return `${diffInYears} ${diffInYears === 1 ? "year" : "years"} ago`;
+  for (let i = 0; i < divisions.length; i++) {
+    if (Math.abs(duration) < divisions[i].amount) {
+      return rtf.format(Math.round(duration), divisions[i].name as Intl.RelativeTimeFormatUnit);
+    }
+    duration /= divisions[i].amount;
+  }
 };
 
 
 
 
+
 const RecentActivities: React.FC<RecenActivitiesProp> = ({activities}) => {
-   console.log(activities)
+   
 
   return (
     <section className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">

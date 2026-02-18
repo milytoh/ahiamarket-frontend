@@ -48,7 +48,7 @@ const Modal: React.FC<ModalProps> = ({
 
         {/* Header (Fixed) */}
         <div className="pt-8 pb-4 px-6 text-center">
-          <h2 className="text-2xl font-extrabold text-charcoal">
+          <h2 className="text-2xl font-extrabold text-brand-orange">
             {title}
           </h2>
 

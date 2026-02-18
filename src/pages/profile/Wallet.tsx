@@ -15,6 +15,7 @@ import ErrorEmptyState from "@/components/ui/ErrorEmptyState";
 
 import Modal from "@/components/ui/Modal";
 import DepositForm from "@/components/profile/wallet/DepositForm";
+import WithdrawForm from "@/components/profile/wallet/WithdrawForm";
 
 import { MdAddCircleOutline, MdOutbox } from "react-icons/md";
 
@@ -61,6 +62,8 @@ interface WalletResponse {
 const Wallet: React.FC = () => {
   const [walletData, setWalletData] = useState<WalletResponse | null>(null);
   const [isDepositOpen, setIsDepositOpen] = useState(false);
+  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+
   
 
   //using custom hook
@@ -94,7 +97,7 @@ const Wallet: React.FC = () => {
 
   return (
     <main className="flex-1 px-4 md:px-8 lg:px-1 py-6 w-[]">
-        {/* Deposit Modal */}
+      {/* Deposit Modal */}
       <Modal
         isOpen={isDepositOpen}
         onClose={() => setIsDepositOpen(false)}
@@ -104,6 +107,18 @@ const Wallet: React.FC = () => {
         <DepositForm onClose={() => setIsDepositOpen(false)} />
       </Modal>
 
+      {/* withdrawal modal */}
+      <Modal
+        isOpen={isWithdrawOpen}
+        onClose={() => setIsWithdrawOpen(false)}
+        title="Withdraw Funds"
+        subtitle="Transfer funds securely to your bank account."
+      >
+        <WithdrawForm
+          balance={walletData?.profileWallet.wallet.balance || 0}
+          onClose={() => setIsWithdrawOpen(false)}
+        />
+      </Modal>
 
       {/* CONTENT WRAPPER */}
       <div className="max-w-7xl mx-auto w-full">
@@ -128,11 +143,14 @@ const Wallet: React.FC = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-            <button onClick={() => setIsDepositOpen(true)} className="h-12 px-6 rounded-xl bg-primary text-white font-bold flex items-center justify-center gap-2 shadow-primary/20 shadow-lg">
+            <button
+              onClick={() => setIsDepositOpen(true)}
+              className="h-12 px-6 rounded-xl bg-primary text-white font-bold flex items-center justify-center gap-2 shadow-primary/20 shadow-lg"
+            >
               <MdAddCircleOutline className="text-sm" />
               Deposit Funds
             </button>
-            <button className="text-sm h-12 px-6 rounded-xl bg-accent-orange text-white font-bold flex items-center justify-center gap-2 shadow-accent-orange/20 shadow-lg">
+            <button onClick={() => setIsWithdrawOpen(true)} className="text-sm h-12 px-6 rounded-xl bg-accent-orange text-white font-bold flex items-center justify-center gap-2 shadow-accent-orange/20 shadow-lg">
               <MdOutbox />
               Withdraw
             </button>
@@ -147,14 +165,22 @@ const Wallet: React.FC = () => {
             <WalletBalance
               pending={walletData?.profileWallet.stats.pendingTransactions!}
               totalBalance={walletData?.profileWallet.wallet.balance!}
-              successfullTrans={walletData?.profileWallet.stats.successfulTransactions!}
+              successfullTrans={
+                walletData?.profileWallet.stats.successfulTransactions!
+              }
             />
           )}
           {loading ? <WalletStatsSkeleton /> : <WalletStats />}
         </div>
 
         {/* Activities */}
-        {loading ? <RecentActivitiesSkeleton /> : <RecentActivities activities={ walletData?.profileWallet.recentActivities! } />}
+        {loading ? (
+          <RecentActivitiesSkeleton />
+        ) : (
+          <RecentActivities
+            activities={walletData?.profileWallet.recentActivities!}
+          />
+        )}
       </div>
     </main>
   );
