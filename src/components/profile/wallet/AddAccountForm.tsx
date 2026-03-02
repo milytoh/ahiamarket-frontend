@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useApi } from "@/hooks/useApi";
+import debounce from "lodash.debounce";
 
 import { MdVerified } from "react-icons/md";
 
@@ -45,7 +46,7 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onSuccess }) => {
 
   // Auto verify when account number = 10 digits
   useEffect(() => {
-    const verifyAccount = async () => {
+    const verifyAccount = debounce( async () => {
       if (accountNumber.length !== 10 || !bankCode) return;
 
       try {
@@ -56,15 +57,13 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onSuccess }) => {
           bankCode,
         });
 
-        console.log(res)
-
-        setAccountName(res.data.accountName);
+        setAccountName(res.accountName);
       } catch {
         setAccountName("");
       } finally {
         setVerifying(false);
       }
-    };
+    }, 800);
 
     verifyAccount();
   }, [accountNumber, bankCode]);
@@ -100,9 +99,13 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onSuccess }) => {
           onChange={(e) => setBankCode(e.target.value)}
           className="w-full h-12 px-4 border border-slate-200 rounded-xl focus:border-primary outline-none"
         >
-          <option value="">Select Bank</option>
+          {getLoading ? (
+            <option value="">loading...</option>
+          ) : (
+            <option value="">Select Bank</option>
+          )}
           {banks?.map((bank) => (
-            <option key={bank.code + Math.random() } value={bank.code}>
+            <option key={bank.code + Math.random()} value={bank.code}>
               {bank.name}
             </option>
           ))}
@@ -153,6 +156,6 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onSuccess }) => {
       </button>
     </div>
   );
-};;;
+};
 
 export default AddAccountForm;

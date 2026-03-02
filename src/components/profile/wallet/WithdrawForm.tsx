@@ -9,9 +9,10 @@ import { HiArrowRight } from "react-icons/hi";
 interface WithdrawFormProps {
   balance: number;
   onClose: () => void;
+  bankAccounts: any[]
 }
 
-const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onClose }) => {
+const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onClose, bankAccounts }) => {
   const [amount, setAmount] = useState<string>("");
   const [showAddAccount, setShowAddAccount] = useState(false);
 

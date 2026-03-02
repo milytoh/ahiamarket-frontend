@@ -44,27 +44,29 @@ interface WalletActivity {
   createdAt: string;
 }
 
+interface User {
+  bankAccounts: any[];
+  email: string;
+  fullname: string;
+}
+
 interface WalletPlayload {
   wallet: Wallet;
   stats: WalletStats;
+  user: User;
   recentActivities: WalletActivity[];
 }
 
-
 interface WalletResponse {
-  success: boolean
-  message: string,
-  profileWallet :WalletPlayload
+  success: boolean;
+  message: string;
+  profileWallet: WalletPlayload;
 }
-
-
 
 const Wallet: React.FC = () => {
   const [walletData, setWalletData] = useState<WalletResponse | null>(null);
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
-
-  
 
   //using custom hook
   const { get, loading, error } = useApi<WalletResponse>(
@@ -95,6 +97,8 @@ const Wallet: React.FC = () => {
     );
   }
 
+  console.log(walletData);
+
   return (
     <main className="flex-1 px-4 md:px-8 lg:px-1 py-6 w-[]">
       {/* Deposit Modal */}
@@ -117,6 +121,7 @@ const Wallet: React.FC = () => {
         <WithdrawForm
           balance={walletData?.profileWallet.wallet.balance || 0}
           onClose={() => setIsWithdrawOpen(false)}
+          bankAccounts={walletData?.profileWallet?.user.bankAccounts || []}
         />
       </Modal>
 
@@ -150,7 +155,10 @@ const Wallet: React.FC = () => {
               <MdAddCircleOutline className="text-sm" />
               Deposit Funds
             </button>
-            <button onClick={() => setIsWithdrawOpen(true)} className="text-sm h-12 px-6 rounded-xl bg-accent-orange text-white font-bold flex items-center justify-center gap-2 shadow-accent-orange/20 shadow-lg">
+            <button
+              onClick={() => setIsWithdrawOpen(true)}
+              className="text-sm h-12 px-6 rounded-xl bg-accent-orange text-white font-bold flex items-center justify-center gap-2 shadow-accent-orange/20 shadow-lg"
+            >
               <MdOutbox />
               Withdraw
             </button>
