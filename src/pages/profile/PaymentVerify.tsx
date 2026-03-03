@@ -3,6 +3,8 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { useApi } from "@/hooks/useApi";
 import Spinner from "@/components/ui/Spinner";
 
+import { toast } from "react-toastify";
+
 
 const PaymentVerify = () => {
   const [searchParams] = useSearchParams();
@@ -28,7 +30,7 @@ const PaymentVerify = () => {
             
       try {
        const response = await get();
-
+       toast.success("payment successful")
         // After verification
         navigate("/profile/wallet");
       } catch (error) {

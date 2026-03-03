@@ -11,10 +11,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { otpSchema, OtpFormData } from "@/utils/schemas/registrationSchema";
 import Spinner from "../ui/Spinner";
 
+import { toast } from "react-toastify";
+
 interface OtpData {
   onCloseOtForm: () => void;
-  email: string,
-  naviTo?: string
+  email: string;
+  naviTo?: string;
 }
 
 interface RegisterResponse {
@@ -28,11 +30,11 @@ interface OtpDataPlayload {
 }
 
 const OtpForm: react.FC<OtpData> = ({ onCloseOtForm, email, naviTo }) => {
-  const navigate = useNavigate()
- 
+  const navigate = useNavigate();
+
   //using custom hook
   const { post, loading, error } = useApi<OtpDataPlayload, RegisterResponse>(
-    "http://localhost:3000/api/account/email/verify"
+    "http://localhost:3000/api/account/email/verify",
   );
 
   // handling form and validation with Form hook and zod
@@ -48,31 +50,28 @@ const OtpForm: react.FC<OtpData> = ({ onCloseOtForm, email, naviTo }) => {
     // reValidateMode: "onChange",
   });
 
-
   // otp input value submit
   const onSubmit = async (data: any) => {
     console.log("check...");
     const otpDataArr = Object.values(data);
-    
+
     const otpData = String(otpDataArr.join(""));
 
-    console.log(email, "gggggggggg")
-    
     const response = await post({
       email: email,
       otp: otpData,
     });
 
-
-    if (!error && naviTo=== "login") {
-      return  navigate("/login", { replace: true });
+    if (!error && naviTo === "login") {
+      toast.success("E-mail verification successful, Login to continue");
+      return navigate("/login", { replace: true });
     }
 
     if (!error && naviTo === "home") {
-       onCloseOtForm()
-       return navigate("/login", { replace: true });
-     }
+      onCloseOtForm();
 
+      return navigate("/login", { replace: true });
+    }
   };
 
   return (

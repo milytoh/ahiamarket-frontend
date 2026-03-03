@@ -20,6 +20,8 @@ import { Link, NavLink } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { loginUser } from "@/features/auth/authThunk";
 
+import { toast } from "react-toastify";
+
 interface LoginPayload {
   email: string;
   password: string;
@@ -60,6 +62,7 @@ const LoginForm: React.FC = () => {
       setEmail(data.email);
     
     if (loginUser.fulfilled.match(result)) {
+      toast.success("Login successful")
       navigate("/");
     }
   };

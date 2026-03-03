@@ -2,7 +2,6 @@ import React from "react";
 
 import { useState } from "react";
 
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -15,9 +14,10 @@ import { useApi } from "@/hooks/useApi";
 import InputForm from "./InputForm";
 import Spinner from "../ui/Spinner";
 
+import { toast } from "react-toastify";
+
 interface PRequestPayload {
   email: string;
- 
 }
 
 interface Response {
@@ -26,12 +26,12 @@ interface Response {
 }
 
 const ForgotPasswordForm: React.FC = () => {
-    const [successMsg, setSuccessMsg]  = useState<string | null>(null)
- 
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
   //using custom hook
-   const { post, loading, error } = useApi<PRequestPayload, Response>(
-     `${import.meta.env.VITE_API_URL}/account/request-password-reset`,
-   );
+  const { post, loading, error } = useApi<PRequestPayload, Response>(
+    `${import.meta.env.VITE_API_URL}/account/request-password-reset`,
+  );
 
   // handling form and validation with Form hook and zod
   const {
@@ -43,11 +43,16 @@ const ForgotPasswordForm: React.FC = () => {
   });
 
   //// form submition
-    const onSubmit = async (data: any) => {
-        const response = await post(data);
-        setSuccessMsg((prev) => response.message)
-  
+  const onSubmit = async (data: any) => {
+    const response = await post(data);
+    toast.success("password reset link has been sent to the E-mail provided")
+    setSuccessMsg((prev) => response.message);
+
   };
+
+  if (error) {
+    toast.error("something went wrong")
+  }
 
   return (
     <>

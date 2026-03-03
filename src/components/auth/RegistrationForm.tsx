@@ -18,6 +18,8 @@ import fblogo from "@/assets/images/logos/fb.jfif";
 import { Link, NavLink } from "react-router-dom";
 import Spinner from "../ui/Spinner";
 
+import { toast } from "react-toastify";
+
 
 
 //Password strength logic
@@ -95,14 +97,22 @@ const RegistrationForm: React.FC = () => {
  
   //// form submition
   const onSubmit = async (data: any) => {
-    console.log(data.email)
+    
     const response = await post(data);
+    toast.success("Registration successful, verification your email to continue")
     
     // showing otp form if registration was successful
+
     if (!error) {
+   
       setEmail((prv) => data.email)
       setShowOtp((pr) => true)
     }
+
+    if (error) {
+      toast.error(error.message);
+    }
+      
     
     // reset()
   };
