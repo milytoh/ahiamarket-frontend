@@ -97,7 +97,7 @@ const Wallet: React.FC = () => {
     );
   }
 
-  console.log(walletData);
+
 
   return (
     <main className="flex-1 px-4 md:px-8 lg:px-1 py-6 w-[]">

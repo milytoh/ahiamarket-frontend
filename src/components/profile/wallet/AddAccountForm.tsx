@@ -4,6 +4,8 @@ import debounce from "lodash.debounce";
 
 import { MdVerified } from "react-icons/md";
 
+import Spinner from "@/components/ui/Spinner";
+
 interface AddAccountFormProps {
   onSuccess: () => void;
 }
@@ -82,7 +84,7 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onSuccess }) => {
 
       onSuccess();
     } catch (err) {
-      console.log(err);
+     console.log(err)
     } finally {
       setLoading(false);
     }
@@ -152,7 +154,8 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onSuccess }) => {
         onClick={handleSubmit}
         className="w-full h-14 bg-primary text-white font-bold rounded-xl disabled:opacity-50"
       >
-        {loading ? "Saving..." : "Save Account"}
+        {setAcctLoading ? <Spinner size="md"/>
+        : "Save Account"}
       </button>
     </div>
   );

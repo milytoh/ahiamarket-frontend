@@ -13,8 +13,15 @@ interface WithdrawFormProps {
 }
 
 const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onClose, bankAccounts }) => {
+
+  
   const [amount, setAmount] = useState<string>("");
   const [showAddAccount, setShowAddAccount] = useState(false);
+
+  const [selectedAccountId, setSelectedAccountId] = useState<string | null>(
+    bankAccounts?.find((acc) => acc.isDefault)?._id || null,
+  );
+
 
   const feePercent = 1;
 
@@ -55,18 +62,54 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onClose, bankAccou
         )}
       </Modal>
       <div className="space-y-8">
-        {/* Saved Accounts */}
+       
         <div className="space-y-3">
           <p className="text-xs font-bold uppercase text-slate-400">
             Saved Accounts
           </p>
 
-          <div className="p-4 rounded-xl border border-slate-200 bg-white hover:border-primary transition cursor-pointer">
-            <p className="font-semibold text-sm">Access Bank</p>
-            <p className="text-xs text-slate-500">**** 1234 • John Doe</p>
-          </div>
+          {bankAccounts.length === 0 ? (
+            <div className="text-sm text-slate-400 p-4 border rounded-xl">
+              No save bank account
+            </div>
+          ) : (
+            bankAccounts.map((acct) => {
+              const isSelected = selectedAccountId === acct._id;
 
-          <button onClick={() => setShowAddAccount(true)} className="w-full flex flex-col items-center justify-center py-6 border-2 border-dashed border-slate-200 rounded-xl hover:border-primary transition bg-slate-50">
+              return (
+                <div
+                  key={acct._id}
+                  onClick={() => setSelectedAccountId(acct._id)}
+                  className={`
+            p-4 rounded-xl border cursor-pointer transition
+            flex items-center justify-between
+            ${
+              isSelected
+                ? "border-primary bg-primary/5"
+                : "border-slate-200 hover:border-primary"
+            }
+          `}
+                >
+                  <div>
+                    <p className="font-semibold text-sm">{acct.accountName}</p>
+                    <p className="text-xs text-slate-500">
+                      **** {acct.accountNumber.slice(-4)}
+                    </p>
+                  </div>
+
+                  {isSelected && (
+                    <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                      <div className="w-2 h-2 bg-white rounded-full" />
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
+          <button
+            onClick={() => setShowAddAccount(true)}
+            className="w-full flex flex-col items-center justify-center py-6 border-2 border-dashed border-slate-200 rounded-xl hover:border-primary transition bg-slate-50"
+          >
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-2">
               <FiPlus className="text-primary" size={20} />
             </div>
@@ -141,7 +184,7 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onClose, bankAccou
         {/* CTA Button */}
         <button
           onClick={handleWithdraw}
-          disabled={!amount || Number(amount) <= 0 || Number(amount) > balance}
+          disabled={!amount || Number(amount) <= 0 || Number(amount) > balance || bankAccounts.length <= 0}
           className="w-full h-14 bg-accent-orange text-white font-bold rounded-xl shadow-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
         >
           Withdraw Now
