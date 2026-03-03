@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 import { useApi } from "@/hooks/useApi";
- 
 
 import {
   Wallet,
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 
 import Spinner from "@/components/ui/Spinner";
+import { toast } from "react-toastify";
 
 interface Props {
   onClose: () => void;
@@ -32,7 +32,6 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
     "http://localhost:3000/api/wallet/fund",
   );
 
-
   const formatCurrency = (value: number) => {
     return value.toLocaleString("en-NG");
   };
@@ -40,35 +39,31 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log({
-      amount,
-      method,
-    });
+    if (amount < 100) {
+      setAmountValid(false);
 
-    if( amount < 100) {
-       setAmountValid(false);
-
-       return;
+      return;
     }
 
     // integrate Paystack here later
-
-      try {
-        const response = await post({amount});
-        console.log("kkkkkk")
-        console.log(response);
-        window.location.href = response?.data?.data?.authorization_url
-      } catch (err) {
-        console.error(err);
-      }
+    try {
+      const response = await post({ amount });
+      window.location.href = response?.data?.data?.authorization_url;
+    } catch (err) {
+      console.error(err);
+    }
 
     onClose();
   };
 
+  if (error) {
+    toast.error(error.message);
+  }
+
   return (
     <form
       onSubmit={handleSubmit}
-      className= "flex flex-col overflow-y-auto px-5 sm:px-8 pb-8 pt-6 gap-8 "
+      className="flex flex-col overflow-y-auto px-5 sm:px-8 pb-8 pt-6 gap-8 "
     >
       {/* Amount */}
       <div className="flex flex-col gap-2">
@@ -101,7 +96,12 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
             />
           </div>
         </label>
-        {!amoutValid && <p className="text-red-700">  invalid amount, should be 100 naira and above </p>}
+        {!amoutValid && (
+          <p className="text-red-700">
+            {" "}
+            invalid amount, should be 100 naira and above{" "}
+          </p>
+        )}
       </div>
 
       {/* Payment Methods */}
@@ -235,12 +235,16 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
                      shadow-primary/20 transition-all flex items-center 
                      justify-center gap-3"
         >
-
-          {loading && <Spinner/>}
+          {loading && <Spinner />}
           {!loading && <span>Proceed to Pay ₦{formatCurrency(amount)}</span>}
           {!loading && <ArrowRight size={20} />}
         </button>
-        {!amoutValid && <p className="text-red-700">  invalid amount, should be 100 naira and above </p>}
+        {!amoutValid && (
+          <p className="text-red-700">
+            {" "}
+            invalid amount, should be 100 naira and above{" "}
+          </p>
+        )}
 
         {/* Security Info */}
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 opacity-50">

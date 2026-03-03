@@ -52,7 +52,7 @@ const OtpForm: react.FC<OtpData> = ({ onCloseOtForm, email, naviTo }) => {
 
   // otp input value submit
   const onSubmit = async (data: any) => {
-    console.log("check...");
+  
     const otpDataArr = Object.values(data);
 
     const otpData = String(otpDataArr.join(""));

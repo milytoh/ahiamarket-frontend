@@ -6,6 +6,8 @@ import { MdVerified } from "react-icons/md";
 
 import Spinner from "@/components/ui/Spinner";
 
+import { toast } from "react-toastify";
+
 interface AddAccountFormProps {
   onSuccess: () => void;
 }
@@ -83,12 +85,17 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onSuccess }) => {
       });
 
       onSuccess();
+      toast.success("Bank account add successful")
     } catch (err) {
      console.log(err)
     } finally {
       setLoading(false);
     }
   };
+
+  if (setAcctError) {
+    toast.error('failed. something went wrong!')
+  }
 
   return (
     <div className="space-y-6">

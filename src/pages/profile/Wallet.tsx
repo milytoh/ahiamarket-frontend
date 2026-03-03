@@ -19,6 +19,8 @@ import WithdrawForm from "@/components/profile/wallet/WithdrawForm";
 
 import { MdAddCircleOutline, MdOutbox } from "react-icons/md";
 
+import { toast } from "react-toastify";
+
 type TransactionType = "deposit" | "withdrawal" | "credit";
 type TransactionStatus = "success" | "pending" | "failed";
 
@@ -88,6 +90,7 @@ const Wallet: React.FC = () => {
   }, []);
 
   if (error) {
+     toast.error("something went wrong, check your network connection");
     return (
       <ErrorState
         title="Failed to load Wallet Summary"

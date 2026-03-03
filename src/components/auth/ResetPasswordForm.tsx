@@ -15,6 +15,8 @@ import { useApi } from "@/hooks/useApi";
 import InputForm from "./InputForm";
 import Spinner from "../ui/Spinner";
 
+import { toast } from "react-toastify";
+
 interface PRequestPayload {
   email: string;
 }
@@ -25,11 +27,11 @@ interface Response {
 }
 
 interface ResetPassword {
-  id: string | null,
-  token: string | null
+  id: string | null;
+  token: string | null;
 }
 
-const ResetPasswordForm: React.FC<ResetPassword> = ({id,token}) => {
+const ResetPasswordForm: React.FC<ResetPassword> = ({ id, token }) => {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -59,9 +61,13 @@ const ResetPasswordForm: React.FC<ResetPassword> = ({id,token}) => {
     setSuccessMsg((prev) => response.message);
 
     if (!error) {
-       navigate("/login", { replace: true });
+      toast.success("password rest successful");
+      navigate("/login", { replace: true });
     }
 
+    if (error) {
+      toast.error(error.message);
+    }
   };
 
   return (

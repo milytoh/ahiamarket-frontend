@@ -13,12 +13,13 @@ import WalletCTA from "@/components/profile/index/Walletcta";
 import ErrorState from "@/components/ui/Error";
 import ErrorEmptyState from "@/components/ui/ErrorEmptyState";
 
-
 /// skeleton ui
 import ProfileHeroSkeleton from "@/components/ui/skeletons/profile/index/Profileheroskeleton";
 import StatsCardsSkeleton from "@/components/ui/skeletons/profile/index/Statscardsskeleton";
 import PersonalInfoSkeleton from "@/components/ui/skeletons/profile/index/Personalinfoskeleton";
 import TrustScoreSkeleton from "@/components/ui/skeletons/profile/index/TrustScoreSkeleton";
+
+import { toast } from "react-toastify";
 
 interface ApiResponse<T> {
   success: boolean;
@@ -40,7 +41,7 @@ export interface UserProfile {
   email: string;
   avatar?: string;
   memberSince: string;
-  trustScore?: number
+  trustScore?: number;
 }
 
 interface ProfileStats {
@@ -90,7 +91,7 @@ const Profile: React.FC = () => {
         console.log(response);
         setProfile(response.profile);
       } catch (err) {
-        console.error(err);
+        toast.error("something went wrong, check your network connection,,,,,");
       }
     };
 
@@ -99,24 +100,28 @@ const Profile: React.FC = () => {
 
   const excellenct = {
     value: profile?.trustScore.breakdown[0].value!,
-    isPrimary: profile?.trustScore.breakdown[0].isPrimary!
+    isPrimary: profile?.trustScore.breakdown[0].isPrimary!,
+  };
 
+  if (error) {
+    toast.error("something went wrong, check your network connection");
+    return (
+      <ErrorState
+        title="Failed to load profile"
+        message={error.message}
+        onRetry={get}
+      />
+    );
   }
 
- if (error) {
-   return (
-     <ErrorState title="Failed to load profile" message={error.message} onRetry={get} />
-   );
+  if (!profile && !loading && error) {
+    return (
+      <ErrorEmptyState
+        title="No profile data"
+        message="We couldn’t find your profile information."
+      />
+    );
   }
-  
-   if (!profile && !loading && error) {
-     return (
-       <ErrorEmptyState
-         title="No profile data"
-         message="We couldn’t find your profile information."
-       />
-     );
-   }
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 md:space-y-8">
