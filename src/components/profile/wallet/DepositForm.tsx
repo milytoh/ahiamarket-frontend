@@ -64,6 +64,7 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
     <form
       onSubmit={handleSubmit}
       className="flex flex-col overflow-y-auto px-5 sm:px-8 pb-8 pt-6 gap-8 "
+      
     >
       {/* Amount */}
       <div className="flex flex-col gap-2">

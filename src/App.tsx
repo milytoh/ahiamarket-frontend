@@ -6,8 +6,11 @@ import useScrollToTop from "@/hooks/useScrollToTop";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import { useAOS } from "@/hooks/useAos";
+
 
 function App() {
+  useAOS();
   useScrollToTop()
   return (
     <>

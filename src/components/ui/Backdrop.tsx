@@ -22,6 +22,7 @@ const Backdrop: React.FC<BackdropProps> = ({
       <div
         className="relative w-full max-w-[520px] bg-white rounded-2xl
                    shadow-xl border border-slate-100 overflow-hidden"
+        data-aos="zoom-in"
         onClick={(e) => e.stopPropagation()} // prevent closing when clicking inside
       >
         {children}

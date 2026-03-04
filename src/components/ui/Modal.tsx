@@ -35,6 +35,7 @@ const Modal: React.FC<ModalProps> = ({
           flex flex-col
           overflow-hidden
         "
+     
       >
         {/* Close button */}
         <button
@@ -48,21 +49,15 @@ const Modal: React.FC<ModalProps> = ({
 
         {/* Header (Fixed) */}
         <div className="pt-8 pb-4 px-6 text-center">
-          <h2 className="text-2xl font-extrabold text-brand-orange">
-            {title}
-          </h2>
+          <h2 className="text-2xl font-extrabold text-brand-orange">{title}</h2>
 
           {subtitle && (
-            <p className="text-slate-500 text-sm mt-2">
-              {subtitle}
-            </p>
+            <p className="text-slate-500 text-sm mt-2">{subtitle}</p>
           )}
         </div>
 
         {/* Body (Scrollable) */}
-        <div className="flex-1 overflow-y-auto px-6 pb-6">
-          {children}
-        </div>
+        <div className="flex-1 overflow-y-auto px-6 pb-6">{children}</div>
       </div>
     </Backdrop>
   );
