@@ -22,6 +22,8 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onClose, bankAccou
     bankAccounts?.find((acc) => acc.isDefault)?._id || null,
   );
 
+  
+
 
   const feePercent = 1;
 
