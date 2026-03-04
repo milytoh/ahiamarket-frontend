@@ -1,10 +1,14 @@
 import AddAccountForm from "./AddAccountForm";
 import Modal from "@/components/ui/Modal";
+import { useApi } from "@/hooks/useApi";
 
 import { useMemo, useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { MdVerifiedUser } from "react-icons/md";
 import { HiArrowRight } from "react-icons/hi";
+import Spinner from "@/components/ui/Spinner";
+
+import { toast } from "react-toastify";
 
 interface WithdrawFormProps {
   balance: number;
@@ -12,18 +16,22 @@ interface WithdrawFormProps {
   bankAccounts: any[]
 }
 
-const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onClose, bankAccounts }) => {
+interface WithdrawResponse {
+  message: string;
+  data: any
+}
 
-  
+const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onClose, bankAccounts }) => {
   const [amount, setAmount] = useState<string>("");
   const [showAddAccount, setShowAddAccount] = useState(false);
-
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(
     bankAccounts?.find((acc) => acc.isDefault)?._id || null,
   );
 
-  
-
+   //using custom hook
+    const { post, loading, error } = useApi(
+      "http://localhost:3000/api/payment/wallet/withdraw",
+    );
 
   const feePercent = 1;
 
@@ -37,14 +45,27 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onClose, bankAccou
     return Number(amount) + fee;
   }, [amount, fee]);
 
-  const handleWithdraw = () => {
-    if (!amount || Number(amount) <= 0) return;
+  const handleWithdraw = async() => {
+
+
+    if (!amount || Number(amount) < 1000) {
+        toast.warning("you can only withdraw 1,000 naira and above")
+      return;
+    };
     if (Number(amount) > balance) return;
 
     console.log("Withdraw:", amount);
 
+    const response = await post({amount})
+
+    
+
     onClose();
   };
+
+  if (error) {
+    toast.error(error.message)
+  }
 
   return (
     <>
@@ -64,7 +85,6 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onClose, bankAccou
         )}
       </Modal>
       <div className="space-y-8">
-       
         <div className="space-y-3">
           <p className="text-xs font-bold uppercase text-slate-400">
             Saved Accounts
@@ -186,11 +206,17 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onClose, bankAccou
         {/* CTA Button */}
         <button
           onClick={handleWithdraw}
-          disabled={!amount || Number(amount) <= 0 || Number(amount) > balance || bankAccounts.length <= 0}
+          disabled={
+            !amount ||
+            Number(amount) <= 0 ||
+            Number(amount) > balance ||
+            bankAccounts.length <= 0
+          }
           className="w-full h-14 bg-accent-orange text-white font-bold rounded-xl shadow-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
         >
-          Withdraw Now
-          <HiArrowRight />
+          {loading && <Spinner />}
+          {!loading && "Withdraw Now"}
+          {!loading && <HiArrowRight />}
         </button>
       </div>
     </>
