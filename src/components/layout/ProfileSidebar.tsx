@@ -7,6 +7,7 @@ import {
   HiOutlineWallet,
   HiOutlineHeart,
   HiOutlineCog6Tooth,
+  HiOutlineClock,
 } from "react-icons/hi2";
 
 import { HiOutlineLogout } from "react-icons/hi";
@@ -72,9 +73,9 @@ const ProfileSidebar: React.FC = () => {
         
           
           <SidebarNavLink
-            to="/profile/settings"
-            icon={<HiOutlineCog6Tooth />}
-             label="My Favorites"
+            to="/profile/transaction/history"
+            icon={<HiOutlineClock />}
+             label="Transaction History"
           />
 
           <SidebarNavLink
