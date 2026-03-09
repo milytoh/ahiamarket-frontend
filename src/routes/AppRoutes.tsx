@@ -13,6 +13,8 @@ import ResetPassword from "@/pages/auth/ResetPassword";
 import Profile from "@/pages/profile/Profile";
 import Wallet from "@/pages/profile/Wallet";
 import PaymentVerify from "@/pages/profile/PaymentVerify";
+import TransactionHistory from "@/pages/profile/TransactionHistory";
+
 
 const AppRoutes = () => {
   return (
@@ -42,7 +44,7 @@ const AppRoutes = () => {
         <Route path="/profile" element={<ProfileLayout />}>
           <Route index element={<Profile />} />
           <Route path="/profile/wallet" element={<Wallet />} />
-          <Route path="/profile/transaction/history" element={<Wallet />} />
+          <Route path="/profile/transaction/history" element={<TransactionHistory />} />
         </Route>
         <Route path="/payment/verify" element={<PaymentVerify />} />
       </Route>

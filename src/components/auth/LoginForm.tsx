@@ -67,6 +67,10 @@ const LoginForm: React.FC = () => {
     }
   };
 
+  if (error) {
+    toast.error(`${error.message}, please check your internet connection and try`)
+  }
+
   
   // google auth redirect url
   const handleGoogleLogin = () => {
