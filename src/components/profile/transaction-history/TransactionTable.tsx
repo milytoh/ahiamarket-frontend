@@ -1,25 +1,16 @@
 import TransactionRow from "./TransactionRow";
+
+
 import { Transaction } from "./TransactionRow";
 
-export default function TransactionTable() {
-  const transactions: Transaction[]  =  [
-    {
-      date: "Oct 24, 2023",
-      time: "14:22 PM",
-      desc: "NVIDIA RTX 4090 Purchase",
-      method: "Main Wallet",
-      amount: "-$1,599.00",
-      status: "Success",
-    },
-    {
-      date: "Oct 23, 2023",
-      time: "09:15 AM",
-      desc: "Wallet Top-up",
-      method: "Mastercard ****4242",
-      amount: "+$5,000.00",
-      status: "Pending",
-    },
-  ];
+interface Prop {
+  transactions: Transaction[];
+}
+
+
+export default function TransactionTable({transactions}: Prop) {
+
+
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm">

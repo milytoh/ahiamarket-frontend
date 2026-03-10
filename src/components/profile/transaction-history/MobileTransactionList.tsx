@@ -1,6 +1,12 @@
 import { FiShoppingBag, FiCreditCard, FiTruck } from "react-icons/fi";
 
-export default function MobileTransactionList({ transactions }) {
+import { Transaction } from "./TransactionRow";
+
+interface Prop {
+    transactions :Transaction[]
+}
+
+export default function MobileTransactionList({ transactions }:Prop  ) {
   return (
     <div className="md:hidden space-y-3">
       {transactions.map((tx, i) => (
