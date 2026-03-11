@@ -42,7 +42,7 @@ const WalletBalance: React.FC<WalletBalanceProp> = ({totalBalance, pending, succ
         <BalanceItem
           icon={<MdTimer />}
           label="On-hold Funds"
-          value={`₦ ${pending}`}
+          value={` ${pending}`}
           bg="bg-blue-50"
           color="text-blue-600"
         />
@@ -50,7 +50,7 @@ const WalletBalance: React.FC<WalletBalanceProp> = ({totalBalance, pending, succ
         <BalanceItem
           icon={<HiOutlineShoppingBag />}
           label="Successful Transactions"
-          value={`₦ ${successfullTrans}`}
+          value={` ${successfullTrans}`}
           bg="bg-primary/10"
           color="text-primary"
         />
