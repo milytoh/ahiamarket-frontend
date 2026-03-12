@@ -30,6 +30,43 @@ const transactions: Transaction[] = [
   },
 ];
 
+const formatTransactions = (data:any) => {
+  return data.map((tx: any) => {
+    const dateObj = new Date(tx.createdAt);
+
+    const date = dateObj.toLocaleDateString("en-US", {
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    });
+
+    const time = dateObj.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    return {
+      date,
+      time,
+      desc: tx.type === "deposit" ? "Wallet Top-up" : "Wallet Withdrawal",
+
+      method:
+        tx.channel === "card"
+          ? "Card"
+          : tx.channel === "bank_transfer"
+            ? "Bank Transfer"
+            : "Wallet",
+
+      amount:
+        tx.type === "deposit"
+          ? `+$${tx.amount.toLocaleString()}`
+          : `-$${tx.amount.toLocaleString()}`,
+
+      status: tx.status.charAt(0).toUpperCase() + tx.status.slice(1),
+    };
+  });
+};
+
 type Filters = {
   startDate?: Date | null;
   endDate?: Date | null;
