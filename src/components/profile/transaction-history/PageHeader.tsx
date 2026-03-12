@@ -5,7 +5,7 @@ export default function PageHeader() {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
       <div className="flex items-center gap-3">
-        <div className="bg-primary p-2 rounded-lg text-white">
+        <div className="bg-brand-orange p-2 rounded-lg text-white">
           <FiFileText />
         </div>
 
