@@ -9,7 +9,7 @@ interface Prop {
 export default function MobileTransactionList({ transactions }:Prop  ) {
   return (
     <div className="md:hidden space-y-3">
-      {transactions.map((tx, i) => (
+      {transactions?.map((tx, i) => (
         <div
           key={i}
           className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm active:bg-slate-50 transition-colors flex items-center justify-between cursor-pointer"

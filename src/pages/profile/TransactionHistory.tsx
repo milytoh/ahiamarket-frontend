@@ -11,27 +11,28 @@ import MobileTransactionList from "@/components/profile/transaction-history/Mobi
 import { Transaction } from "@/components/profile/transaction-history/TransactionRow";
 import { ur } from "zod/v4/locales";
 
-const transactions: Transaction[] = [
-  {
-    date: "Oct 24, 2023",
-    time: "14:22 PM",
-    desc: "NVIDIA RTX 4090 Purchase",
-    method: "Main Wallet",
-    amount: "-$1,599.00",
-    status: "Success",
-  },
-  {
-    date: "Oct 23, 2023",
-    time: "09:15 AM",
-    desc: "Wallet Top-up",
-    method: "Mastercard ****4242",
-    amount: "+$5,000.00",
-    status: "Pending",
-  },
-];
+// const transactions: Transaction[] = [
+//   {
+//     date: "Oct 24, 2023",
+//     time: "14:22 PM",
+//     desc: "NVIDIA RTX 4090 Purchase",
+//     method: "Main Wallet",
+//     amount: "-$1,599.00",
+//     status: "Success",
+//   },
+//   {
+//     date: "Oct 23, 2023",
+//     time: "09:15 AM",
+//     desc: "Wallet Top-up",
+//     method: "Mastercard ****4242",
+//     amount: "+$5,000.00",
+//     status: "Pending",
+//   },
+// ];
 
+//format transaction data
 const formatTransactions = (data:any) => {
-  return data.map((tx: any) => {
+  return data?.map((tx: any) => {
     const dateObj = new Date(tx.createdAt);
 
     const date = dateObj.toLocaleDateString("en-US", {
@@ -86,7 +87,11 @@ export default function TransactionHistory() {
   const [url, setUrl] = useState(
     "http://localhost:3000/api/user/profile/wallet/transactions?type=all",
   );
-  const [transactionData, setTransactionData] = useState()
+  const [transactionData, setTransactionData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(5);
+  const [total, setTotal] = useState(0);
+
   
 
   const { get, loading, error } = useApi(
@@ -110,7 +115,9 @@ export default function TransactionHistory() {
     console.log(params)
 
      const newUrl = `http://localhost:3000/api/user/profile/wallet/transactions${
-       params.toString() ? `?${params.toString()}` : ""
+       params.toString()
+         ? `?${params.toString()}&page=${page}&limit=${limit}`
+         : `?page=${page}&limit=${limit}`
      }`;
     setUrl(
       (pre) => newUrl
@@ -124,7 +131,9 @@ export default function TransactionHistory() {
    const fetchData = async () => {
      try {
        const response = await get();
-       console.log(response);
+       console.log(response, 'responsssss')
+       setTotal(response.total)
+       setTransactionData(formatTransactions(response.transactions))
      } catch (err) {
        console.error(err);
      }
@@ -132,6 +141,8 @@ export default function TransactionHistory() {
 
    fetchData();
  }, [url]);
+  
+  console.log(transactionData)
 
   return (
     <main className="flex-1 flex flex-col ">
@@ -142,14 +153,19 @@ export default function TransactionHistory() {
       <FiltersBar onChange={handleFilters} total={6} />
 
       {/* MOBILE */}
-      <MobileTransactionList transactions={transactions} />
+      <MobileTransactionList transactions={transactionData!} />
 
       {/* DESKTOP */}
       <div className="hidden md:block">
-        <TransactionTable transactions={transactions} />
+        <TransactionTable transactions={transactionData!} />
       </div>
 
-      <Pagination />
+      <Pagination
+        page={page}
+        total={total}
+        limit={limit}
+        onPageChange={(p) => setPage(p)}
+      />
     </main>
   );
 }

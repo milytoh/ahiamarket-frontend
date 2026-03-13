@@ -44,7 +44,7 @@ export default function TransactionTable({transactions}: Prop) {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {transactions.map((tx, i) => (
+            {transactions?.map((tx, i) => (
               <TransactionRow key={i} tx={tx} />
             ))}
           </tbody>
