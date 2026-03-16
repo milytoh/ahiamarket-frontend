@@ -88,15 +88,24 @@ const Profile: React.FC = () => {
     const fetchProfile = async () => {
       try {
         const response = await get();
-        console.log(response);
+        
         setProfile(response.profile);
       } catch (err) {
-        toast.error("something went wrong, check your network connection,,,,,");
+       
+          
+   
       }
     };
 
     fetchProfile();
   }, []);
+
+  useEffect(() => {
+    if (error) {
+      toast.error("something went wrong, check your network connection");
+    }
+  }, [error])
+
 
   const excellenct = {
     value: profile?.trustScore.breakdown[0].value!,
@@ -104,7 +113,7 @@ const Profile: React.FC = () => {
   };
 
   if (error) {
-    toast.error("something went wrong, check your network connection");
+
     return (
       <ErrorState
         title="Failed to load profile"

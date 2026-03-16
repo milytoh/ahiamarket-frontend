@@ -3,10 +3,19 @@ import { FiShoppingBag, FiCreditCard, FiTruck } from "react-icons/fi";
 import { Transaction } from "./TransactionRow";
 
 interface Prop {
-    transactions :Transaction[]
+  transactions: Transaction[];
+  
 }
 
-export default function MobileTransactionList({ transactions }:Prop  ) {
+
+
+
+
+export default function MobileTransactionList({
+  transactions,
+  hasMore,
+  onLoadMore,
+}: Prop) {
   return (
     <div className="md:hidden space-y-3">
       {transactions?.map((tx, i) => (
@@ -47,14 +56,23 @@ export default function MobileTransactionList({ transactions }:Prop  ) {
                   : tx.status === "Pending"
                     ? "bg-amber-50 text-amber-600"
                     : "bg-rose-50 text-rose-600"
-              }
-              `}
+              }`}
             >
               {tx.status}
             </span>
           </div>
         </div>
       ))}
+
+      {/* LOAD MORE */}
+      {hasMore && (
+        <button
+          onClick={onLoadMore}
+          className="w-full py-3 text-sm font-semibold bg-slate-100 rounded-xl active:scale-[0.98]"
+        >
+          Show More
+        </button>
+      )}
     </div>
   );
 }

@@ -260,7 +260,7 @@ export default function FiltersBar({ onChange, total }: Props) {
         <div className="flex flex-wrap items-center gap-3">
           {/* FROM DATE */}
           <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg">
-            <FiCalendar className="text-slate-400" />
+            <FiCalendar  className="text-brand-orange" />
 
             <DatePicker
               selected={filters.startDate}

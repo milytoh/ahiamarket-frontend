@@ -11,7 +11,6 @@ import MobileTransactionList from "@/components/profile/transaction-history/Mobi
 import { Transaction } from "@/components/profile/transaction-history/TransactionRow";
 import { ur } from "zod/v4/locales";
 
-// const transactions: Transaction[] = [
 //   {
 //     date: "Oct 24, 2023",
 //     time: "14:22 PM",
@@ -60,8 +59,8 @@ const formatTransactions = (data:any) => {
 
       amount:
         tx.type === "deposit"
-          ? `+$${tx.amount.toLocaleString()}`
-          : `-$${tx.amount.toLocaleString()}`,
+          ? `+₦${tx.amount.toLocaleString()}`
+          : `-₦${tx.amount.toLocaleString()}`,
 
       status: tx.status.charAt(0).toUpperCase() + tx.status.slice(1),
     };
@@ -84,24 +83,54 @@ const defaultFilters: Filters = {
 
 export default function TransactionHistory() {
 
-  const [url, setUrl] = useState(
-    "http://localhost:3000/api/user/profile/wallet/transactions?type=all",
-  );
+  
   const [transactionData, setTransactionData] = useState([]);
   const [page, setPage] = useState(1);
   const [limit] = useState(5);
   const [total, setTotal] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [filters, setFilters] = useState<Filters>({
+    type: "all",
+  });
 
-  
+  const [url, setUrl] = useState(
+    `http://localhost:3000/api/user/profile/wallet/transactions?type=all&page=1&limit=${limit}`,
+  );
 
   const { get, loading, error } = useApi(
    url
   );
 
-  const handleFilters = async (filters: Filters) => {
+  // const handleFilters = async (filters: Filters) => {
+  //   const params = new URLSearchParams();
+
+  //   if (filters.startDate)
+  //     params.append("startDate", filters.startDate.toISOString());
+
+  //   if (filters.endDate)
+  //     params.append("endDate", filters.endDate.toISOString());
+
+  //   if (filters.type !== "all") params.append("type", filters.type);
+  //   if (filters.type === 'all') params.append("type", filters.type)
+
+  //    const newUrl = `http://localhost:3000/api/user/profile/wallet/transactions${
+  //      params.toString()
+  //        ? `?${params.toString()}&page=${page}&limit=${limit}`
+  //        : `?page=${page}&limit=${limit}`
+  //    }`;
+  //   setUrl(
+  //     (pre) => newUrl
+  //   )
+
+  // };
+
+  const handleFilters = (newFilters: Filters) => {
+    setPage(1); // reset pagination
+    setFilters(newFilters);
+  };
+
+  useEffect(() => {
     const params = new URLSearchParams();
-    
-    console.log(filters)
 
     if (filters.startDate)
       params.append("startDate", filters.startDate.toISOString());
@@ -109,40 +138,39 @@ export default function TransactionHistory() {
     if (filters.endDate)
       params.append("endDate", filters.endDate.toISOString());
 
-    if (filters.type !== "all") params.append("type", filters.type);
-    if (filters.type === 'all') params.append("type", filters.type)
-    
-    console.log(params)
+    params.append("type", filters.type);
 
-     const newUrl = `http://localhost:3000/api/user/profile/wallet/transactions${
-       params.toString()
-         ? `?${params.toString()}&page=${page}&limit=${limit}`
-         : `?page=${page}&limit=${limit}`
-     }`;
-    setUrl(
-      (pre) => newUrl
-    )
+    params.append("page", String(page));
+    params.append("limit", String(limit));
 
-  };
+    const newUrl = `http://localhost:3000/api/user/profile/wallet/transactions?${params.toString()}`;
+
+    setUrl(newUrl);
+  }, [filters, page, limit]);
 
  useEffect(() => {
    if (!url) return;
 
    const fetchData = async () => {
      try {
+      
        const response = await get();
-       console.log(response, 'responsssss')
+      
        setTotal(response.total)
        setTransactionData(formatTransactions(response.transactions))
+       setHasMore(page < response.totalPages);
      } catch (err) {
        console.error(err);
      }
    };
 
    fetchData();
- }, [url]);
+ }, [url,]);
   
-  console.log(transactionData)
+ 
+
+  const showingNum = Math.min(page * limit, total);
+  
 
   return (
     <main className="flex-1 flex flex-col ">
@@ -150,7 +178,7 @@ export default function TransactionHistory() {
 
       <PageHeader />
 
-      <FiltersBar onChange={handleFilters} total={6} />
+      <FiltersBar onChange={handleFilters} total={showingNum} />
 
       {/* MOBILE */}
       <MobileTransactionList transactions={transactionData!} />

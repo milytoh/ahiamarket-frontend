@@ -64,12 +64,14 @@ const LoginForm: React.FC = () => {
     if (loginUser.fulfilled.match(result)) {
       toast.success("Login successful")
       navigate("/");
+    } else {
+        toast.error(
+          `${error? error.message: "something went wrong, check your network connection"}`
+        );
     }
   };
 
-  if (error) {
-    toast.error(`${error.message}, please check your internet connection and try`)
-  }
+ 
 
   
   // google auth redirect url
