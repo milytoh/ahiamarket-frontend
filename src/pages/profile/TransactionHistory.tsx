@@ -10,6 +10,8 @@ import MobileTransactionList from "@/components/profile/transaction-history/Mobi
 
 import TransactionTableSkeleton from "@/components/ui/skeletons/profile/transaction/transactionTable";
 import MobileTransactionListSkeleton from "@/components/ui/skeletons/profile/transaction/MobileTransaction";
+import ErrorState from "@/components/ui/Error";
+import { toast } from "react-toastify";
 
 
 //format transaction data
@@ -146,6 +148,23 @@ export default function TransactionHistory() {
     setPage(next);
     
   };
+
+  // for error
+   if (error) {
+     return (
+       <ErrorState
+         title="Failed to load profile"
+         message={error.message || "something went wrong"}
+         onRetry={get}
+       />
+     );
+  }
+  
+   useEffect(() => {
+      if (error) {
+        toast.error("something went wrong, check your network connection");
+      }
+    }, [error])
   
 
   return (
