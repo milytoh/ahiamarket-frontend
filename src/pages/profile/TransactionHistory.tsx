@@ -8,26 +8,9 @@ import TransactionTable from "@/components/profile/transaction-history/Transacti
 import Pagination from "@/components/profile/transaction-history/Pagination";
 import MobileTransactionList from "@/components/profile/transaction-history/MobileTransactionList";
 
-import { Transaction } from "@/components/profile/transaction-history/TransactionRow";
-import { ur } from "zod/v4/locales";
+import TransactionTableSkeleton from "@/components/ui/skeletons/profile/transaction/transactionTable";
+import MobileTransactionListSkeleton from "@/components/ui/skeletons/profile/transaction/MobileTransaction";
 
-//   {
-//     date: "Oct 24, 2023",
-//     time: "14:22 PM",
-//     desc: "NVIDIA RTX 4090 Purchase",
-//     method: "Main Wallet",
-//     amount: "-$1,599.00",
-//     status: "Success",
-//   },
-//   {
-//     date: "Oct 23, 2023",
-//     time: "09:15 AM",
-//     desc: "Wallet Top-up",
-//     method: "Mastercard ****4242",
-//     amount: "+$5,000.00",
-//     status: "Pending",
-//   },
-// ];
 
 //format transaction data
 const formatTransactions = (data:any) => {
@@ -101,31 +84,13 @@ export default function TransactionHistory() {
    url
   );
 
-  // const handleFilters = async (filters: Filters) => {
-  //   const params = new URLSearchParams();
 
-  //   if (filters.startDate)
-  //     params.append("startDate", filters.startDate.toISOString());
-
-  //   if (filters.endDate)
-  //     params.append("endDate", filters.endDate.toISOString());
-
-  //   if (filters.type !== "all") params.append("type", filters.type);
-  //   if (filters.type === 'all') params.append("type", filters.type)
-
-  //    const newUrl = `http://localhost:3000/api/user/profile/wallet/transactions${
-  //      params.toString()
-  //        ? `?${params.toString()}&page=${page}&limit=${limit}`
-  //        : `?page=${page}&limit=${limit}`
-  //    }`;
-  //   setUrl(
-  //     (pre) => newUrl
-  //   )
-
-  // };
 
   const handleFilters = (newFilters: Filters) => {
-    setPage(1); // reset pagination
+    // setPage(1); // reset pagination
+    // setFilters(newFilters);
+    setPage(1);
+    setTransactionData([]);
     setFilters(newFilters);
   };
 
@@ -157,7 +122,12 @@ export default function TransactionHistory() {
        const response = await get();
       
        setTotal(response.total)
-       setTransactionData(formatTransactions(response.transactions))
+       //  setTransactionData(formatTransactions(response.transactions))
+       setTransactionData((prev) =>
+         page === 1
+           ? formatTransactions(response.transactions)
+           : [...prev, ...formatTransactions(response.transactions)],
+       );
        setHasMore(page < response.totalPages);
      } catch (err) {
        console.error(err);
@@ -167,9 +137,15 @@ export default function TransactionHistory() {
    fetchData();
  }, [url,]);
   
- 
+  // const showingNum = Math.min(page * limit, total);
+  const showingNum = transactionData.length
 
-  const showingNum = Math.min(page * limit, total);
+  //mobile fatch more
+  const loadMore = () => {
+    const next = page + 1;
+    setPage(next);
+    
+  };
   
 
   return (
@@ -181,19 +157,35 @@ export default function TransactionHistory() {
       <FiltersBar onChange={handleFilters} total={showingNum} />
 
       {/* MOBILE */}
-      <MobileTransactionList transactions={transactionData!} />
+
+      {loading ? (
+        <MobileTransactionListSkeleton />
+      ) : (
+        <MobileTransactionList
+          transactions={transactionData}
+          hasMore={hasMore}
+          onLoadMore={loadMore}
+        />
+      )}
 
       {/* DESKTOP */}
       <div className="hidden md:block">
-        <TransactionTable transactions={transactionData!} />
+        {loading ? (
+          <TransactionTableSkeleton />
+        ) : (
+          <TransactionTable transactions={transactionData!} />
+        )}
       </div>
 
-      <Pagination
-        page={page}
-        total={total}
-        limit={limit}
-        onPageChange={(p) => setPage(p)}
-      />
+      {/*pagination on DESKTOP */}
+      <div className="hidden md:block">
+        <Pagination
+          page={page}
+          total={total}
+          limit={limit}
+          onPageChange={(p) => setPage(p)}
+        />
+      </div>
     </main>
   );
 }

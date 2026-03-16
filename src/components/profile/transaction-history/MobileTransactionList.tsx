@@ -4,7 +4,8 @@ import { Transaction } from "./TransactionRow";
 
 interface Prop {
   transactions: Transaction[];
-  
+  hasMore: boolean;
+  onLoadMore: () => void;
 }
 
 
@@ -68,7 +69,7 @@ export default function MobileTransactionList({
       {hasMore && (
         <button
           onClick={onLoadMore}
-          className="w-full py-3 text-sm font-semibold bg-slate-100 rounded-xl active:scale-[0.98]"
+          className="w-full flex justify-center items-center py-3 text-sm font-semibold bg-slate-100 rounded-xl active:scale-[0.98] text-brand-orange"
         >
           Show More
         </button>
