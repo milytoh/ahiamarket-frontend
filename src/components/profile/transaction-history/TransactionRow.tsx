@@ -8,13 +8,15 @@ export type Transaction = {
   method: string;
   amount: string;
   status: TransactionStatus;
+  id: any
 };
 
 type Props = {
+  onclick: () => void;
   tx: Transaction;
 };
 
-export default function TransactionRow({ tx }: Props) {
+export default function TransactionRow({ tx , onclick}: Props) {
   const statusColor: Record<TransactionStatus, string> = {
     Success: "bg-emerald-50 text-emerald-600 border-emerald-100",
     Pending: "bg-amber-50 text-amber-600 border-amber-100",
@@ -51,7 +53,7 @@ export default function TransactionRow({ tx }: Props) {
       </td>
 
       <td className="px-6 py-4 text-right">
-        <button className="text-slate-400 hover:text-primary">
+        <button className="text-slate-400 hover:text-primary" onClick={onclick}>
           <FiMoreHorizontal />
         </button>
       </td>

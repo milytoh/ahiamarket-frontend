@@ -5,12 +5,17 @@ import { Transaction } from "./TransactionRow";
 
 interface Prop {
   transactions: Transaction[];
+  onClick: (id: any) => void
 }
 
 
-export default function TransactionTable({transactions}: Prop) {
+export default function TransactionTable({transactions, onClick}: Prop) {
 
-
+  const handlerTrans = (id: any) => {
+    
+    onClick(id)
+    
+  }
 
   return (
     <div className="bg-white rounded-xl border border-slate-200 shadow-sm">
@@ -45,7 +50,7 @@ export default function TransactionTable({transactions}: Prop) {
           </thead>
           <tbody className="divide-y divide-slate-100">
             {transactions?.map((tx, i) => (
-              <TransactionRow key={i} tx={tx} />
+              <TransactionRow key={i} tx={tx} onclick={handlerTrans.bind(null, tx.id)!}/>
             ))}
           </tbody>
           

@@ -7,15 +7,21 @@ import FiltersBar from "@/components/profile/transaction-history/FiltersBar";
 import TransactionTable from "@/components/profile/transaction-history/TransactionTable";
 import Pagination from "@/components/profile/transaction-history/Pagination";
 import MobileTransactionList from "@/components/profile/transaction-history/MobileTransactionList";
+import TransactionDetailModal from "@/components/profile/transaction-history/TransactionDetail";
 
-import TransactionTableSkeleton from "@/components/ui/skeletons/profile/transaction/transactionTable";
+import TransactionTableSkeleton from "@/components/ui/skeletons/profile/transaction/TransactionTable";
 import MobileTransactionListSkeleton from "@/components/ui/skeletons/profile/transaction/MobileTransaction";
+import Modal from "@/components/ui/Modal";
+
+import TransactionDetail from "@/components/profile/transaction-history/TransactionDetail";
+
 import ErrorState from "@/components/ui/Error";
 import { toast } from "react-toastify";
-
+import { set } from "zod";
+import { tr } from "zod/v4/locales";
 
 //format transaction data
-const formatTransactions = (data:any) => {
+const formatTransactions = (data: any) => {
   return data?.map((tx: any) => {
     const dateObj = new Date(tx.createdAt);
 
@@ -33,6 +39,7 @@ const formatTransactions = (data:any) => {
     return {
       date,
       time,
+      id: tx._id,
       desc: tx.type === "deposit" ? "Wallet Top-up" : "Wallet Withdrawal",
 
       method:
@@ -60,16 +67,15 @@ type Filters = {
 };
 
 const defaultFilters: Filters = {
-  startDate: undefined, 
-  endDate: undefined, 
+  startDate: undefined,
+  endDate: undefined,
   type: "all",
-  
 };
 
 export default function TransactionHistory() {
-
-  
   const [transactionData, setTransactionData] = useState([]);
+  const [trans, setTrans] = useState([]);
+  const [transDetail, setTransDetail] = useState()
   const [page, setPage] = useState(1);
   const [limit] = useState(5);
   const [total, setTotal] = useState(0);
@@ -78,15 +84,13 @@ export default function TransactionHistory() {
     type: "all",
   });
 
+  const [isTransDetailOpen, setIsTransDetailOpen] = useState(false);
+
   const [url, setUrl] = useState(
     `http://localhost:3000/api/user/profile/wallet/transactions?type=all&page=1&limit=${limit}`,
   );
 
-  const { get, loading, error } = useApi(
-   url
-  );
-
-
+  const { get, loading, error } = useApi(url);
 
   const handleFilters = (newFilters: Filters) => {
     // setPage(1); // reset pagination
@@ -115,60 +119,76 @@ export default function TransactionHistory() {
     setUrl(newUrl);
   }, [filters, page, limit]);
 
- useEffect(() => {
-   if (!url) return;
+  useEffect(() => {
+    if (!url) return;
 
-   const fetchData = async () => {
-     try {
-      
-       const response = await get();
-      
-       setTotal(response.total)
-       //  setTransactionData(formatTransactions(response.transactions))
-       setTransactionData((prev) =>
-         page === 1
-           ? formatTransactions(response.transactions)
-           : [...prev, ...formatTransactions(response.transactions)],
-       );
-       setHasMore(page < response.totalPages);
-     } catch (err) {
-       console.error(err);
-     }
-   };
+    const fetchData = async () => {
+      try {
+        const response = await get();
+        setTrans(response.transactions);
+        setTotal(response.total);
+        //  setTransactionData(formatTransactions(response.transactions))
+        setTransactionData((prev) =>
+          page === 1
+            ? formatTransactions(response.transactions)
+            : [...prev, ...formatTransactions(response.transactions)],
+        );
+        setHasMore(page < response.totalPages);
+      } catch (err) {}
+    };
 
-   fetchData();
- }, [url,]);
-  
+    fetchData();
+  }, [url]);
+
   // const showingNum = Math.min(page * limit, total);
-  const showingNum = transactionData.length
+  const showingNum = transactionData.length;
 
   //mobile fatch more
   const loadMore = () => {
     const next = page + 1;
     setPage(next);
-    
   };
 
   // for error
-   if (error) {
-     return (
-       <ErrorState
-         title="Failed to load profile"
-         message={error.message || "something went wrong"}
-         onRetry={get}
-       />
-     );
+  if (error) {
+    return (
+      <ErrorState
+        title="Failed to load profile"
+        message={error.message || "something went wrong"}
+        onRetry={get}
+      />
+    );
   }
-  
-   useEffect(() => {
-      if (error) {
-        toast.error("something went wrong, check your network connection");
-      }
-    }, [error])
-  
+
+  useEffect(() => {
+    if (error) {
+      toast.error("something went wrong, check your network connection");
+    }
+  }, [error]);
+
+ 
+
+  const handlerModalOpen = (id: any) => {
+    
+    console.log(trans)
+   setTransDetail((trans as any[]).find((tr: any) => tr?._id === id))
+
+    setIsTransDetailOpen(true);
+  };
+
+console.log(transDetail)
 
   return (
     <main className="flex-1 flex flex-col ">
+      <Modal
+        isOpen={isTransDetailOpen}
+        onClose={() => setIsTransDetailOpen(false)}
+        title="Transaction Details"
+        subtitle=""
+      >
+        <TransactionDetail tx={transDetail!} />
+      </Modal>
+
       <Breadcrumb />
 
       <PageHeader />
@@ -192,7 +212,10 @@ export default function TransactionHistory() {
         {loading ? (
           <TransactionTableSkeleton />
         ) : (
-          <TransactionTable transactions={transactionData!} />
+          <TransactionTable
+            transactions={transactionData!}
+            onClick={handlerModalOpen}
+          />
         )}
       </div>
 
