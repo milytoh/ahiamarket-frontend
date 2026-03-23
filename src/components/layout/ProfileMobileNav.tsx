@@ -1,36 +1,65 @@
 import React, { useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { HiOutlineLogout } from "react-icons/hi";
+
 import {
   HiOutlineUser,
-  HiOutlineLogout,
-  HiOutlineShoppingBag,
+  HiOutlineArchiveBox,
+  HiOutlineWallet,
   HiOutlineHeart,
-  HiOutlineCog,
-  HiOutlineHome,
-  HiOutlineSupport,
-} from "react-icons/hi";
+  HiOutlineCog6Tooth,
+  HiOutlineClock,
+} from "react-icons/hi2";
 
 interface MobileNavProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-
-interface NavItemProps {
+interface MobileNavLinkProps {
+  to: string;
   icon: React.ReactNode;
   label: string;
   onClick?: () => void;
 }
 
-const NavItem = ({ icon, label, onClick }: NavItemProps) => (
-  <button
-    onClick={onClick}
-    className="flex items-center gap-3 w-full px-4 py-3 rounded-xl
-    text-slate-500 hover:bg-slate-50 hover:text-charcoal transition"
-  >
-    <span className="text-xl">{icon}</span>
-    <span className="text-sm font-semibold">{label}</span>
-  </button>
-);
+const MobileNavLink: React.FC<MobileNavLinkProps> = ({
+  to,
+  icon,
+  label,
+  onClick,
+}) => {
+  return (
+    <NavLink
+      to={to}
+      onClick={onClick}
+      className={({ isActive }) =>
+        `
+        flex items-center gap-3 px-4 py-3 rounded-xl transition-all
+        ${
+          isActive
+            ? "text-brand-orange bg-brand-orange/10 font-bold"
+            : "text-slate-500 hover:text-charcoal hover:bg-slate-50 font-semibold"
+        }
+        `
+      }
+    >
+      <span className="text-xl shrink-0">{icon}</span>
+      <span className="text-sm truncate">{label}</span>
+    </NavLink>
+  );
+};
+
+// const NavItem = ({ icon, label, onClick }: NavItemProps) => (
+//   <button
+//     onClick={onClick}
+//     className="flex items-center gap-3 w-full px-4 py-3 rounded-xl
+//     text-slate-500 hover:bg-slate-50 hover:text-charcoal transition"
+//   >
+//     <span className="text-xl">{icon}</span>
+//     <span className="text-sm font-semibold">{label}</span>
+//   </button>
+// );
 
 const ProfileMobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
   useEffect(() => {
@@ -121,39 +150,39 @@ const ProfileMobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
 
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto p-4 space-y-1">
-            <NavItem
+            <MobileNavLink
+              to="/profile"
               icon={<HiOutlineUser />}
-              label="Profile"
-              onClick={onClose}
-            />
-            <NavItem
-              icon={<HiOutlineShoppingBag />}
-              label="Orders"
-              onClick={onClose}
-            />
-            <NavItem
-              icon={<HiOutlineHeart />}
-              label="Favorites"
-              onClick={onClose}
-            />
-            <NavItem
-              icon={<HiOutlineCog />}
-              label="Settings"
+              label="Account Profile"
               onClick={onClose}
             />
 
-            <div className="pt-4 mt-4 border-t border-slate-100">
-              <NavItem
-                icon={<HiOutlineHome />}
-                label="Marketplace"
-                onClick={onClose}
-              />
-              <NavItem
-                icon={<HiOutlineSupport />}
-                label="Support"
-                onClick={onClose}
-              />
-            </div>
+            <MobileNavLink
+              to="/profile/orders"
+              icon={<HiOutlineArchiveBox />}
+              label="Order History "
+            />
+
+            <MobileNavLink
+              to="/profile/wallet"
+              icon={<HiOutlineWallet />}
+              label="Wallet & Payments"
+              onClick={onClose}
+            />
+
+            <MobileNavLink
+              to="/profile/transaction/history"
+              icon={<HiOutlineClock />}
+              label="Transaction History"
+              onClick={onClose}
+            />
+
+            <MobileNavLink
+              to="/profile/settings"
+              icon={<HiOutlineCog6Tooth />}
+              label="Settings"
+              onClick={onClose}
+            />
           </nav>
 
           {/* Bottom Actions */}

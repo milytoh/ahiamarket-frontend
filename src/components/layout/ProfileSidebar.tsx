@@ -85,9 +85,9 @@ const ProfileSidebar: React.FC = () => {
           />
 
           {/*  extra items just to prove scrolling works */}
-          <SidebarLink icon={<HiOutlineUser />} label="Security" />
+          {/* <SidebarLink icon={<HiOutlineUser />} label="Security" />
           <SidebarLink icon={<HiOutlineUser />} label="Notifications" />
-          <SidebarLink icon={<HiOutlineUser />} label="Addresses" />
+          <SidebarLink icon={<HiOutlineUser />} label="Addresses" /> */}
         </nav>
       </div>
 

@@ -75,7 +75,7 @@ const defaultFilters: Filters = {
 export default function TransactionHistory() {
   const [transactionData, setTransactionData] = useState([]);
   const [trans, setTrans] = useState([]);
-  const [transDetail, setTransDetail] = useState()
+  const [transDetail, setTransDetail] = useState();
   const [page, setPage] = useState(1);
   const [limit] = useState(5);
   const [total, setTotal] = useState(0);
@@ -166,17 +166,11 @@ export default function TransactionHistory() {
     }
   }, [error]);
 
- 
-
   const handlerModalOpen = (id: any) => {
-    
-    console.log(trans)
-   setTransDetail((trans as any[]).find((tr: any) => tr?._id === id))
+    setTransDetail((trans as any[]).find((tr: any) => tr?._id === id));
 
     setIsTransDetailOpen(true);
   };
-
-console.log(transDetail)
 
   return (
     <main className="flex-1 flex flex-col ">
