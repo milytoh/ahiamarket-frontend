@@ -15,26 +15,19 @@ import {
   HiOutlineUserCircle,
 } from "react-icons/hi";
 
-
-
-
 import { logout } from "@/features/auth/authSlice";
 
 const NavbarBottom = () => {
   const navigate = useNavigate();
 
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
-  const logoutHandler =  () => {
-
- 
+  const logoutHandler = () => {
     dispatch(logout());
 
-    navigate("/login")
-      
-      
+    navigate("/login");
   };
 
   return (

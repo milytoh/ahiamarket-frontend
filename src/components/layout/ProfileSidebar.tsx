@@ -1,5 +1,10 @@
 import React from "react";
 
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "@/store/hook";
+
+import { logout } from "@/features/auth/authSlice";
+
 import { NavLink } from "react-router-dom";
 import {
   HiOutlineUser,
@@ -19,6 +24,8 @@ interface SidebarNavLinkProps {
 }
 
 const SidebarNavLink: React.FC<SidebarNavLinkProps> = ({ to, icon, label }) => {
+
+
   return (
     <NavLink
       to={to}
@@ -39,6 +46,16 @@ const SidebarNavLink: React.FC<SidebarNavLinkProps> = ({ to, icon, label }) => {
   );
 };
 const ProfileSidebar: React.FC = () => {
+
+  const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+
+  const logoutHandler = () => {
+    dispatch(logout());
+
+    navigate("/login");
+  };
   return (
     <aside
       className="
@@ -103,9 +120,7 @@ const ProfileSidebar: React.FC = () => {
         </div>
       </div>
       <button
-        onClick={() => {
-          // logout logic
-        }}
+        onClick={logoutHandler}
         className="flex items-center justify-center gap-3 w-full px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition"
       >
         <HiOutlineLogout className="text-xl" />
@@ -117,31 +132,6 @@ const ProfileSidebar: React.FC = () => {
 
 export default ProfileSidebar;
 
-/* ---------------------------------- */
 
-interface SidebarLinkProps {
-  icon: React.ReactNode;
-  label: string;
-  active?: boolean;
-}
 
-const SidebarLink: React.FC<SidebarLinkProps> = ({
-  icon,
-  label,
-  active = false,
-}) => (
-  <a
-    href="#"
-    className={`
-      flex items-center gap-3 px-4 py-3 rounded-xl transition-all
-      ${
-        active
-          ? "bg-primary/10 text-primary font-bold"
-          : "text-slate-500 hover:bg-slate-50 hover:text-charcoal font-semibold"
-      }
-    `}
-  >
-    <span className="text-xl shrink-0">{icon}</span>
-    <span className="text-sm truncate">{label}</span>
-  </a>
-);
+

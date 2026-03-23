@@ -1,6 +1,13 @@
 import React, { useEffect } from "react";
+
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "@/store/hook";
+
+import { logout } from "@/features/auth/authSlice";
+
 import { NavLink } from "react-router-dom";
 import { HiOutlineLogout } from "react-icons/hi";
+
 
 import {
   HiOutlineUser,
@@ -50,18 +57,17 @@ const MobileNavLink: React.FC<MobileNavLinkProps> = ({
   );
 };
 
-// const NavItem = ({ icon, label, onClick }: NavItemProps) => (
-//   <button
-//     onClick={onClick}
-//     className="flex items-center gap-3 w-full px-4 py-3 rounded-xl
-//     text-slate-500 hover:bg-slate-50 hover:text-charcoal transition"
-//   >
-//     <span className="text-xl">{icon}</span>
-//     <span className="text-sm font-semibold">{label}</span>
-//   </button>
-// );
-
 const ProfileMobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+
+  const logoutHandler = () => {
+    dispatch(logout());
+   
+    navigate("/login");
+  };
+
   useEffect(() => {
     const originalOverflow = document.body.style.overflow;
 
@@ -192,10 +198,7 @@ const ProfileMobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
             </button>
 
             <button
-              onClick={() => {
-                onClose();
-                // logout logic
-              }}
+              onClick={ logoutHandler}
               className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition"
             >
               <HiOutlineLogout className="text-xl" />
