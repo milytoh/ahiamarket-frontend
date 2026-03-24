@@ -17,8 +17,7 @@ import TransactionDetail from "@/components/profile/transaction-history/Transact
 
 import ErrorState from "@/components/ui/Error";
 import { toast } from "react-toastify";
-import { set } from "zod";
-import { tr } from "zod/v4/locales";
+
 
 //format transaction data
 const formatTransactions = (data: any) => {

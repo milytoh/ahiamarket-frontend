@@ -4,13 +4,18 @@ import { loginUser } from "./authThunk";
 
 /// hydrated logic
 const token = localStorage.getItem("token");
+const expiry = localStorage.getItem("token_expiry");
+
+const EXPIRY_TIME = 6 * 60 * 60 * 1000;
+
+const isTokenValid = token && expiry && Date.now() < Number(expiry);
 
 const initialState: AuthState = {
   user: null,
   token: token,
   loading: false,
   error: null,
-  isAuthenticated: !!token,
+  isAuthenticated: !!isTokenValid,
 };
 
 const authSlice = createSlice({
@@ -40,7 +45,11 @@ const authSlice = createSlice({
         state.user = action.payload;
         state.token = action.payload.token;
         state.isAuthenticated = true;
+         
+          const expiry = Date.now() + EXPIRY_TIME;
+
         localStorage.setItem("token", action.payload.token);
+         localStorage.setItem("token_expiry", expiry.toString());
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
