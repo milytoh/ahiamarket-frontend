@@ -1,17 +1,12 @@
 import React from "react";
-import {
-  HiArrowDownLeft,
-  HiArrowUpRight,
-  HiClock,
-} from "react-icons/hi2";
+import { HiArrowDownLeft, HiArrowUpRight, HiClock } from "react-icons/hi2";
 
 type TransactionStatus = "success" | "pending" | "failed";
 
-type TransactionType = "deposit" | "withdrawal" |"credit";
+type TransactionType = "deposit" | "withdrawal" | "credit";
 
 interface Activity {
-  
-  _id?: string,
+  _id?: string;
   type: TransactionType;
   title?: string;
   createdAt: string;
@@ -19,8 +14,6 @@ interface Activity {
   status: TransactionStatus;
   reference: string;
 }
-
-
 
 //  reference: 1,
 //             type: 1,
@@ -56,7 +49,7 @@ interface Activity {
 // ];
 
 interface RecenActivitiesProp {
-  activities: Activity[]
+  activities: Activity[];
 }
 
 const formatPrice = (amount: number) => {
@@ -83,19 +76,16 @@ export const formatRelativeTime = (dateString: string) => {
 
   for (let i = 0; i < divisions.length; i++) {
     if (Math.abs(duration) < divisions[i].amount) {
-      return rtf.format(Math.round(duration), divisions[i].name as Intl.RelativeTimeFormatUnit);
+      return rtf.format(
+        Math.round(duration),
+        divisions[i].name as Intl.RelativeTimeFormatUnit,
+      );
     }
     duration /= divisions[i].amount;
   }
 };
 
-
-
-
-
-const RecentActivities: React.FC<RecenActivitiesProp> = ({activities}) => {
-   
-
+const RecentActivities: React.FC<RecenActivitiesProp> = ({ activities }) => {
   return (
     <section className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
       {/* Header */}
@@ -108,7 +98,7 @@ const RecentActivities: React.FC<RecenActivitiesProp> = ({activities}) => {
       {/* Activities */}
       <div className="divide-y divide-slate-50">
         {activities?.map((activity, index) => {
-          const isCredit = activity.type ===  "credit" || "deposit";
+          const isCredit = activity.type === "credit" || "deposit";
           const isDebit = activity.type === "withdrawal";
           const isPending = activity.status === "pending";
 
@@ -167,9 +157,6 @@ const RecentActivities: React.FC<RecenActivitiesProp> = ({activities}) => {
 };
 
 export default RecentActivities;
-
-
-
 
 // import React from "react";
 // import ActivityRow from "./ActivityRow";
@@ -284,7 +271,6 @@ export default RecentActivities;
 // };
 
 // export default RecentActivities;
-
 
 // const RecentActivities: React.FC = () => {
 //   return (

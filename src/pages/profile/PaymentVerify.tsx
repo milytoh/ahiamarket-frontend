@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useApi } from "@/hooks/useApi";
@@ -13,7 +15,7 @@ const PaymentVerify = () => {
   const reference = searchParams.get("reference");
 
   const { get, loading, error } = useApi(
-    `http://localhost:3000/api/paystack/callback?reference=${reference}`,
+    `${API_URL}/api/paystack/callback?reference=${reference}`,
   );
 
   useEffect(() => {
@@ -27,13 +29,13 @@ const PaymentVerify = () => {
       }
 
       try {
-        toast.info("verifying payment")
+        toast.info("verifying payment");
         const response = await get();
         toast.success("payment successful");
         // After verification
         navigate("/profile/wallet");
       } catch (error) {
-        toast.error("payment verification failed, please refresh your wallet")
+        toast.error("payment verification failed, please refresh your wallet");
         navigate("/profile/wallet");
       }
     };

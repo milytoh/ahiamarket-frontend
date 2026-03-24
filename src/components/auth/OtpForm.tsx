@@ -1,5 +1,7 @@
 import react from "react";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 import { useNavigate } from "react-router-dom";
 
 import { useApi } from "@/hooks/useApi";
@@ -34,7 +36,7 @@ const OtpForm: react.FC<OtpData> = ({ onCloseOtForm, email, naviTo }) => {
 
   //using custom hook
   const { post, loading, error } = useApi<OtpDataPlayload, RegisterResponse>(
-    "http://localhost:3000/api/account/email/verify",
+    `${API_URL}/account/email/verify`,
   );
 
   // handling form and validation with Form hook and zod

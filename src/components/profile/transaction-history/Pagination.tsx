@@ -1,7 +1,5 @@
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-
-
 type Props = {
   page: number;
   total: number;

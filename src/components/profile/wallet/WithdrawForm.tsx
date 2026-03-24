@@ -13,25 +13,29 @@ import { toast } from "react-toastify";
 interface WithdrawFormProps {
   balance: number;
   onClose: () => void;
-  bankAccounts: any[]
+  bankAccounts: any[];
 }
 
 interface WithdrawResponse {
   message: string;
-  data: any
+  data: any;
 }
 
-const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onClose, bankAccounts }) => {
+const WithdrawForm: React.FC<WithdrawFormProps> = ({
+  balance,
+  onClose,
+  bankAccounts,
+}) => {
   const [amount, setAmount] = useState<string>("");
   const [showAddAccount, setShowAddAccount] = useState(false);
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(
     bankAccounts?.find((acc) => acc.isDefault)?._id || null,
   );
 
-   //using custom hook
-    const { post, loading, error } = useApi(
-      "http://localhost:3000/api/payment/wallet/withdraw",
-    );
+  //using custom hook
+  const { post, loading, error } = useApi(
+    "http://localhost:3000/api/payment/wallet/withdraw",
+  );
 
   const feePercent = 1;
 
@@ -45,26 +49,22 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({ balance, onClose, bankAccou
     return Number(amount) + fee;
   }, [amount, fee]);
 
-  const handleWithdraw = async() => {
-
-
+  const handleWithdraw = async () => {
     if (!amount || Number(amount) < 1000) {
-        toast.warning("you can only withdraw 1,000 naira and above")
+      toast.warning("you can only withdraw 1,000 naira and above");
       return;
-    };
+    }
     if (Number(amount) > balance) return;
 
     console.log("Withdraw:", amount);
 
-    const response = await post({amount})
-
-    
+    const response = await post({ amount });
 
     onClose();
   };
 
   if (error) {
-    toast.error(error.message)
+    toast.error(error.message);
   }
 
   return (

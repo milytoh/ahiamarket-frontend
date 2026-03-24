@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useApi } from "@/hooks/useApi";
 import debounce from "lodash.debounce";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 import { MdVerified } from "react-icons/md";
 
 import Spinner from "@/components/ui/Spinner";
@@ -25,11 +27,11 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onSuccess }) => {
     get,
     loading: getLoading,
     error: getError,
-  } = useApi("http://localhost:3000/api/payment/banks");
+  } = useApi(`${API_URL}/payment/banks`);
 
   //using custom hook for account resoler
   const { post, loading, error } = useApi(
-    "http://localhost:3000/api/payment/get-payout-details",
+    `${API_URL}/payment/get-payout-details`,
   );
 
   //using custom hook for account setup
@@ -37,9 +39,9 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onSuccess }) => {
     post: postSetAcct,
     loading: setAcctLoading,
     error: setAcctError,
-  } = useApi("http://localhost:3000/api/payment/set-payout-details");
+  } = useApi(`${API_URL}/payment/set-payout-details`);
 
-  //  Fetch real banks/resolver 
+  //  Fetch real banks/resolver
   useEffect(() => {
     const fetchBanks = async () => {
       const res = await get();
@@ -50,7 +52,7 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onSuccess }) => {
 
   // Auto verify when account number = 10 digits
   useEffect(() => {
-    const verifyAccount = debounce( async () => {
+    const verifyAccount = debounce(async () => {
       if (accountNumber.length !== 10 || !bankCode) return;
 
       try {
@@ -79,22 +81,22 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onSuccess }) => {
     try {
       setLoading(true);
 
-      await postSetAcct( {
+      await postSetAcct({
         accountNumber,
         bankCode,
       });
 
       onSuccess();
-      toast.success("Bank account add successful")
+      toast.success("Bank account add successful");
     } catch (err) {
-     console.log(err)
+      console.log(err);
     } finally {
       setLoading(false);
     }
   };
 
   if (setAcctError) {
-    toast.error('failed. something went wrong!')
+    toast.error("failed. something went wrong!");
   }
 
   return (
@@ -161,8 +163,7 @@ const AddAccountForm: React.FC<AddAccountFormProps> = ({ onSuccess }) => {
         onClick={handleSubmit}
         className="w-full h-14 bg-primary text-white font-bold rounded-xl disabled:opacity-50"
       >
-        {setAcctLoading ? <Spinner size="md"/>
-        : "Save Account"}
+        {setAcctLoading ? <Spinner size="md" /> : "Save Account"}
       </button>
     </div>
   );

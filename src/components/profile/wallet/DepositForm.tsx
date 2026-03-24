@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+const API_URL = import.meta.env.VITE_API_URL;
 import { useApi } from "@/hooks/useApi";
 
 import {
@@ -28,9 +28,7 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
   const [amoutValid, setAmountValid] = useState(true);
 
   //using custom hook
-  const { post, loading, error } = useApi(
-    "http://localhost:3000/api/wallet/fund",
-  );
+  const { post, loading, error } = useApi(`${API_URL}/wallet/fund`);
 
   const formatCurrency = (value: number) => {
     return value.toLocaleString("en-NG");
@@ -64,7 +62,6 @@ const DepositForm: React.FC<Props> = ({ onClose }) => {
     <form
       onSubmit={handleSubmit}
       className="flex flex-col overflow-y-auto px-5 sm:px-8 pb-8 pt-6 gap-8 "
-      
     >
       {/* Amount */}
       <div className="flex flex-col gap-2">

@@ -1,3 +1,4 @@
+const API_URL = import.meta.env.VITE_API_URL;
 import { useApi } from "@/hooks/useApi";
 import { useState, useEffect } from "react";
 
@@ -17,7 +18,6 @@ import TransactionDetail from "@/components/profile/transaction-history/Transact
 
 import ErrorState from "@/components/ui/Error";
 import { toast } from "react-toastify";
-
 
 //format transaction data
 const formatTransactions = (data: any) => {
@@ -86,7 +86,7 @@ export default function TransactionHistory() {
   const [isTransDetailOpen, setIsTransDetailOpen] = useState(false);
 
   const [url, setUrl] = useState(
-    `http://localhost:3000/api/user/profile/wallet/transactions?type=all&page=1&limit=${limit}`,
+    `${API_URL}/user/profile/wallet/transactions?type=all&page=1&limit=${limit}`,
   );
 
   const { get, loading, error } = useApi(url);

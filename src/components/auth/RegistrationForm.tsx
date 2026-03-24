@@ -1,4 +1,5 @@
 import React from "react";
+const API_URL = import.meta.env.VITE_API_URL;
 
 import { useState } from "react";
 
@@ -66,7 +67,7 @@ const RegistrationForm: React.FC = () => {
 
   //using custom hook
   const { post, loading, error } = useApi<RegisterPayload, RegisterResponse>(
-    "http://localhost:3000/api/account/signup"
+    `${API_URL}/api/account/signup`
   );
 
   // handling form and validation with Form hook and zod

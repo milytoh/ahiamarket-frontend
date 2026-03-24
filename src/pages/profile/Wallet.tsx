@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 import { useApi } from "@/hooks/useApi";
 import { useEffect, useState } from "react";
 
@@ -72,7 +74,7 @@ const Wallet: React.FC = () => {
 
   //using custom hook
   const { get, loading, error } = useApi<WalletResponse>(
-    "http://localhost:3000/api/user/profile/wallet",
+    `${API_URL}/user/profile/wallet`,
   );
 
   useEffect(() => {

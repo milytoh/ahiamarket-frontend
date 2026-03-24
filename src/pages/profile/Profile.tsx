@@ -1,5 +1,7 @@
 import React from "react";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 import { useApi } from "@/hooks/useApi";
 import { useEffect, useState } from "react";
 
@@ -81,7 +83,7 @@ const Profile: React.FC = () => {
   const [profile, setProfile] = useState<ProfileResponse["data"] | null>(null);
   //using custom hook
   const { get, loading, error } = useApi<ProfileResponse>(
-    "http://localhost:3000/api/user/profile",
+    `${API_URL}/user/profile`,
   );
 
   useEffect(() => {
