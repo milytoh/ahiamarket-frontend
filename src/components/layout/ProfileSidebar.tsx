@@ -112,10 +112,10 @@ const ProfileSidebar: React.FC = () => {
       <div className="pt-4 shrink-0">
         <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10">
           <p className="text-[11px] text-charcoal/70 font-medium mb-4 leading-relaxed">
-            Unlock priority delivery and exclusive marketplace deals.
+           Sell your Products to the right people that needs it.
           </p>
           <button className="w-full h-10 rounded-xl bg-primary text-white text-sm font-bold hover:bg-[#00a383] transition-all shadow-md shadow-primary/20">
-            Upgrade to Pro
+            Appy for a Vendor
           </button>
         </div>
       </div>

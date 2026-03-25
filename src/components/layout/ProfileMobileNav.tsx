@@ -194,7 +194,7 @@ const ProfileMobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
           {/* Bottom Actions */}
           <footer className="p-4 border-t border-slate-100 space-y-2">
             <button className="w-full h-10 rounded-xl bg-primary text-white font-bold hover:bg-[#00a383] transition">
-              Upgrade to Pro
+              Appy for a Vendor
             </button>
 
             <button
