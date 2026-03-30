@@ -6,9 +6,9 @@ import StoreLocationForm from './StoreLocationForm';
 export default function StoreLocation() {
   return (
     <div className="bg-background-light text-text-main min-h-screen font-sans overflow-x-hidden">
-      <div className="flex flex-1 pt-16">
+      <div className="flex flex-1 ">
         {/* Main Content */}
-        <main className="flex-1 p-6 md:p-12 overflow-y-auto">
+        <main className="flex-1 p-6  overflow-y-auto">
           <div className="max-w-2xl mx-auto">
             {/* Header */}
             <header className="mb-10">
