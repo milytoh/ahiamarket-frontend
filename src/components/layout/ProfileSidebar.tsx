@@ -56,6 +56,10 @@ const ProfileSidebar: React.FC = () => {
 
     navigate("/login");
   };
+
+  const handlerVendor = () => {
+    navigate("/profile/vendor/application")
+  }
   return (
     <aside
       className="
@@ -114,7 +118,7 @@ const ProfileSidebar: React.FC = () => {
           <p className="text-[11px] text-charcoal/70 font-medium mb-4 leading-relaxed">
            Sell your Products to the right people that needs it.
           </p>
-          <button className="w-full h-10 rounded-xl bg-primary text-white text-sm font-bold hover:bg-[#00a383] transition-all shadow-md shadow-primary/20">
+          <button onClick={handlerVendor} className="w-full h-10 rounded-xl bg-primary text-white text-sm font-bold hover:bg-[#00a383] transition-all shadow-md shadow-primary/20">
             Appy for a Vendor
           </button>
         </div>

@@ -14,6 +14,7 @@ import Profile from "@/pages/profile/Profile";
 import Wallet from "@/pages/profile/Wallet";
 import PaymentVerify from "@/pages/profile/PaymentVerify";
 import TransactionHistory from "@/pages/profile/TransactionHistory";
+import VendorApplication from "@/pages/vendor/Application";
 
 
 const AppRoutes = () => {
@@ -45,6 +46,7 @@ const AppRoutes = () => {
           <Route index element={<Profile />} />
           <Route path="/profile/wallet" element={<Wallet />} />
           <Route path="/profile/transaction/history" element={<TransactionHistory />} />
+          <Route path="/profile/vendor/application" element={<VendorApplication/>} />
         </Route>
         <Route path="/payment/verify" element={<PaymentVerify />} />
       </Route>
