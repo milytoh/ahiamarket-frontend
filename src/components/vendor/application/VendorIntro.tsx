@@ -18,11 +18,7 @@ export default function VendorInto() {
 
   return (
     <div className="bg-background-light font-sans text-text-main antialiased min-h-screen overflow-x-hidden">
-     
-
       <div className="flex min-h-screen ">
-        
-
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto px-6 py-10 md:px-12 lg:px-24">
           <div className="max-w-4xl mx-auto">
@@ -131,8 +127,8 @@ export default function VendorInto() {
                       <p className="text-sm font-medium text-slate-700 mb-1">
                         Projected Monthly Revenue
                       </p>
-                      <p className="text-3xl font-black text-primary">
-                        $12,450.00
+                      <p className="text-xl font-black text-primary">
+                        ₦12,450,677.00
                       </p>
                       <div className="mt-4 flex gap-1 h-1">
                         <div className="bg-primary w-1/4 rounded-full" />
