@@ -4,7 +4,7 @@ import { useApi } from "@/hooks/useApi";
 import { useEffect, useState } from "react";
 
 import WalletBalance from "@/components/profile/wallet/Walletbalance";
-import WalletStats from "@/components/profile/wallet/Walletstats";
+import WalletStats from "@/components/profile/wallet/WalletStats";
 import RecentActivities from "@/components/profile/wallet/RecenActivities";
 
 //skeleton
@@ -91,8 +91,14 @@ const Wallet: React.FC = () => {
     fetchProfile();
   }, []);
 
+  useEffect(() => {
+     if (error) {
+       toast.error("something went wrong, check your network connection");
+     }
+   }, [error])
+
   if (error) {
-     toast.error("something went wrong, check your network connection");
+     
     return (
       <ErrorState
         title="Failed to load Wallet Summary"

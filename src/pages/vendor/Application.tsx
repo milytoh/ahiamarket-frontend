@@ -1,11 +1,13 @@
-"use client";
-
-import React, { useState } from "react";
+const API_URL = import.meta.env.VITE_API_URL;
+import React, { useState, useEffect } from "react";
+import { useApi } from "@/hooks/useApi";
 
 import VendorIntro from "@/components/vendor/application/VendorIntro";
 import StoreIdentity from "@/components/vendor/application/StoreIdentity";
 import StoreLocation from "@/components/vendor/application/StoreLocation";
 import StoreReview from "@/components/vendor/application/StoreReview";
+
+import { toast } from "react-toastify";
 
 export type VendorFormData = {
   storeNameIdentity?: string;
@@ -25,7 +27,9 @@ const steps = [
 export default function VendorApplication() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<VendorFormData>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  //using custom hook
+  const { post, loading, error } = useApi(`${API_URL}/user/vendor-application`);
 
   const updateFormData = (newData: Partial<VendorFormData>) => {
     setFormData((prev) => ({ ...prev, ...newData }));
@@ -50,36 +54,28 @@ export default function VendorApplication() {
   };
 
   const handleFinalSubmit = async () => {
-    setIsSubmitting(true);
     try {
       console.log("Submitting full application:", formData);
 
       // Replace with your actual API call
-      const response = await fetch("/api/vendor/application", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        alert("✅ Application submitted successfully!");
-        // Redirect to success page
-        window.location.href = "/vendor/success";
-      } else {
-        alert("❌ Failed to submit application. Please try again.");
-      }
+      const res = await post({ ...formData });
+      console.log(res);
+      toast.success(
+        "Application successful, we will review your info, before approval. ",
+      );
     } catch (error) {
       console.error(error);
-      alert(
-        "❌ Something went wrong. Please check your connection and try again.",
-      );
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   const CurrentStepComponent =
     steps.find((s) => s.id === currentStep)?.component || VendorIntro;
+
+   useEffect(() => {
+      if (error) {
+        toast.error(error.message);
+      }
+    }, [error])
 
   return (
     <div>
@@ -91,7 +87,7 @@ export default function VendorApplication() {
         currentStep={currentStep}
         totalSteps={steps.length}
         onSubmit={handleFinalSubmit}
-        isSubmitting={isSubmitting}
+        isSubmitting={loading}
         goToStep={goToStep} // Only Review step will use this if needed
       />
     </div>
