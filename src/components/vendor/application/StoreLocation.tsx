@@ -1,14 +1,32 @@
+"use client";
 
+import React from "react";
+import StoreLocationForm from "./StoreLocationForm";
 
+type Props = {
+  formData: any;
+  updateFormData: (data: any) => void;
+  onNext: () => void;
+  onBack: () => void;
+  currentStep: number;
+  totalSteps: number;
+};
 
-import StoreLocationForm from './StoreLocationForm';
-
-export default function StoreLocation() {
+export default function StoreLocation({
+  formData,
+  updateFormData,
+  onNext,
+  onBack,
+  currentStep,
+  totalSteps,
+}: Props) {
   return (
     <div className="bg-background-light text-text-main min-h-screen font-sans overflow-x-hidden">
       <div className="flex flex-1 ">
+        {" "}
+        
         {/* Main Content */}
-        <main className="flex-1 p-6  overflow-y-auto">
+        <main className="flex-1 p-6 md:p-12 overflow-y-auto">
           <div className="max-w-2xl mx-auto">
             {/* Header */}
             <header className="mb-10">
@@ -16,35 +34,45 @@ export default function StoreLocation() {
                 Location Information
               </h1>
               <p className="text-slate-600">
-                Tell us where your business is physically located to help with logistics and local tax compliance.
+                Tell us where your business is physically located to help with
+                logistics and local tax compliance.
               </p>
             </header>
 
-            {/* Progress Bar */}
+            {/* Progress Bar - Dynamic */}
             <div className="mb-12">
               <div className="flex justify-between items-center mb-4">
                 <span className="text-xs font-bold uppercase tracking-widest text-primary">
-                  Step 3 of 4: Physical Presence
+                  Step {currentStep} of {totalSteps}: Physical Presence
                 </span>
-                <span className="text-xs font-medium text-slate-600">75% Complete</span>
+                <span className="text-xs font-medium text-slate-600">
+                  {Math.round((currentStep / totalSteps) * 100)}% Complete
+                </span>
               </div>
               <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                <div className="h-full bg-primary w-[75%] rounded-full" />
+                <div
+                  className="h-full bg-primary rounded-full transition-all duration-500"
+                  style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+                />
               </div>
             </div>
 
             {/* Form Component */}
-            <StoreLocationForm />
+            <StoreLocationForm
+              formData={formData}
+              updateFormData={updateFormData}
+              onNext={onNext}
+              onBack={onBack}
+            />
 
             {/* Trust Badges */}
             <div className="mt-12 flex items-center justify-center gap-6 opacity-40 grayscale">
-              <div className="h-8 w-8 bg-slate-300 rounded" /> {/* Placeholder for security badge */}
-              <div className="h-8 w-8 bg-slate-300 rounded" /> {/* Placeholder for logistics badge */}
+              <div className="h-8 w-8 bg-slate-300 rounded" />
+              <div className="h-8 w-8 bg-slate-300 rounded" />
             </div>
           </div>
         </main>
       </div>
     </div>
   );
-};
-
+}

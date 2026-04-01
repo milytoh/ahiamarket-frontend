@@ -1,10 +1,7 @@
+"use client";
 
+import React from "react";
 import {
-  MdStorefront,
-  MdBadge,
-  MdInventory2,
-  MdVerified,
-  MdAccountCircle,
   MdPayments,
   MdBolt,
   MdConstruction,
@@ -12,14 +9,24 @@ import {
   MdArrowForward,
 } from "react-icons/md";
 
+type Props = {
+  onNext: () => void; // Only needs onNext
+  currentStep: number;
+  totalSteps: number;
+};
 
-export default function VendorInto() { 
-
+export default function VendorIntro({
+  onNext,
+  currentStep,
+  totalSteps,
+}: Props) {
+  const handleStartApplication = () => {
+    onNext(); // Go to Step 2 (Identity)
+  };
 
   return (
     <div className="bg-background-light font-sans text-text-main antialiased min-h-screen overflow-x-hidden">
       <div className="flex min-h-screen ">
-        {/* Main Content */}
         <main className="flex-1 overflow-y-auto px-6 py-10 md:px-12 lg:px-24">
           <div className="max-w-4xl mx-auto">
             {/* Progress Indicator */}
@@ -34,15 +41,18 @@ export default function VendorInto() {
                   </p>
                 </div>
                 <span className="text-sm font-medium text-slate-600">
-                  25% Complete
+                  Step {currentStep} of {totalSteps} • 25% Complete
                 </span>
               </div>
               <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                <div className="bg-primary h-full w-1/4 rounded-full transition-all duration-500" />
+                <div
+                  className="bg-primary h-full rounded-full transition-all duration-500"
+                  style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+                />
               </div>
             </div>
 
-            {/* Main Grid */}
+            {/* Rest of your content remains the same */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               {/* Left Column - Hero Content */}
               <div className="lg:col-span-7 flex flex-col justify-center">
@@ -56,7 +66,6 @@ export default function VendorInto() {
                   across the continent. Secure, fast, and easy to set up.
                 </p>
 
-                {/* Benefits */}
                 <div className="space-y-4 mb-12">
                   {[
                     {
@@ -93,18 +102,21 @@ export default function VendorInto() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <button className="px-10 py-4 bg-primary hover:bg-brand-green text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group">
+                  <button
+                    onClick={handleStartApplication}
+                    className="px-10 py-4 bg-primary hover:bg-brand-green text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group"
+                  >
                     Start Application
                     <MdArrowForward className="group-hover:translate-x-1 transition-transform" />
                   </button>
 
-                  <button className="px-10 py-4 text-emerald-700 font-bold hover:bg-emerald-50 transition-colors rounded-lg border border-border-light">
+                  <button className="px-10 py-4 text-emerald-700 font-bold hover:bg-emerald-50 transition-colors rounded-xl border border-border-light">
                     Learn More
                   </button>
                 </div>
               </div>
 
-              {/* Right Column - Visual Card */}
+              {/* Right Visual Card - unchanged */}
               <div className="lg:col-span-5 hidden lg:block">
                 <div className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl border border-border-light bg-white p-2">
                   <div className="w-full h-full rounded-xl overflow-hidden relative">
@@ -113,8 +125,6 @@ export default function VendorInto() {
                       alt="Modern entrepreneur in workspace"
                       className="w-full h-full object-cover"
                     />
-
-                    {/* Revenue Overlay Card */}
                     <div className="absolute bottom-6 left-6 right-6 p-6 rounded-xl bg-white/70 backdrop-blur-md border border-white/50 shadow-lg">
                       <div className="flex justify-between items-start mb-4">
                         <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
@@ -166,4 +176,3 @@ export default function VendorInto() {
     </div>
   );
 }
- 
