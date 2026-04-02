@@ -1,18 +1,18 @@
 
+import { Outlet } from "react-router-dom";
+
 import React, { useState } from "react";
 import VendorSidebar from "./VendorSidebar";
 import VendorTopbar from "./VendorTopbar";
 import VendorMobileNav from "./VendorMobileNav";
 
-interface VendorDashboardLayoutProps {
-  children: React.ReactNode;
-  title?: string;
-}
+
+
+
 
 export default function VendorDashboardLayout({
-  children,
-  title = "Overview",
-}: VendorDashboardLayoutProps) {
+  
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -22,7 +22,7 @@ export default function VendorDashboardLayout({
 
       {/* Topbar */}
       <VendorTopbar
-        title={title}
+        title={'hh'}
         onMobileMenuClick={() => setSidebarOpen(true)}
       />
 
@@ -34,7 +34,7 @@ export default function VendorDashboardLayout({
 
       {/* Main Content Area */}
       <main className="md:ml-64 min-h-screen pt-16 md:pt-0 transition-all duration-300">
-        {children}
+        <Outlet />
       </main>
     </div>
   );
