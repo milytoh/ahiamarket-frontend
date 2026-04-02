@@ -17,7 +17,7 @@ export default function VendorTopbar({
   onMobileMenuClick,
 }: VendorTopbarProps) {
   return (
-    <header className="md:ml-64 sticky top-0 z-40 bg-[#e7fff4]/90 backdrop-blur-xl flex justify-between items-center w-full px-6 md:px-8 py-4 shadow-sm border-b border-[#05b384]/10">
+    <header className="md:ml-64 sticky top-0 z-40 bg-[#e7fff4]/90 backdrop-blur-xl flex justify-between items-center  px-6 md:px-8 py-4 shadow-sm border-b border-[#05b384]/10">
       <div className="flex items-center gap-4">
         <button
           onClick={onMobileMenuClick}

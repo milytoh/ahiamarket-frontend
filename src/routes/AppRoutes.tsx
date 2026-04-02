@@ -16,6 +16,7 @@ import PaymentVerify from "@/pages/profile/PaymentVerify";
 import TransactionHistory from "@/pages/profile/TransactionHistory";
 import VendorApplication from "@/pages/vendor/Application";
 import VendorDashboardLayout from "@/components/layout/VendorDashboardLayout";
+import OverviewPage from "@/pages/vendor/Overview";
 
 
 const AppRoutes = () => {
@@ -60,8 +61,8 @@ const AppRoutes = () => {
 
        {/* vendor layout  */}
       <Route element={<ProtectedRoute />}>
-        <Route path="/vendor-dashboard" element={< VendorDashboardLayout/>}>
-         
+        <Route path="/vendor/dashboard" element={< VendorDashboardLayout/>}>
+         <Route index element={<OverviewPage/>} />
         </Route>
       </Route>
     </Routes>

@@ -1,4 +1,6 @@
 import React from "react";
+
+import {useNavigate} from "react-router-dom"
 import {
   HiOutlineBars3,
   HiOutlineMagnifyingGlass,
@@ -11,6 +13,12 @@ interface HeaderProps {
 }
 
 const ProfileHeader: React.FC<HeaderProps> = ({ onMenuClick }) => {
+  const navigate = useNavigate();
+
+  const vendorDashboardHandler = () => {
+    navigate("/vendor/dashboard")
+  }
+
   return (
     <header className="flex items-center justify-between whitespace-nowrap border-b border-slate-100 bg-white px-4 md:px-8 py-4 sticky top-0 z-50 shadow-sm">
       {/* LEFT */}
@@ -61,8 +69,8 @@ const ProfileHeader: React.FC<HeaderProps> = ({ onMenuClick }) => {
       {/* RIGHT */}
       <div className="flex items-center gap-3 lg:gap-6">
         <nav className="hidden xl:flex items-center gap-6">
-          <a className="text-charcoal/70 text-sm font-semibold hover:text-primary transition-colors">
-            Marketplace
+          <a onClick={vendorDashboardHandler} className="text-charcoal/70 text-sm font-semibold hover:text-primary transition-colors">
+            Vendor Dashboard
           </a>
           <a className="text-charcoal/70 text-sm font-semibold hover:text-primary transition-colors">
             Help
