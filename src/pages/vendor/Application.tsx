@@ -1,6 +1,7 @@
 const API_URL = import.meta.env.VITE_API_URL;
 import React, { useState, useEffect } from "react";
 import { useApi } from "@/hooks/useApi";
+import { useNavigate } from "react-router-dom";
 
 import VendorIntro from "@/components/vendor/application/VendorIntro";
 import StoreIdentity from "@/components/vendor/application/StoreIdentity";
@@ -27,6 +28,8 @@ const steps = [
 export default function VendorApplication() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<VendorFormData>({});
+
+  const navigate = useNavigate();
 
   //using custom hook
   const { post, loading, error } = useApi(`${API_URL}/user/vendor-application`);
@@ -55,14 +58,13 @@ export default function VendorApplication() {
 
   const handleFinalSubmit = async () => {
     try {
-      console.log("Submitting full application:", formData);
-
       // Replace with your actual API call
       const res = await post({ ...formData });
-      console.log(res);
+
       toast.success(
         "Application successful, we will review your info, before approval. ",
       );
+      navigate("/profile");
     } catch (error) {
       console.error(error);
     }
@@ -71,11 +73,11 @@ export default function VendorApplication() {
   const CurrentStepComponent =
     steps.find((s) => s.id === currentStep)?.component || VendorIntro;
 
-   useEffect(() => {
-      if (error) {
-        toast.error(error.message);
-      }
-    }, [error])
+  useEffect(() => {
+    if (error) {
+      toast.error(error.message);
+    }
+  }, [error]);
 
   return (
     <div>

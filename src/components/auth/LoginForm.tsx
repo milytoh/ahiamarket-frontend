@@ -6,12 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginFormData } from "@/utils/schemas/registrationSchema";
-import { useApi } from "@/hooks/useApi";
+
 
 import InputForm from "./InputForm";
 import OtpForm from "./OtpForm";
 import Spinner from "../ui/Spinner";
-
 
 import googlelogo from "@/assets/images/logos/google.jfif";
 import fblogo from "@/assets/images/logos/fb.jfif";
@@ -58,22 +57,19 @@ const LoginForm: React.FC = () => {
   //// form submition
   const onSubmit = async (data: any) => {
     const result = await dispatch(loginUser(data));
-  
-      setEmail(data.email);
-    
+
+    setEmail(data.email);
+
     if (loginUser.fulfilled.match(result)) {
-      toast.success("Login successful")
+      toast.success("Login successful");
       navigate("/");
     } else {
-        toast.error(
-          `${error? error.message: "something went wrong, check your network connection"}`
-        );
+      toast.error(
+        `${error ? error.message : "something went wrong, check your network connection"}`,
+      );
     }
   };
 
- 
-
-  
   // google auth redirect url
   const handleGoogleLogin = () => {
     window.location.href = `${import.meta.env.VITE_API_URL}/account/auth/google`;
@@ -84,16 +80,10 @@ const LoginForm: React.FC = () => {
   // }
 
   useEffect(() => {
-    if (
-      error?.message === "please verify your email to continue" 
-      
-    ) {
+    if (error?.message === "please verify your email to continue") {
       setShowOtpForm(true);
     }
   }, [error]);
-
-
-  
 
   //hide otp form
   const onCloseOtp = () => {
@@ -160,8 +150,6 @@ const LoginForm: React.FC = () => {
           </NavLink>
         </p>
 
-    
-
         <div className="flex items-center gap-4">
           <hr className="flex-grow border-gray-300 dark:border-gray-600" />
           <span className="text-gray-500 dark:text-gray-400 text-sm">
@@ -195,9 +183,11 @@ const LoginForm: React.FC = () => {
       </form>
       {/* <!-- OTP Modal (hidden by default) --> */}
 
-      {showOtpForm && <OtpForm onCloseOtForm={onCloseOtp} email={email} naviTo="home"/>}
+      {showOtpForm && (
+        <OtpForm onCloseOtForm={onCloseOtp} email={email} naviTo="home" />
+      )}
     </>
   );
-};;
+};
 
 export default LoginForm;
