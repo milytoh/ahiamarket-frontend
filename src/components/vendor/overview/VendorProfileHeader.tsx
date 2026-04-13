@@ -8,8 +8,33 @@ import {
   MdEdit,
   MdVerified,
 } from "react-icons/md";
+interface VendorProfileHeaderProps {
+  vendor: {
+    store_name?: string;
+    logo_url?: string;
+    location?: {
+      city?: string;
+      state?: string;
+      country?: string;
+    };
+    verificationStatus?: "pending" | "verified" | "rejected";
+  };
+  rating?: number;
+  reviewCount?: number;
+}
 
-export default function VendorProfileHeader() {
+export default function VendorProfileHeader({
+  vendor,
+  rating = 4.2,
+  reviewCount = 128,
+}: VendorProfileHeaderProps) {
+
+  console.log(vendor, "oooooooooo")
+  const storeName = vendor.store_name || "Lagos Fashion Hub";
+  const city = vendor.location?.city || "Lagos";
+  const state = vendor.location?.state || "Nigeria";
+  const isVerified = vendor.verificationStatus === "verified";
+
   return (
     <section className="relative rounded-3xl overflow-hidden bg-white shadow-sm border border-border-light">
       {/* Cover Photo */}
@@ -24,20 +49,25 @@ export default function VendorProfileHeader() {
         {/* Profile Picture */}
         <div className="relative">
           <img
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ3deY2Hqh8qBkrhjSCIckY8zRDYoG-7bP691haOLoONjO_Gyi_H_IP7LXejheIHWKZrh_RowutO-EfhalaqSXtFqE-_nvLyWtkvHeZXUVPUJy6MXb0yM035t2S6a0mnLXfMLds7DpMaxr1xB4PiX3E0Ng69l8Sma_9RWSTnU-xlQmX99GbKK1KrCqAzojIXaLZdwjbyEjdBSIFZu1okHXfQpgqhUFBZV15VY34AzxNlU9vc7z2f1kgaQu7kPN_tiM9279MNAu66nS"
-            alt="Lagos Fashion Hub"
+            src={
+              vendor.logo_url ||
+              "https://lh3.googleusercontent.com/aida-public/AB6AXuCZ3deY2Hqh8qBkrhjSCIckY8zRDYoG-7bP691haOLoONjO_Gyi_H_IP7LXejheIHWKZrh_RowutO-EfhalaqSXtFqE-_nvLyWtkvHeZXUVPUJy6MXb0yM035t2S6a0mnLXfMLds7DpMaxr1xB4PiX3E0Ng69l8Sma_9RWSTnU-xlQmX99GbKK1KrCqAzojIXaLZdwjbyEjdBSIFZu1okHXfQpgqhUFBZV15VY34AzxNlU9vc7z2f1kgaQu7kPN_tiM9279MNAu66nS"
+            }
+            alt={storeName}
             className="w-32 h-32 rounded-2xl border-4 border-white object-cover shadow-xl"
           />
-          <div className="absolute bottom-3 right-3 bg-[#05b384] text-white p-1.5 rounded-full border-2 border-white">
-            <MdVerified size={20} />
-          </div>
+          {isVerified && (
+            <div className="absolute bottom-3 right-3 bg-[#05b384] text-white p-1.5 rounded-full border-2 border-white">
+              <MdVerified size={20} />
+            </div>
+          )}
         </div>
 
         {/* Business Info */}
         <div className="flex-1 pb-2">
           <div className="flex items-center gap-3 mb-2">
             <h2 className="text-3xl font-extrabold tracking-tight text-text-main">
-              Lagos Fashion Hub
+              {storeName}
             </h2>
             <button className="flex items-center gap-2 text-sm font-bold text-[#05b384] hover:text-brand-green transition-colors">
               <MdEdit size={18} /> Edit Profile
@@ -47,7 +77,7 @@ export default function VendorProfileHeader() {
           <div className="flex items-center gap-4 text-sm text-slate-600">
             <div className="flex items-center gap-1">
               <MdLocationOn className="text-[#05b384]" />
-              Lagos, Nigeria
+              {city}, {state}
             </div>
             <div className="w-1 h-1 bg-slate-300 rounded-full" />
             <div className="flex items-center gap-1">
@@ -59,9 +89,9 @@ export default function VendorProfileHeader() {
           <div className="flex items-center gap-2 mt-3">
             <div className="flex items-center gap-1 text-amber-500 font-bold">
               <MdStar size={20} />
-              <span>4.2</span>
+              <span>{rating}</span>
             </div>
-            <span className="text-slate-500">(128 reviews)</span>
+            <span className="text-slate-500">({reviewCount} reviews)</span>
           </div>
         </div>
 

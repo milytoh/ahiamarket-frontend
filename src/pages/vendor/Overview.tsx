@@ -12,6 +12,8 @@ import RecentTransactionsTable from "@/components/vendor/overview/RecentTransact
 
 // types/vendorDashboard.ts
 
+// types/vendorDashboard.ts
+
 export interface VendorDashboardOverview {
   vendor: {
     store_name: string;
@@ -22,6 +24,7 @@ export interface VendorDashboardOverview {
       country: string;
     };
     verificationStatus?: "pending" | "verified" | "rejected";
+    // Add any other vendor fields you need
   };
 
   wallet: {
@@ -39,7 +42,7 @@ export interface VendorDashboardOverview {
   };
 
   sevenDaySales: Array<{
-    _id: string;
+    _id: string; // date string
     totalSales: number;
     orderCount: number;
   }>;
@@ -77,17 +80,21 @@ export default function OverviewPage() {
     const fetchDashboard = async () => {
       try {
         const response = await get();
-        console.log(response);
-        setVendorDashboardOverview(response);
+
+        setVendorDashboardOverview(response.data);
       } catch (err) {}
     };
 
     fetchDashboard();
   }, []);
-
+  console.log(vendorDashboardOverview);
   return (
     <div className="p-6 md:p-8 space-y-8">
-      <VendorProfileHeader />
+      <VendorProfileHeader
+        vendor={vendorDashboardOverview?.vendor || {}}
+        rating={4.2} // You can pull from stats if you add it later
+        reviewCount={128}
+      />
       <VendorQuickStats />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

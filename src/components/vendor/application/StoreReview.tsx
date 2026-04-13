@@ -70,7 +70,7 @@ export default function StoreReview({
                 100% Complete
               </span>
             </div>
-            <div className="w-full h-3 bg-slate-200 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
               <div className="h-full bg-primary w-full rounded-full" />
             </div>
           </div>
