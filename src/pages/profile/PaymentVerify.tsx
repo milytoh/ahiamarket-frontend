@@ -14,8 +14,9 @@ const PaymentVerify = () => {
 
   const reference = searchParams.get("reference");
 
+
   const { get, loading, error } = useApi(
-    `${API_URL}/api/paystack/callback?reference=${reference}`,
+    `${API_URL}/paystack/callback?reference=${reference}`,
   );
 
   useEffect(() => {
