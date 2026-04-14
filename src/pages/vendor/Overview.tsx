@@ -18,6 +18,7 @@ export interface VendorDashboardOverview {
   vendor: {
     store_name: string;
     logo_url?: string;
+    category?: string;
     location?: {
       city: string;
       state: string;
@@ -95,7 +96,7 @@ export default function OverviewPage() {
         rating={4.2} // You can pull from stats if you add it later
         reviewCount={128}
       />
-      <VendorQuickStats />
+      <VendorQuickStats stats={vendorDashboardOverview?.stats! } />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">

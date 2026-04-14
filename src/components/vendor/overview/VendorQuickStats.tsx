@@ -3,43 +3,58 @@
 import React from "react";
 import { MdTrendingUp, MdTrendingDown } from "react-icons/md";
 
-const stats = [
-  {
-    label: "Today's Orders",
-    value: "12",
-    change: "+18%",
-    trend: "up",
-    color: "#05b384",
-  },
-  {
-    label: "Pending Settlement",
-    value: "₦82,500",
-    status: "AWAITING",
-    color: "#F7941D",
-  },
-  {
-    label: "Conversion Rate",
-    value: "3.4%",
-    change: "-0.2%",
-    trend: "down",
-    color: "#ef4444",
-  },
-  {
-    label: "Avg. Order Value",
-    value: "₦6,875",
-    color: "#05b384",
-  },
-];
+interface VendorQuickStatsProps {
+  stats: {
+    totalOrders?: number;
+    totalSales?: number;
+    avgOrderValue?: number;
+    todayOrders?: number;
+    pendingOrders?: number;
+    pendingSettlementAmount?: number;
+  };
+}
 
-export default function VendorQuickStats() {
+export default function VendorQuickStats({
+  stats ={},
+}: VendorQuickStatsProps) {
+  const quickStats = [
+    {
+      label: "Today's Orders",
+      value: stats.todayOrders?.toLocaleString() || "0",
+      change: "+12%", // You can calculate this later if needed
+      trend: "up" as const,
+      color: "#05b384",
+    },
+    {
+      label: "Pending Settlement",
+      value: stats.pendingSettlementAmount
+        ? `₦${stats.pendingSettlementAmount.toLocaleString()}`
+        : "₦0",
+      status: "AWAITING",
+      color: "#F7941D",
+    },
+    {
+      label: "Total Orders",
+      value: stats.totalOrders?.toLocaleString() || "0",
+      color: "#05b384",
+    },
+    {
+      label: "Avg. Order Value",
+      value: stats.avgOrderValue
+        ? `₦${stats.avgOrderValue.toLocaleString()}`
+        : "₦0",
+      color: "#05b384",
+    },
+  ];
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {stats.map((stat, index) => (
+      {quickStats.map((stat, index) => (
         <div
           key={index}
-          className="bg-white p-6 rounded-3xl border border-border-light"
+          className="bg-white p-6 rounded-3xl border border-border-light hover:shadow-md transition-shadow"
         >
-          <p className="text-slate-500 text-sm font-medium mb-4">
+          <p className="text-slate-500 text-sm font-medium mb-4 uppercase tracking-wider">
             {stat.label}
           </p>
 
@@ -50,7 +65,9 @@ export default function VendorQuickStats() {
 
             {stat.change && (
               <span
-                className={`flex items-center text-sm font-bold ${stat.trend === "up" ? "text-[#05b384]" : "text-red-500"}`}
+                className={`flex items-center text-sm font-bold ${
+                  stat.trend === "up" ? "text-[#05b384]" : "text-red-500"
+                }`}
               >
                 {stat.trend === "up" ? <MdTrendingUp /> : <MdTrendingDown />}
                 {stat.change}

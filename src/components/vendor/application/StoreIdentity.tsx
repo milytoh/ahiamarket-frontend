@@ -3,6 +3,8 @@
 import React from "react";
 import StoreIdentityForm from "./StoreIdentityForm";
 
+import { FaCheckCircle } from "react-icons/fa";
+
 type Props = {
   formData: any;
   updateFormData: (data: any) => void;
@@ -22,9 +24,7 @@ export default function StoreIdentity({
 }: Props) {
   return (
     <div className="bg-background-light font-sans text-text-main min-h-screen overflow-x-hidden">
-      <div className="flex min-h-screen">
-        {" "}
-       
+      <div className="flex min-h-screen pt-16">
         {/* Main Content */}
         <main className="flex-1 p-6 md:p-12 flex flex-col items-center">
           <div className="w-full max-w-2xl">
@@ -42,7 +42,7 @@ export default function StoreIdentity({
               </p>
             </header>
 
-            {/* Form Component - Passing necessary props */}
+            {/* Updated Form Component */}
             <StoreIdentityForm
               formData={formData}
               updateFormData={updateFormData}
@@ -64,7 +64,8 @@ export default function StoreIdentity({
                 </div>
               </div>
               <div className="flex items-start gap-4 p-4">
-                <div className="text-primary mt-0.5">✅</div>
+                {/* <div className="text-primary mt-0.5">✅</div> */}
+                <FaCheckCircle className="text-primary mt-0.5" />
                 <div>
                   <p className="text-xs font-bold text-text-main">
                     Trusted Vendor

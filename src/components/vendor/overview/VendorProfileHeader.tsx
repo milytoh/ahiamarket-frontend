@@ -12,6 +12,7 @@ interface VendorProfileHeaderProps {
   vendor: {
     store_name?: string;
     logo_url?: string;
+    category?: string
     location?: {
       city?: string;
       state?: string;
@@ -33,7 +34,8 @@ export default function VendorProfileHeader({
   const storeName = vendor.store_name || "Lagos Fashion Hub";
   const city = vendor.location?.city || "Lagos";
   const state = vendor.location?.state || "Nigeria";
-  const isVerified = vendor.verificationStatus === "verified";
+  const isVerified = vendor.verificationStatus || "verified";
+  const category = vendor.category
 
   return (
     <section className="relative rounded-3xl overflow-hidden bg-white shadow-sm border border-border-light">
@@ -82,7 +84,7 @@ export default function VendorProfileHeader({
             <div className="w-1 h-1 bg-slate-300 rounded-full" />
             <div className="flex items-center gap-1">
               <MdCategory className="text-[#05b384]" />
-              Fashion & Apparel
+            {category}
             </div>
           </div>
 

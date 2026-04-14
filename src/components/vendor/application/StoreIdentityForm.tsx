@@ -10,11 +10,9 @@ const storeIdentitySchema = z.object({
   storeName: z
     .string()
     .min(3, "Store name must be at least 3 characters")
-    .max(60, "Store name is too long"),
-  storeBio: z
-    .string()
-    .min(20, "Please write a bit more about your store (minimum 20 characters)")
-    .max(300, "Store bio cannot exceed 300 characters"),
+    .max(60),
+  storeBio: z.string().min(20, "Bio must be at least 20 characters").max(300),
+  category: z.string().min(1, "Please select a store category"),
 });
 
 type FormData = z.infer<typeof storeIdentitySchema>;
@@ -41,96 +39,91 @@ export default function StoreIdentityForm({
     defaultValues: {
       storeName: formData.storeNameIdentity || "",
       storeBio: formData.storeBioIdentity || "",
+      category: formData.category || "",
     },
   });
 
   const onSubmit = (data: FormData) => {
-    // Save data to parent wizard
     updateFormData({
       storeNameIdentity: data.storeName,
       storeBioIdentity: data.storeBio,
+      category: data.category,
     });
-
-    // Move to next step
     onNext();
   };
+
+  const categories = [
+    "Fashion & Apparel",
+    "Electronics & Gadgets",
+    "Home & Kitchen",
+    "Beauty & Personal Care",
+    "Food & Groceries",
+    "Health & Wellness",
+    "Jewelry & Accessories",
+    "Books & Stationery",
+    "Automotive",
+    "Sports & Outdoors",
+    "Others",
+  ];
 
   return (
     <div className="bg-white rounded-2xl p-8 shadow-lg border border-border-light">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-10">
         {/* Progress Bar */}
-
-        <div className="mb-12">
-          <div className="flex justify-between items-end mb-4">
-            <div>
-              <span className="text-xs font-bold tracking-wider uppercase text-slate-500">
-                Current Progress
-              </span>
-              {/* <p className="font-semibold text-lg text-text-main">
-                Welcome to Ahiamarket
-              </p> */}
-            </div>
-            <span className="text-sm font-medium text-slate-600">
-              Step 2 of 4 • 50% Complete
-            </span>
-          </div>
-          <div className="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
-            <div className="bg-primary h-full w-1/2 rounded-full" />
-          </div>
+        <div className="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+          <div className="bg-primary h-full w-1/2 rounded-full" />
         </div>
 
         {/* Store Name */}
         <div className="space-y-2">
-          <div className="relative">
-            <input
-              {...register("storeName")}
-              className="block w-full px-4 pt-6 pb-3 bg-background-light border border-border-light rounded-xl focus:border-primary focus:ring-1 outline-none peer transition-all"
-              placeholder=" "
-            />
-            <label className="absolute left-4 top-4 text-slate-500 text-sm transition-all peer-focus:text-primary peer-focus:top-2 peer-focus:text-xs pointer-events-none">
-              Store Name
-            </label>
-          </div>
+          <label className="block text-sm font-bold text-text-main">
+            Store Name
+          </label>
+          <input
+            {...register("storeName")}
+            className="w-full px-4 py-4 bg-background-light border border-border-light rounded-xl focus:border-primary focus:ring-1 outline-none"
+            placeholder="e.g. Lagos Fashion Hub"
+          />
           {errors.storeName && (
-            <p className="text-red-500 text-xs ml-1">
-              {errors.storeName.message}
-            </p>
+            <p className="text-red-500 text-xs">{errors.storeName.message}</p>
+          )}
+        </div>
+
+        {/* Store Category - Dropdown */}
+        <div className="space-y-2">
+          <label className="block text-sm font-bold text-text-main">
+            Store Category
+          </label>
+          <select
+            {...register("category")}
+            className="w-full px-4 py-4 bg-background-light border border-border-light rounded-xl focus:border-primary focus:ring-1 outline-none"
+          >
+            <option value="">Select Store Category</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+          {errors.category && (
+            <p className="text-red-500 text-xs">{errors.category.message}</p>
           )}
         </div>
 
         {/* Store Bio */}
         <div className="space-y-2">
-          <div className="relative">
-            <textarea
-              {...register("storeBio")}
-              rows={5}
-              className="block w-full px-4 pt-6 pb-3 bg-background-light border border-border-light rounded-xl focus:border-primary focus:ring-1 outline-none peer resize-none transition-all"
-              placeholder=" "
-            />
-            <label className="absolute left-4 top-4 text-slate-500 text-sm transition-all peer-focus:text-primary peer-focus:top-2 peer-focus:text-xs pointer-events-none">
-              Store Bio
-            </label>
-          </div>
+          <label className="block text-sm font-bold text-text-main">
+            Store Bio
+          </label>
+          <textarea
+            {...register("storeBio")}
+            rows={5}
+            className="w-full px-4 py-4 bg-background-light border border-border-light rounded-xl focus:border-primary focus:ring-1 outline-none resize-none"
+            placeholder="Tell customers what makes your store special..."
+          />
           {errors.storeBio && (
-            <p className="text-red-500 text-xs ml-1">
-              {errors.storeBio.message}
-            </p>
+            <p className="text-red-500 text-xs">{errors.storeBio.message}</p>
           )}
-        </div>
-
-        {/* Preview Card */}
-        <div className="p-6 rounded-xl bg-slate-50 border border-border-light">
-          <div className="flex gap-4 items-center">
-            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-              <span className="text-3xl">🏪</span>
-            </div>
-            <div>
-              <p className="font-bold">Store Preview</p>
-              <p className="text-xs text-slate-500">
-                This is how your store will appear to customers
-              </p>
-            </div>
-          </div>
         </div>
 
         {/* Navigation Buttons */}
