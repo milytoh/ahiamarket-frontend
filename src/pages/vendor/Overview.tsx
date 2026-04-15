@@ -11,9 +11,14 @@ import VendorTopProducts from "@/components/vendor/overview/VendorTopProducts";
 import RecentTransactionsTable from "@/components/vendor/overview/RecentTransactionsTable";
 import RecentTransactionsMobile from "@/components/vendor/overview/RecentTransactionsMobile";
 
-// types/vendorDashboard.ts
+//skeleton
 
-// types/vendorDashboard.ts
+import RecentTransactionsTableSkeleton from "@/components/ui/skeletons/vendor/overview/RecentTransactionsTableSkeleton";
+import RecentTransactionsMobileSkeleton from "@/components/ui/skeletons/vendor/overview/RecentTransactionsMobileSkeleton";
+import VendorProfileHeaderSkeleton from "@/components/ui/skeletons/vendor/overview/VendorProfileHeaderSkeleton";
+import VendorQuickStatsSkeleton from "@/components/ui/skeletons/vendor/overview/VendorQuickStatsSkeleton";
+import VendorRevenueChartSkeleton from "@/components/ui/skeletons/vendor/overview/VendorRevenueChartSkeleton";
+import VendorTopProductsSkeleton from "@/components/ui/skeletons/vendor/overview/VendorTopProductsSkeleton";
 
 export interface VendorDashboardOverview {
   vendor: {
@@ -70,6 +75,8 @@ export interface VendorDashboardOverview {
   }>;
 }
 
+
+
 export default function OverviewPage() {
   const [vendorDashboardOverview, setVendorDashboardOverview] =
     useState<VendorDashboardOverview | null>(null);
@@ -83,7 +90,7 @@ export default function OverviewPage() {
       try {
         const response = await get();
 
-        console.log(response.data)
+        console.log(response.data);
 
         setVendorDashboardOverview(response.data);
       } catch (err) {}
@@ -91,31 +98,73 @@ export default function OverviewPage() {
 
     fetchDashboard();
   }, []);
-  console.log(vendorDashboardOverview);
+
+   useEffect(() => {
+      if (error) {
+        toast.error("something went wrong, check your network connection");
+      }
+    }, [error]);
+  
+ if (error) {
+   return (
+     <ErrorState
+       title="Failed to load profile"
+       message={error.message}
+       onRetry={get}
+     />
+   );
+ }
+
   return (
     <div className="p-6 md:p-8 space-y-8">
-      <VendorProfileHeader
-        vendor={vendorDashboardOverview?.vendor || {}}
-        rating={4.2} // You can pull from stats if you add it later
-        reviewCount={128}
-      />
-      <VendorQuickStats stats={vendorDashboardOverview?.stats!} />
+      {loading ? (
+        <VendorProfileHeaderSkeleton />
+      ) : (
+        <VendorProfileHeader
+          vendor={vendorDashboardOverview?.vendor || {}}
+          rating={4.2} // You can pull from stats if you add it later
+          reviewCount={128}
+        />
+      )}
+      {loading ? (
+        <VendorQuickStatsSkeleton />
+      ) : (
+        <VendorQuickStats stats={vendorDashboardOverview?.stats!} />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <VendorRevenueChart data={vendorDashboardOverview?.sevenDaySales} />
+          {loading ? (
+            <VendorRevenueChartSkeleton />
+          ) : (
+            <VendorRevenueChart data={vendorDashboardOverview?.sevenDaySales} />
+          )}
         </div>
-        <VendorTopProducts
-          products={vendorDashboardOverview?.topProducts || []}
-        />
+        {loading ? (
+          <VendorTopProductsSkeleton />
+        ) : (
+          <VendorTopProducts
+            products={vendorDashboardOverview?.topProducts || []}
+          />
+        )}
       </div>
       {/* Recent Transactions */}
-      <RecentTransactionsTable
-        orders={vendorDashboardOverview?.recentOrders || []}
-      />
-      <RecentTransactionsMobile
-        orders={vendorDashboardOverview?.recentOrders || []}
-      />
+
+      {loading ? (
+        <RecentTransactionsTableSkeleton />
+      ) : (
+        <RecentTransactionsTable
+          orders={vendorDashboardOverview?.recentOrders || []}
+        />
+      )}
+
+      {loading ? (
+        <RecentTransactionsMobileSkeleton />
+      ) : (
+        <RecentTransactionsMobile
+          orders={vendorDashboardOverview?.recentOrders || []}
+        />
+      )}
     </div>
   );
 }
