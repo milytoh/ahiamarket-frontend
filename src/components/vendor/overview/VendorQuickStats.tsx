@@ -15,7 +15,7 @@ interface VendorQuickStatsProps {
 }
 
 export default function VendorQuickStats({
-  stats ={},
+  stats = {},
 }: VendorQuickStatsProps) {
   const quickStats = [
     {

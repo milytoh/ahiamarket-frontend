@@ -9,6 +9,7 @@ import VendorQuickStats from "@/components/vendor/overview/VendorQuickStats";
 import VendorRevenueChart from "@/components/vendor/overview/VendorRevenueChart";
 import VendorTopProducts from "@/components/vendor/overview/VendorTopProducts";
 import RecentTransactionsTable from "@/components/vendor/overview/RecentTransactionsTable";
+import RecentTransactionsMobile from "@/components/vendor/overview/RecentTransactionsMobile";
 
 // types/vendorDashboard.ts
 
@@ -110,6 +111,9 @@ export default function OverviewPage() {
       </div>
       {/* Recent Transactions */}
       <RecentTransactionsTable
+        orders={vendorDashboardOverview?.recentOrders || []}
+      />
+      <RecentTransactionsMobile
         orders={vendorDashboardOverview?.recentOrders || []}
       />
     </div>

@@ -36,14 +36,14 @@ export default function RecentTransactionsTable({
 
   if (!orders || orders.length === 0) {
     return (
-      <div className="bg-white rounded-3xl border border-border-light overflow-hidden p-8 text-center text-slate-400">
+      <div className="bg-white rounded-3xl border border-border-light overflow-hidden p-8 text-center text-slate-400 hidden md:block">
         No recent transactions yet
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-3xl border border-border-light overflow-hidden">
+    <div className="bg-white rounded-3xl border border-border-light overflow-hidden hidden md:block">
       <div className="px-8 py-6 flex justify-between items-center border-b">
         <h2 className="text-xl font-bold text-text-main">
           Recent Transactions
