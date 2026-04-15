@@ -82,6 +82,8 @@ export default function OverviewPage() {
       try {
         const response = await get();
 
+        console.log(response.data)
+
         setVendorDashboardOverview(response.data);
       } catch (err) {}
     };
@@ -96,13 +98,15 @@ export default function OverviewPage() {
         rating={4.2} // You can pull from stats if you add it later
         reviewCount={128}
       />
-      <VendorQuickStats stats={vendorDashboardOverview?.stats! } />
+      <VendorQuickStats stats={vendorDashboardOverview?.stats!} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <VendorRevenueChart />
+          <VendorRevenueChart data={vendorDashboardOverview?.sevenDaySales} />
         </div>
-        <VendorTopProducts />
+        <VendorTopProducts
+          products={vendorDashboardOverview?.topProducts || []}
+        />
       </div>
       {/* Recent Transactions */}
       <RecentTransactionsTable />
