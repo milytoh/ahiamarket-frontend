@@ -2,31 +2,46 @@
 
 import React from "react";
 
-const transactions = [
-  {
-    id: "#ORD-90210",
-    customer: "Tunde Afolayan",
-    amount: "₦18,500",
-    status: "Delivered",
-    date: "Today, 10:45 AM",
-  },
-  {
-    id: "#ORD-90211",
-    customer: "Chioma Okoro",
-    amount: "₦12,000",
-    status: "Processing",
-    date: "Today, 09:12 AM",
-  },
-  {
-    id: "#ORD-89452",
-    customer: "Musa Ibrahim",
-    amount: "₦22,000",
-    status: "Delivered",
-    date: "Yesterday, 06:30 PM",
-  },
-];
+interface RecentOrder {
+  _id: string;
+  total: number;
+  order_status: string;
+  created_at: string;
+  payment?: {
+    method?: string;
+    status?: string;
+  };
+}
 
-export default function RecentTransactionsTable() {
+interface RecentTransactionsTableProps {
+  orders?: RecentOrder[];
+}
+
+export default function RecentTransactionsTable({
+  orders = [],
+}: RecentTransactionsTableProps) {
+  // Format date nicely
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0)
+      return `Today, ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+    if (diffDays === 1)
+      return `Yesterday, ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+    return date.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+  };
+
+  if (!orders || orders.length === 0) {
+    return (
+      <div className="bg-white rounded-3xl border border-border-light overflow-hidden p-8 text-center text-slate-400">
+        No recent transactions yet
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-3xl border border-border-light overflow-hidden">
       <div className="px-8 py-6 flex justify-between items-center border-b">
@@ -51,9 +66,6 @@ export default function RecentTransactionsTable() {
                 Order ID
               </th>
               <th className="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-widest">
-                Customer
-              </th>
-              <th className="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-widest">
                 Amount
               </th>
               <th className="px-8 py-5 text-left text-xs font-bold text-slate-500 uppercase tracking-widest">
@@ -65,27 +77,34 @@ export default function RecentTransactionsTable() {
             </tr>
           </thead>
           <tbody className="divide-y">
-            {transactions.map((tx, i) => (
-              <tr key={i} className="hover:bg-[#e2f9ef]/50 transition-colors">
+            {orders.map((order) => (
+              <tr
+                key={order._id}
+                className="hover:bg-[#e2f9ef]/50 transition-colors cursor-pointer"
+              >
                 <td className="px-8 py-5 font-mono font-bold text-sm">
-                  {tx.id}
+                  #{order._id.toString().slice(-6).toUpperCase()}
                 </td>
-                <td className="px-8 py-5 text-sm font-medium">{tx.customer}</td>
                 <td className="px-8 py-5 font-bold text-text-main">
-                  {tx.amount}
+                  ₦{order.total.toLocaleString()}
                 </td>
                 <td className="px-8 py-5">
                   <span
-                    className={`inline-block px-4 py-1 text-xs font-bold rounded-full ${
-                      tx.status === "Delivered"
+                    className={`inline-block px-4 py-1 text-xs font-bold rounded-full capitalize ${
+                      order.order_status === "completed" ||
+                      order.order_status === "delivered"
                         ? "bg-emerald-100 text-emerald-700"
-                        : "bg-amber-100 text-amber-700"
+                        : order.order_status === "pending"
+                          ? "bg-orange-100 text-orange-600"
+                          : "bg-amber-100 text-amber-700"
                     }`}
                   >
-                    {tx.status}
+                    {order.order_status}
                   </span>
                 </td>
-                <td className="px-8 py-5 text-sm text-slate-500">{tx.date}</td>
+                <td className="px-8 py-5 text-sm text-slate-500">
+                  {formatDate(order.created_at)}
+                </td>
               </tr>
             ))}
           </tbody>

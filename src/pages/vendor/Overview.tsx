@@ -109,7 +109,9 @@ export default function OverviewPage() {
         />
       </div>
       {/* Recent Transactions */}
-      <RecentTransactionsTable />
+      <RecentTransactionsTable
+        orders={vendorDashboardOverview?.recentOrders || []}
+      />
     </div>
   );
 }
