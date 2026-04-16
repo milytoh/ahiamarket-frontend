@@ -16,8 +16,8 @@ export default function VendorTopbar({
   title,
   onMobileMenuClick,
 }: VendorTopbarProps) {
-  return (
-    <header className="md:ml-64 sticky top-0 z-40 bg-[#e7fff4]/90 backdrop-blur-xl flex justify-between items-center  px-6 md:px-8 py-4 shadow-sm border-b border-[#05b384]/10">
+  return ( <header className="md:ml-64 sticky top-0 z-40  backdrop-blur-xl flex justify-between items-center  px-6 md:px-8 py-4 shadow-sm border-b border-[#05b384]/10">
+   
       <div className="flex items-center gap-4">
         <button
           onClick={onMobileMenuClick}
@@ -33,7 +33,7 @@ export default function VendorTopbar({
         <div className="hidden md:block h-6 w-px bg-[#05b384]/20 mx-3" />
 
         <button className="hidden md:flex items-center gap-2 text-[#333333] font-medium text-sm hover:bg-white/70 px-4 py-2 rounded-xl transition-all">
-          Lagos Fashion Hub
+          Legend Cloth
           <MdKeyboardArrowDown />
         </button>
       </div>
@@ -45,7 +45,7 @@ export default function VendorTopbar({
             <span className="text-[0.65rem] uppercase tracking-wider text-[#333333]/60 font-bold">
               Wallet Balance
             </span>
-            <span className="text-sm font-bold text-[#05b384]">₦248,750</span>
+            <span className="text-sm font-bold text-[#05b384]">₦0</span>
           </div>
           <button className="bg-[#05b384] text-white px-5 py-1.5 rounded-xl text-xs font-bold hover:bg-[#00A859] transition-all">
             Settle

@@ -20,6 +20,11 @@ import VendorQuickStatsSkeleton from "@/components/ui/skeletons/vendor/overview/
 import VendorRevenueChartSkeleton from "@/components/ui/skeletons/vendor/overview/VendorRevenueChartSkeleton";
 import VendorTopProductsSkeleton from "@/components/ui/skeletons/vendor/overview/VendorTopProductsSkeleton";
 
+import ErrorState from "@/components/ui/Error";
+import ErrorEmptyState from "@/components/ui/ErrorEmptyState";
+
+import { toast } from "react-toastify";
+
 export interface VendorDashboardOverview {
   vendor: {
     store_name: string;
@@ -108,7 +113,7 @@ export default function OverviewPage() {
  if (error) {
    return (
      <ErrorState
-       title="Failed to load profile"
+       title="Failed to load"
        message={error.message}
        onRetry={get}
      />

@@ -15,7 +15,7 @@ import {
 
 export default function VendorSidebar() {
   return (
-    <aside className="hidden md:flex h-screen w-64 fixed left-0 top-0 bg-[#e2f9ef] flex-col p-6 gap-y-2 z-50 border-r border-[#05b384]/10">
+    <aside className="hidden md:flex h-screen w-64 fixed left-0 top-0  flex-col p-6 gap-y-2 z-50 border-r border-[#05b384]/10">
       {/* Logo / Header */}
       <div className="mb-10 flex items-center gap-3">
         <div className="w-10 h-10 rounded-lg bg-[#05b384] flex items-center justify-center">
