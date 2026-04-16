@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { MdArrowBack } from "react-icons/md";
+import { MdAddPhotoAlternate, MdClose } from "react-icons/md";
 
 const addProductSchema = z.object({
   productName: z
@@ -12,7 +12,9 @@ const addProductSchema = z.object({
     .min(3, "Product name must be at least 3 characters")
     .max(100),
   category: z.string().min(1, "Please select a category"),
-  condition: z.enum(["New", "Refurbished"]),
+  condition: z.enum(["New", "Refurbished", "Used"], {
+    required_error: "Please select condition",
+  }),
   description: z
     .string()
     .min(20, "Description must be at least 20 characters")
@@ -24,19 +26,16 @@ const addProductSchema = z.object({
 
 type AddProductFormData = z.infer<typeof addProductSchema>;
 
-interface AddProductFormProps {
-  onSubmit: (data: AddProductFormData) => Promise<void>;
-  isSubmitting: boolean;
-}
+export default function AddProductForm() {
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
-export default function AddProductForm({
-  onSubmit,
-  isSubmitting,
-}: AddProductFormProps) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
   } = useForm<AddProductFormData>({
     resolver: zodResolver(addProductSchema),
     defaultValues: {
@@ -45,6 +44,67 @@ export default function AddProductForm({
       stock: 1,
     },
   });
+
+  const podEnabled = watch("podEnabled");
+
+  // Handle image selection with preview
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    const newImages = [...selectedImages, ...files].slice(0, 3); // Max 3 images
+    setSelectedImages(newImages);
+
+    // Create previews
+    const newPreviews = newImages.map((file) => URL.createObjectURL(file));
+    setImagePreviews(newPreviews);
+  };
+
+  // Remove image
+  const removeImage = (index: number) => {
+    const newImages = selectedImages.filter((_, i) => i !== index);
+    const newPreviews = imagePreviews.filter((_, i) => i !== index);
+
+    setSelectedImages(newImages);
+    setImagePreviews(newPreviews);
+  };
+
+  const onSubmit = async (data: AddProductFormData) => {
+    try {
+      const formDataToSend = new FormData();
+
+      // Append form fields
+      formDataToSend.append("productName", data.productName);
+      formDataToSend.append("category", data.category);
+      formDataToSend.append("condition", data.condition);
+      formDataToSend.append("description", data.description);
+      formDataToSend.append("unitPrice", data.unitPrice.toString());
+      formDataToSend.append("stock", data.stock.toString());
+      formDataToSend.append("podEnabled", data.podEnabled.toString());
+
+      // Append images
+      selectedImages.forEach((file, index) => {
+        formDataToSend.append(`image${index}`, file);
+      });
+
+      console.log("Submitting to backend with images:", selectedImages.length);
+
+      const response = await fetch("/api/vendor/products", {
+        method: "POST",
+        body: formDataToSend,
+      });
+
+      if (response.ok) {
+        alert("✅ Product added successfully!");
+        // Reset form if needed
+      } else {
+        alert("Failed to add product");
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      alert("Something went wrong. Please try again.");
+    }
+  };
 
   const categories = [
     "Fashion & Apparel",
@@ -65,9 +125,9 @@ export default function AddProductForm({
       onSubmit={handleSubmit(onSubmit)}
       className="grid grid-cols-1 lg:grid-cols-12 gap-8"
     >
-      {/* Left Column - Primary Details */}
+      {/* Left Column */}
       <div className="lg:col-span-8 space-y-8">
-        {/* Foundation Details Section */}
+        {/* Foundation Details */}
         <section className="bg-white p-8 rounded-3xl border border-border-light">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-1.5 h-6 bg-primary rounded-full" />
@@ -91,58 +151,47 @@ export default function AddProductForm({
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">
-                  Category
-                </label>
-                <select
-                  {...register("category")}
-                  className="w-full bg-background-light border border-border-light rounded-2xl p-4 focus:ring-2 focus:ring-primary outline-none"
-                >
-                  <option value="">Select Category</option>
-                  {categories.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
-                {errors.category && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.category.message}
-                  </p>
-                )}
-              </div>
+            {/* Category Dropdown */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">
+                Category
+              </label>
+              <select
+                {...register("category")}
+                className="w-full bg-background-light border border-border-light rounded-2xl p-4 focus:ring-2 focus:ring-primary outline-none"
+              >
+                <option value="">Select Category</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+              {errors.category && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.category.message}
+                </p>
+              )}
+            </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">
-                  Condition
-                </label>
-                <div className="flex gap-3">
-                  <label className="flex-1 cursor-pointer">
-                    <input
-                      type="radio"
-                      value="New"
-                      {...register("condition")}
-                      className="peer sr-only"
-                    />
-                    <div className="bg-background-light border border-border-light peer-checked:border-primary peer-checked:bg-primary peer-checked:text-white text-center py-3 rounded-2xl font-medium transition-all">
-                      New
-                    </div>
-                  </label>
-                  <label className="flex-1 cursor-pointer">
-                    <input
-                      type="radio"
-                      value="Refurbished"
-                      {...register("condition")}
-                      className="peer sr-only"
-                    />
-                    <div className="bg-background-light border border-border-light peer-checked:border-primary peer-checked:bg-primary peer-checked:text-white text-center py-3 rounded-2xl font-medium transition-all">
-                      Refurbished
-                    </div>
-                  </label>
-                </div>
-              </div>
+            {/* Condition Dropdown (as requested) */}
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">
+                Condition
+              </label>
+              <select
+                {...register("condition")}
+                className="w-full bg-background-light border border-border-light rounded-2xl p-4 focus:ring-2 focus:ring-primary outline-none"
+              >
+                <option value="New">New</option>
+                <option value="Refurbished">Refurbished</option>
+                <option value="Used">Used</option>
+              </select>
+              {errors.condition && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.condition.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -164,43 +213,66 @@ export default function AddProductForm({
           </div>
         </section>
 
-        {/* Media Upload Section */}
+        {/* Image Upload with Preview */}
         <section className="bg-white p-8 rounded-3xl border border-border-light">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="w-1.5 h-6 bg-primary rounded-full" />
               <h3 className="font-bold text-xl">Visual Assets</h3>
             </div>
             <span className="text-xs font-bold bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full">
-              Max 3 Files
+              Max 3 Images
             </span>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 h-64">
-            <div className="col-span-2 border-2 border-dashed border-border-light rounded-3xl flex flex-col items-center justify-center hover:border-primary transition-all cursor-pointer">
-              <div className="text-center">
-                <div className="text-6xl text-slate-300 mb-3">📸</div>
-                <p className="font-medium">Upload Primary Image</p>
-                <p className="text-xs text-slate-400 mt-1">
-                  High resolution recommended
-                </p>
-              </div>
-            </div>
+          {/* Hidden File Input */}
+          <input
+            type="file"
+            id="productImages"
+            multiple
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+          />
 
-            {[1, 2].map((i) => (
-              <div
-                key={i}
-                className="flex-1 border-2 border-dashed border-border-light rounded-3xl flex items-center justify-center hover:border-primary transition-all cursor-pointer"
-              >
-                <div className="text-4xl text-slate-300">+</div>
-              </div>
-            ))}
-          </div>
+          <label
+            htmlFor="productImages"
+            className="border-2 border-dashed border-border-light rounded-3xl p-12 flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-all"
+          >
+            <MdAddPhotoAlternate className="text-6xl text-slate-300 mb-4" />
+            <p className="font-medium text-slate-600">Click to upload images</p>
+            <p className="text-xs text-slate-400 mt-1">
+              PNG, JPG up to 5MB each
+            </p>
+          </label>
+
+          {/* Image Previews */}
+          {imagePreviews.length > 0 && (
+            <div className="mt-6 grid grid-cols-3 gap-4">
+              {imagePreviews.map((preview, index) => (
+                <div key={index} className="relative group">
+                  <img
+                    src={preview}
+                    alt={`Preview ${index}`}
+                    className="w-full aspect-square object-cover rounded-2xl border border-border-light"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-all"
+                  >
+                    <MdClose size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       </div>
 
       {/* Right Column - Pricing & Settings */}
       <div className="lg:col-span-4 space-y-8">
+        {/* Pricing & Inventory */}
         <section className="bg-white p-8 rounded-3xl border border-border-light">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-1.5 h-6 bg-emerald-200 rounded-full" />
@@ -269,7 +341,7 @@ export default function AddProductForm({
           </div>
         </section>
 
-        {/* Action Buttons */}
+        {/* Submit Buttons */}
         <div className="flex flex-col gap-4 pt-6">
           <button
             type="submit"

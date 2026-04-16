@@ -18,6 +18,7 @@ import VendorApplication from "@/pages/vendor/Application";
 import VendorDashboardLayout from "@/components/layout/VendorDashboardLayout";
 import OverviewPage from "@/pages/vendor/Overview";
 import Products from "@/pages/vendor/Products";
+import AddProduct from "@/pages/vendor/AddProduct";
 
 
 const AppRoutes = () => {
@@ -64,10 +65,8 @@ const AppRoutes = () => {
       <Route element={<ProtectedRoute />}>
         <Route path="/vendor/dashboard" element={<VendorDashboardLayout />}>
           <Route index element={<OverviewPage />} />
-          <Route
-            path="/vendor/dashboard/products"
-            element={< Products/>}
-          />
+          <Route path="/vendor/dashboard/products" element={<Products />} />
+          <Route path="/vendor/dashboard/add-product" element={<AddProduct />} />
         </Route>
       </Route>
     </Routes>
