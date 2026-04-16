@@ -1,15 +1,17 @@
 "use client";
 
-import React from "react";
+import { NavLink } from "react-router-dom";
 import {
-  MdClose,
   MdGridView,
   MdInventory2,
   MdShoppingBag,
   MdAccountBalanceWallet,
   MdQueryStats,
   MdSettings,
+
   MdLogout,
+ 
+  MdClose,
 } from "react-icons/md";
 
 interface VendorMobileNavProps {
@@ -44,28 +46,97 @@ export default function VendorMobileNav({
           </button>
         </div>
 
-        <nav className="flex-1 space-y-2">
-          {[
-            { icon: MdGridView, label: "Overview", active: true },
-            { icon: MdInventory2, label: "Products" },
-            { icon: MdShoppingBag, label: "Orders" },
-            { icon: MdAccountBalanceWallet, label: "Transactions" },
-            { icon: MdQueryStats, label: "Analytics" },
-            { icon: MdSettings, label: "Settings" },
-          ].map((item, i) => (
-            <a
-              key={i}
-              href="#"
-              className={`flex items-center gap-3 px-5 py-4 rounded-2xl transition-all ${
-                item.active
-                  ? "bg-[#05b384] text-white"
-                  : "text-[#333333]/70 hover:bg-[#e2f9ef]"
-              }`}
-            >
-              <item.icon size={24} />
-              <span className="font-medium">{item.label}</span>
-            </a>
-          ))}
+        {/* Navigation */}
+        <nav className="flex-1 space-y-1">
+          <NavLink
+            to="/vendor/dashboard"
+            end
+            className={({ isActive }) =>
+              `flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200 ${
+                isActive
+                  ? "bg-gradient-to-br from-[#05b384] to-[#00A859] text-white shadow-lg"
+                  : "text-[#333333]/70 hover:bg-white/60"
+              }`
+            }
+          >
+            <MdGridView size={22} />
+            <span className="font-medium text-[0.875rem]">Overview</span>
+          </NavLink>
+
+          <NavLink
+            to="/vendor/dashboard/products"
+            end
+            className={({ isActive }) =>
+              `flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200 ${
+                isActive
+                  ? "bg-gradient-to-br from-[#05b384] to-[#00A859] text-white shadow-lg"
+                  : "text-[#333333]/70 hover:bg-white/60"
+              }`
+            }
+          >
+            <MdInventory2 size={22} />
+            <span className="font-medium text-[0.875rem]">Products</span>
+          </NavLink>
+
+          <NavLink
+            to="/vendor/orders"
+            end
+            className={({ isActive }) =>
+              `flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200 ${
+                isActive
+                  ? "bg-gradient-to-br from-[#05b384] to-[#00A859] text-white shadow-lg"
+                  : "text-[#333333]/70 hover:bg-white/60"
+              }`
+            }
+          >
+            <MdShoppingBag size={22} />
+            <span className="font-medium text-[0.875rem]">Orders</span>
+          </NavLink>
+
+          <NavLink
+            to="/vendor/transactions"
+            end
+            className={({ isActive }) =>
+              `flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200 ${
+                isActive
+                  ? "bg-gradient-to-br from-[#05b384] to-[#00A859] text-white shadow-lg"
+                  : "text-[#333333]/70 hover:bg-white/60"
+              }`
+            }
+          >
+            <MdAccountBalanceWallet size={22} />
+            <span className="font-medium text-[0.875rem]">Transactions</span>
+          </NavLink>
+
+          <NavLink
+            to="/vendor/analytics"
+            end
+            className={({ isActive }) =>
+              `flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200 ${
+                isActive
+                  ? "bg-gradient-to-br from-[#05b384] to-[#00A859] text-white shadow-lg"
+                  : "text-[#333333]/70 hover:bg-white/60"
+              }`
+            }
+          >
+            <MdQueryStats size={22} />
+            <span className="font-medium text-[0.875rem]">Analytics</span>
+          </NavLink>
+
+          <NavLink
+            to="/vendor/settings"
+            end
+            className={({ isActive }) =>
+              `flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200 ${
+                isActive
+                  ? "bg-gradient-to-br from-[#05b384] to-[#00A859] text-white shadow-lg"
+                  : "text-[#333333]/70 hover:bg-white/60"
+              }`
+            }
+          >
+            <MdSettings size={22} />
+            <span className="font-medium text-[0.875rem]">Settings</span>
+          </NavLink>
         </nav>
 
         <div className="pt-6 border-t">
