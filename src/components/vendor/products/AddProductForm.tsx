@@ -6,22 +6,35 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { MdAddPhotoAlternate, MdClose } from "react-icons/md";
 
+// Updated Zod Schema with Image Validation
 const addProductSchema = z.object({
   productName: z
     .string()
     .min(3, "Product name must be at least 3 characters")
-    .max(100),
+    .max(100, "Product name is too long"),
+
   category: z.string().min(1, "Please select a category"),
-  condition: z.enum(["New", "Refurbished", "Used"], {
-    required_error: "Please select condition",
-  }),
+
+  condition: z.enum(["New", "Refurbished", "Used"]),
+
   description: z
     .string()
     .min(20, "Description must be at least 20 characters")
-    .max(1000),
+    .max(1000, "Description is too long"),
+
   unitPrice: z.number().min(100, "Price must be at least ₦100"),
-  stock: z.number().min(0, "Stock cannot be negative").max(10000),
+
+  stock: z
+    .number()
+    .min(0, "Stock cannot be negative")
+    .max(10000, "Stock limit reached"),
+
   podEnabled: z.boolean().default(false),
+});
+
+// Extend schema with custom image validation
+const fullSchema = addProductSchema.extend({
+  // We will validate images manually since files are not part of the form values
 });
 
 type AddProductFormData = z.infer<typeof addProductSchema>;
@@ -33,76 +46,73 @@ export default function AddProductForm() {
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
     formState: { errors, isSubmitting },
-  } = useForm<AddProductFormData>({
+  } = useForm({
     resolver: zodResolver(addProductSchema),
     defaultValues: {
-      podEnabled: false,
       condition: "New",
       stock: 1,
+      podEnabled: false,
     },
   });
 
-  const podEnabled = watch("podEnabled");
-
-  // Handle image selection with preview
+  // Handle image selection
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length === 0) return;
 
-    const newImages = [...selectedImages, ...files].slice(0, 3); // Max 3 images
+    const newImages = [...selectedImages, ...files].slice(0, 3);
     setSelectedImages(newImages);
 
-    // Create previews
     const newPreviews = newImages.map((file) => URL.createObjectURL(file));
     setImagePreviews(newPreviews);
   };
 
-  // Remove image
   const removeImage = (index: number) => {
     const newImages = selectedImages.filter((_, i) => i !== index);
     const newPreviews = imagePreviews.filter((_, i) => i !== index);
-
     setSelectedImages(newImages);
     setImagePreviews(newPreviews);
   };
 
   const onSubmit = async (data: AddProductFormData) => {
+    // Custom validation for images
+    if (selectedImages.length === 0) {
+      alert("Please upload at least 1 product image");
+      return;
+    }
+
     try {
-      const formDataToSend = new FormData();
+      const formData = new FormData();
 
-      // Append form fields
-      formDataToSend.append("productName", data.productName);
-      formDataToSend.append("category", data.category);
-      formDataToSend.append("condition", data.condition);
-      formDataToSend.append("description", data.description);
-      formDataToSend.append("unitPrice", data.unitPrice.toString());
-      formDataToSend.append("stock", data.stock.toString());
-      formDataToSend.append("podEnabled", data.podEnabled.toString());
+      formData.append("productName", data.productName);
+      formData.append("category", data.category);
+      formData.append("condition", data.condition);
+      formData.append("description", data.description);
+      formData.append("unitPrice", data.unitPrice.toString());
+      formData.append("stock", data.stock.toString());
+      formData.append("podEnabled", data.podEnabled.toString());
 
-      // Append images
+      // Append images (first image will be primary)
       selectedImages.forEach((file, index) => {
-        formDataToSend.append(`image${index}`, file);
+        formData.append(`image${index}`, file);
       });
-
-      console.log("Submitting to backend with images:", selectedImages.length);
 
       const response = await fetch("/api/vendor/products", {
         method: "POST",
-        body: formDataToSend,
+        body: formData,
       });
 
       if (response.ok) {
-        alert("✅ Product added successfully!");
-        // Reset form if needed
+        
+        setSelectedImages([]);
+        setImagePreviews([]);
       } else {
         alert("Failed to add product");
       }
     } catch (error) {
-      console.error("Submission error:", error);
-      alert("Something went wrong. Please try again.");
+      console.error(error);
+      alert("An error occurred while submitting the form");
     }
   };
 
@@ -127,7 +137,6 @@ export default function AddProductForm() {
     >
       {/* Left Column */}
       <div className="lg:col-span-8 space-y-8">
-        {/* Foundation Details */}
         <section className="bg-white p-8 rounded-3xl border border-border-light">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-1.5 h-6 bg-primary rounded-full" />
@@ -151,7 +160,6 @@ export default function AddProductForm() {
               )}
             </div>
 
-            {/* Category Dropdown */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">
                 Category
@@ -174,7 +182,6 @@ export default function AddProductForm() {
               )}
             </div>
 
-            {/* Condition Dropdown (as requested) */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">
                 Condition
@@ -213,22 +220,21 @@ export default function AddProductForm() {
           </div>
         </section>
 
-        {/* Image Upload with Preview */}
+        {/* Image Upload with Preview - Required */}
         <section className="bg-white p-8 rounded-3xl border border-border-light">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex justify-between items-center mb-6">
             <div className="flex items-center gap-3">
               <div className="w-1.5 h-6 bg-primary rounded-full" />
               <h3 className="font-bold text-xl">Visual Assets</h3>
             </div>
             <span className="text-xs font-bold bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full">
-              Max 3 Images
+              {selectedImages.length}/3 • First image is main
             </span>
           </div>
 
-          {/* Hidden File Input */}
           <input
             type="file"
-            id="productImages"
+            id="images"
             multiple
             accept="image/*"
             onChange={handleImageChange}
@@ -236,13 +242,17 @@ export default function AddProductForm() {
           />
 
           <label
-            htmlFor="productImages"
-            className="border-2 border-dashed border-border-light rounded-3xl p-12 flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-all"
+            htmlFor="images"
+            className={`border-2 border-dashed rounded-3xl p-12 flex flex-col items-center justify-center cursor-pointer transition-all ${
+              selectedImages.length === 0
+                ? "border-red-300"
+                : "border-border-light hover:border-primary"
+            }`}
           >
             <MdAddPhotoAlternate className="text-6xl text-slate-300 mb-4" />
-            <p className="font-medium text-slate-600">Click to upload images</p>
+            <p className="font-medium">Click to upload images</p>
             <p className="text-xs text-slate-400 mt-1">
-              PNG, JPG up to 5MB each
+              PNG or JPG • Max 3 images (First is main thumbnail)
             </p>
           </label>
 
@@ -253,9 +263,14 @@ export default function AddProductForm() {
                 <div key={index} className="relative group">
                   <img
                     src={preview}
-                    alt={`Preview ${index}`}
+                    alt={`Preview ${index + 1}`}
                     className="w-full aspect-square object-cover rounded-2xl border border-border-light"
                   />
+                  {index === 0 && (
+                    <div className="absolute top-2 left-2 bg-primary text-white text-[10px] px-2 py-0.5 rounded font-bold">
+                      MAIN
+                    </div>
+                  )}
                   <button
                     type="button"
                     onClick={() => removeImage(index)}
@@ -267,12 +282,17 @@ export default function AddProductForm() {
               ))}
             </div>
           )}
+
+          {selectedImages.length === 0 && (
+            <p className="text-red-500 text-xs mt-2 text-center">
+              * At least 1 image is required
+            </p>
+          )}
         </section>
       </div>
 
-      {/* Right Column - Pricing & Settings */}
+      {/* Right Column */}
       <div className="lg:col-span-4 space-y-8">
-        {/* Pricing & Inventory */}
         <section className="bg-white p-8 rounded-3xl border border-border-light">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-1.5 h-6 bg-emerald-200 rounded-full" />
@@ -319,7 +339,6 @@ export default function AddProductForm() {
               )}
             </div>
 
-            {/* PoD Toggle */}
             <div className="pt-6 border-t">
               <div className="flex items-center justify-between">
                 <div>
@@ -341,11 +360,10 @@ export default function AddProductForm() {
           </div>
         </section>
 
-        {/* Submit Buttons */}
         <div className="flex flex-col gap-4 pt-6">
           <button
             type="submit"
-            disabled={isSubmitting}
+            disabled={isSubmitting || selectedImages.length === 0}
             className="w-full bg-primary text-white py-5 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl active:scale-[0.98] transition-all disabled:opacity-70"
           >
             {isSubmitting ? "Saving Product..." : "Save Product"}
