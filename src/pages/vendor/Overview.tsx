@@ -95,8 +95,6 @@ export default function OverviewPage() {
       try {
         const response = await get();
 
-        console.log(response.data);
-
         setVendorDashboardOverview(response.data);
       } catch (err) {}
     };

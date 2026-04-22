@@ -1,10 +1,15 @@
-"use client";
+const API_URL = import.meta.env.VITE_API_URL;
+
+import { useApi } from "@/hooks/useApi";
+import { useNavigate } from "react-router-dom";
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { MdAddPhotoAlternate, MdClose } from "react-icons/md";
+
+import Spinner from "@/components/ui/Spinner";
 
 // Updated Zod Schema with Image Validation
 const addProductSchema = z.object({
@@ -22,7 +27,7 @@ const addProductSchema = z.object({
     .min(20, "Description must be at least 20 characters")
     .max(1000, "Description is too long"),
 
-  unitPrice: z.number().min(100, "Price must be at least ₦100"),
+  unitPrice: z.number().min(1000, "Price must be at least ₦1000"),
 
   stock: z
     .number()
@@ -42,6 +47,8 @@ type AddProductFormData = z.infer<typeof addProductSchema>;
 export default function AddProductForm() {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+
+  const { post, loading, error } = useApi(`${API_URL}/vendor/create-product`);
 
   const {
     register,
@@ -94,25 +101,22 @@ export default function AddProductForm() {
       formData.append("podEnabled", data.podEnabled.toString());
 
       // Append images (first image will be primary)
-      selectedImages.forEach((file, index) => {
-        formData.append(`image${index}`, file);
+      // selectedImages.forEach((file, index) => {
+      //   formData.append(`image${index}`, file);
+      // });
+
+      selectedImages.forEach((file) => {
+        formData.append("images", file);
       });
 
-      const response = await fetch("/api/vendor/products", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await post(formData);
 
-      if (response.ok) {
-        
-        setSelectedImages([]);
-        setImagePreviews([]);
-      } else {
-        alert("Failed to add product");
-      }
+      console.log(response);
+
+      setSelectedImages([]);
+      setImagePreviews([]);
     } catch (error) {
-      console.error(error);
-      alert("An error occurred while submitting the form");
+      console.log(error);
     }
   };
 
@@ -366,7 +370,14 @@ export default function AddProductForm() {
             disabled={isSubmitting || selectedImages.length === 0}
             className="w-full bg-primary text-white py-5 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl active:scale-[0.98] transition-all disabled:opacity-70"
           >
-            {isSubmitting ? "Saving Product..." : "Save Product"}
+            {isSubmitting ? (
+              <div className="flex items-center justify-center">
+                {" "}
+                <Spinner />
+              </div>
+            ) : (
+              "Save Product"
+            )}
           </button>
 
           <button

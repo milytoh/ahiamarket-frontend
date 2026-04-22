@@ -9,18 +9,33 @@ const api = axios.create({
 });
 
 // Request interceptor
-api.interceptors.request.use(
-  config => {
-    const token = localStorage.getItem("token");
+// api.interceptors.request.use(
+//   config => {
+//     const token = localStorage.getItem("token");
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
 
-    return config;
-  },
-  error => Promise.reject(error)
-);
+//     return config;
+//   },
+//   error => Promise.reject(error)
+// );
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  // IMPORTANT: let FormData auto-set headers
+  if (config.data instanceof FormData) {
+    delete config.headers["Content-Type"];
+  }
+
+  return config;
+});
 
 //  Response interceptor
 api.interceptors.response.use(
