@@ -26,26 +26,27 @@ export default function Products() {
   const [limit] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [url, setUrl] = useState(
-      `${API_URL}/vendor/products?page=${page}&limit=${limit}`,
+    `${API_URL}/vendor/products?page=${page}&limit=${limit}`,
   );
-  
+
   const { get, loading, error } = useApi(url);
-  
-   useEffect(() => {
-     const params = new URLSearchParams();
 
-     params.append("page", String(page));
-     params.append("limit", String(limit));
+  useEffect(() => {
+    const params = new URLSearchParams();
 
-     const newUrl = `${API_URL}/vendor/products?${params.toString()}`;
+    params.append("page", String(page));
+    params.append("limit", String(limit));
 
-     setUrl(newUrl);
-   }, [ page, limit]);
+    const newUrl = `${API_URL}/vendor/products?${params.toString()}`;
+
+    setUrl(newUrl);
+  }, [page, limit]);
 
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
         const response = await get();
+
         const mappedProducts: Product[] = response.products.map(
           (item: any) => ({
             id: item._id,
@@ -57,10 +58,13 @@ export default function Products() {
             price: item.price,
             stock: item.stock,
             status: item.status,
-            podEnabled: item.pod,
+            podEnabled: item.pod === "true",
           }),
         );
+
         setProducts(mappedProducts);
+
+        setTotalPages(response.totalPages);
       } catch (err) {
         console.log(err);
       }
