@@ -22,16 +22,35 @@ interface Product {
   podEnabled: boolean;
 }
 
+export type Filters = {
+  status?: "active" | "out_of_stock" | "draft";
+  category?: "Fashion" | "Electronics" | "Home & Kitchen" | "Beauty";
+  startDate?: Date | null;
+  endDate?: Date | null;
+};
+
+
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([]);
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
+
+  const [filters, setFilters] = useState<Filters>({
+    status: "active",
+  });
   const [url, setUrl] = useState(
     `${API_URL}/vendor/products?page=${page}&limit=${limit}`,
   );
 
   const { get, loading, error } = useApi(url);
+
+
+  const handleFilter = (filters: Filters) => {
+    console.log('gggggggg')
+    console.log("Applying Filters:", filters);
+    setFilters(filters);
+   }
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -43,6 +62,8 @@ export default function Products() {
 
     setUrl(newUrl);
   }, [page, limit]);
+
+  
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -78,7 +99,7 @@ export default function Products() {
   return (
     <div className="bg-background-light min-h-screen p-6 md:p-10 max-w-7xl mx-auto">
       <ProductsHeader />
-      <ProductsFilters />
+      <ProductsFilters onFilter={handleFilter}/>
       {loading ? (
         <ProductsTableSkeleton />
       ) : (
