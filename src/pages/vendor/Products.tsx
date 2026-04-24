@@ -9,6 +9,8 @@ import ProductsTable from "@/components/vendor/products/ProductsTable";
 
 import ProductsSummary from "@/components/vendor/products/ProductsSummary";
 
+import ProductsTableSkeleton from "@/components/ui/skeletons/vendor/products/ProductsTableSkeleton";
+
 interface Product {
   id: number;
   name: string;
@@ -77,12 +79,16 @@ export default function Products() {
     <div className="bg-background-light min-h-screen p-6 md:p-10 max-w-7xl mx-auto">
       <ProductsHeader />
       <ProductsFilters />
-      <ProductsTable
-        products={products!}
-        currentPage={page}
-        totalPages={totalPages}
-        onPageChange={setPage}
-      />
+      {loading ? (
+        <ProductsTableSkeleton />
+      ) : (
+        <ProductsTable
+          products={products!}
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
+        />
+      )}
       <ProductsSummary />
     </div>
   );
