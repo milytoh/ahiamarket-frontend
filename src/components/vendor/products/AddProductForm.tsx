@@ -3,13 +3,15 @@ const API_URL = import.meta.env.VITE_API_URL;
 import { useApi } from "@/hooks/useApi";
 import { useNavigate } from "react-router-dom";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { MdAddPhotoAlternate, MdClose } from "react-icons/md";
 
 import Spinner from "@/components/ui/Spinner";
+
+import { toast } from "react-toastify";
 
 // Updated Zod Schema with Image Validation
 const addProductSchema = z.object({
@@ -85,7 +87,8 @@ export default function AddProductForm() {
   const onSubmit = async (data: AddProductFormData) => {
     // Custom validation for images
     if (selectedImages.length === 0) {
-      alert("Please upload at least 1 product image");
+      toast.warning("Please upload at least 1 product image");
+     
       return;
     }
 
@@ -100,11 +103,6 @@ export default function AddProductForm() {
       formData.append("stock", data.stock.toString());
       formData.append("podEnabled", data.podEnabled.toString());
 
-      // Append images (first image will be primary)
-      // selectedImages.forEach((file, index) => {
-      //   formData.append(`image${index}`, file);
-      // });
-
       selectedImages.forEach((file) => {
         formData.append("images", file);
       });
@@ -112,13 +110,16 @@ export default function AddProductForm() {
       const response = await post(formData);
 
       console.log(response);
+      toast.success("Product created successfully!");
 
       setSelectedImages([]);
       setImagePreviews([]);
     } catch (error) {
       console.log(error);
+     
     }
   };
+
 
   const categories = [
     "Fashion & Apparel",
@@ -133,6 +134,12 @@ export default function AddProductForm() {
     "Sports & Outdoors",
     "Others",
   ];
+
+  
+      if (error) {
+        toast.error(`${error.message}` || "something went wrong, check your network connection");
+      }
+   
 
   return (
     <form

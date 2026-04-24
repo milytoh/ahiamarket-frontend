@@ -27,7 +27,6 @@ export default function ProductRow({ product, onRowClick }: ProductRowProps) {
  const togglePoD = (e: React.ChangeEvent<HTMLInputElement>) => {
    const newValue = e.target.checked;
 
-   console.log(`Toggled PoD for ${product.name} → ${newValue}`);
  };
 
   return (
@@ -70,30 +69,6 @@ export default function ProductRow({ product, onRowClick }: ProductRowProps) {
         </div>
       </td>
 
-      {/* POD Toggle - Clean & Modern */}
-      {/* <td className="py-6 px-6" onClick={togglePoD}>
-        <div className="flex items-center gap-3">
-          <span className=" text-xs font-bold uppercase tracking-widest text-slate-500">
-            POD
-            
-          </span>
-
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              checked={product.podEnabled}
-              onClick={togglePoD}
-              className="sr-only peer"
-            />
-            <div
-              className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:bg-[] 
-                            after:content-[''] after:absolute after:top-0.5 after:left-0.5 
-                            after:bg-white after:border after:rounded-full after:h-5 after:w-5 
-                            after:transition-all peer-checked:after:translate-x-5"
-            />
-          </label>
-        </div>
-      </td> */}
 
       <td className="py-6 px-6">
         <div className="flex items-center gap-3">
