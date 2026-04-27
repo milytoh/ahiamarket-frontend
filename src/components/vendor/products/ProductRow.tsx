@@ -11,23 +11,31 @@ interface Product {
   price: number;
   stock: number;
   status: string;
-  podEnabled: boolean;
+  pod: boolean;
 }
 
 interface ProductRowProps {
   product: Product;
   onRowClick?: (product: Product) => void;
+  onTogglePod: (id: number, value: boolean) => void;
 }
 
-export default function ProductRow({ product, onRowClick }: ProductRowProps) {
+export default function ProductRow({
+  product,
+  onRowClick,
+  onTogglePod,
+}: ProductRowProps) {
   const handleRowClick = () => {
     if (onRowClick) onRowClick(product);
   };
 
- const togglePoD = (e: React.ChangeEvent<HTMLInputElement>) => {
-   const newValue = e.target.checked;
+  const togglePoD = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
 
- };
+    const newValue = e.target.checked;
+
+    onTogglePod(product.id, newValue);
+  };
 
   return (
     <tr
@@ -69,22 +77,21 @@ export default function ProductRow({ product, onRowClick }: ProductRowProps) {
         </div>
       </td>
 
-
       <td className="py-6 px-6">
         <div className="flex items-center gap-3">
           <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
             POD
           </span>
 
-          <label className="relative inline-flex items-center cursor-pointer">
+          <label className="relative inline-flex items-center cursor-pointer ">
             <input
               type="checkbox"
-              checked={product.podEnabled}
+              checked={product.pod}
               onChange={togglePoD}
               className="sr-only peer"
             />
             <div
-              className="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-[#05b384]
+              className="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:bg-[#F7941D]
         after:content-[''] after:absolute after:top-0.5 after:left-0.5 
         after:bg-white after:rounded-full after:h-5 after:w-5 
         after:transition-all peer-checked:after:translate-x-5"

@@ -19,7 +19,7 @@ interface Product {
   price: number;
   stock: number;
   status: string;
-  podEnabled: boolean;
+  pod: boolean;
 }
 
 export type Filters = {
@@ -28,7 +28,6 @@ export type Filters = {
   startDate?: Date | null;
   endDate?: Date | null;
 };
-
 
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -40,20 +39,55 @@ export default function Products() {
     status: "active",
   });
   const [url, setUrl] = useState(
-    `${API_URL}/vendor/products?page=${page}&limit=${limit}`,
+    `${API_URL}/vendor/products?page=${page}&limit=${limit}&status=${filters.status}`,
   );
 
   const { get, loading, error } = useApi(url);
 
+  const { patch, loading: podLoading, error: podError } = useApi(url);
 
   const handleFilter = (filters: Filters) => {
-    console.log('gggggggg')
-    console.log("Applying Filters:", filters);
     setFilters(filters);
-   }
+  };
+
+  //for POD toggle - needs to be moved to ProductRow and lifted up
+  const handleTogglePod = async (productId: number, value: boolean) => {
+    try {
+      // optimistic UI update
+      setProducts((prev) =>
+        prev.map((p) => (p.id === productId ? { ...p, pod: value } : p)),
+      );
+
+      console.log(productId, value);
+
+      // send to backend
+      await patch({
+        pod: value,
+      });
+    } catch (err) {
+      console.log(err);
+
+      // rollback if failed
+      setProducts((prev) =>
+        prev.map((p) =>
+          p.id === productId ? { ...p, podEnabled: !value } : p,
+        ),
+      );
+    }
+  };
 
   useEffect(() => {
     const params = new URLSearchParams();
+
+    console.log(filters);
+
+    if (filters.startDate)
+      params.append("startDate", filters.startDate.toISOString());
+
+    if (filters.endDate)
+      params.append("endDate", filters.endDate.toISOString());
+
+    params.append("status", filters.status || "active");
 
     params.append("page", String(page));
     params.append("limit", String(limit));
@@ -61,14 +95,14 @@ export default function Products() {
     const newUrl = `${API_URL}/vendor/products?${params.toString()}`;
 
     setUrl(newUrl);
-  }, [page, limit]);
-
-  
+  }, [page, limit, filters]);
 
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
         const response = await get();
+
+        console.log(response);
 
         const mappedProducts: Product[] = response.products.map(
           (item: any) => ({
@@ -99,7 +133,7 @@ export default function Products() {
   return (
     <div className="bg-background-light min-h-screen p-6 md:p-10 max-w-7xl mx-auto">
       <ProductsHeader />
-      <ProductsFilters onFilter={handleFilter}/>
+      <ProductsFilters onFilter={handleFilter} />
       {loading ? (
         <ProductsTableSkeleton />
       ) : (
@@ -108,6 +142,7 @@ export default function Products() {
           currentPage={page}
           totalPages={totalPages}
           onPageChange={setPage}
+          onTogglePod={handleTogglePod}
         />
       )}
       <ProductsSummary />

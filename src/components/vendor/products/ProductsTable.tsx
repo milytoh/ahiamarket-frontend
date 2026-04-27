@@ -10,7 +10,7 @@ interface Product {
   price: number;
   stock: number;
   status: string;
-  podEnabled: boolean;
+  pod: boolean;
 }
 
 interface ProductRowProps {
@@ -18,6 +18,7 @@ interface ProductRowProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  onTogglePod: (id: number, value: boolean) => void;
 }
 
 export default function ProductsTable({
@@ -25,8 +26,9 @@ export default function ProductsTable({
   currentPage,
   totalPages,
   onPageChange,
+  onTogglePod
 }: ProductRowProps) {
-  // ✅ Smart pagination logic
+  
   const getVisiblePages = () => {
     const pages: (number | string)[] = [];
 
@@ -92,7 +94,11 @@ export default function ProductsTable({
             </tr>
           ) : (
             products.map((product) => (
-              <ProductRow key={product.id} product={product} />
+              <ProductRow
+                key={product.id}
+                product={product}
+                onTogglePod={onTogglePod}
+              />
             ))
           )}
         </tbody>
