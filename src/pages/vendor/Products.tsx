@@ -8,8 +8,10 @@ import ProductsFilters from "@/components/vendor/products/ProductsFilters";
 import ProductsTable from "@/components/vendor/products/ProductsTable";
 
 import ProductsSummary from "@/components/vendor/products/ProductsSummary";
-
 import ProductsTableSkeleton from "@/components/ui/skeletons/vendor/products/ProductsTableSkeleton";
+
+import ErrorState from "@/components/ui/Error";
+import { toast } from "react-toastify";
 
 interface Product {
   id: number;
@@ -20,6 +22,7 @@ interface Product {
   stock: number;
   status: string;
   pod: boolean;
+  visible: boolean;
 }
 
 export type Filters = {
@@ -44,7 +47,11 @@ export default function Products() {
 
   const { get, loading, error } = useApi(url);
 
-  const { patch, loading: podLoading, error: podError } = useApi(url);
+  const {
+    patch,
+    loading: podLoading,
+    error: podError,
+  } = useApi("/vendor/product/pod/update");
 
   const handleFilter = (filters: Filters) => {
     setFilters(filters);
@@ -61,9 +68,11 @@ export default function Products() {
       console.log(productId, value);
 
       // send to backend
-      await patch({
-        pod: value,
-      });
+     const response = await patch({
+       pod: value,
+       id: productId,
+     });
+      
     } catch (err) {
       console.log(err);
 
@@ -115,7 +124,8 @@ export default function Products() {
             price: item.price,
             stock: item.stock,
             status: item.status,
-            podEnabled: item.pod === "true",
+            pod: item.pod,
+            visible: item.visible,
           }),
         );
 
@@ -129,6 +139,24 @@ export default function Products() {
 
     fetchDashboard();
   }, [url]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error("something went wrong, check your network connection");
+    }
+  }, [error]);
+  
+
+
+   if (error) {
+     return (
+       <ErrorState
+         title="Failed to load products"
+         message={error.message}
+         onRetry={get}
+       />
+     );
+   }
 
   return (
     <div className="bg-background-light min-h-screen p-6 md:p-10 max-w-7xl mx-auto">

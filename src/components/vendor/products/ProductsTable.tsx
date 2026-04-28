@@ -11,6 +11,7 @@ interface Product {
   stock: number;
   status: string;
   pod: boolean;
+  visible: boolean;
 }
 
 interface ProductRowProps {

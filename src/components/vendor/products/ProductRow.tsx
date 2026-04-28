@@ -12,6 +12,7 @@ interface Product {
   stock: number;
   status: string;
   pod: boolean;
+  visible: boolean;
 }
 
 interface ProductRowProps {
@@ -31,9 +32,15 @@ export default function ProductRow({
 
   const togglePoD = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
-
     const newValue = e.target.checked;
+    onTogglePod(product.id, newValue);
+  };
 
+
+  const toggleVisibility = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.stopPropagation();
+    const newValue = e.target.checked;
+    console.log(newValue)
     onTogglePod(product.id, newValue);
   };
 
@@ -103,7 +110,12 @@ export default function ProductRow({
       {/* Visibility Toggle */}
       <td className="py-6 px-6">
         <label className="relative inline-flex items-center cursor-pointer">
-          <input type="checkbox" className="sr-only peer" defaultChecked />
+          <input
+            type="checkbox"
+            checked={product.visible}
+            onChange={toggleVisibility}
+            className="sr-only peer"
+          />
           <div
             className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:bg-[#05b384] 
                           after:content-[''] after:absolute after:top-0.5 after:left-0.5 
