@@ -51,13 +51,13 @@ export default function Products() {
     patch,
     loading: podLoading,
     error: podError,
-  } = useApi("/vendor/product/pod/update");
+  } = useApi(`${API_URL}/vendor/product/pod/update`);
 
   const {
     patch: visibilityPatch,
     loading: visibilityLoading,
     error: visibilityError,
-  } = useApi("/vendor/product/visibility/update");
+  } = useApi(`${API_URL}/vendor/product/visible/update`);
 
   const handleFilter = (filters: Filters) => {
     setFilters(filters);
@@ -71,8 +71,6 @@ export default function Products() {
         prev.map((p) => (p.id === productId ? { ...p, pod: value } : p)),
       );
 
-      console.log(productId, value);
-
       // send to backend
       const response = await patch({
         pod: value,
@@ -84,7 +82,7 @@ export default function Products() {
         prev.map((p) => (p.id === productId ? { ...p, pod: !value } : p)),
       );
 
-        toast.error("operation failed, check your network connection");
+      toast.error("operation failed, check your network connection");
     }
   };
 
@@ -96,10 +94,9 @@ export default function Products() {
         prev.map((p) => (p.id === productId ? { ...p, visible: value } : p)),
       );
 
-      console.log(productId, value);
 
       // send to backend
-      const response = await visibilityPatch({
+      await visibilityPatch({
         visible: value,
         id: productId,
       });
@@ -108,7 +105,7 @@ export default function Products() {
       setProducts((prev) =>
         prev.map((p) => (p.id === productId ? { ...p, visible: !value } : p)),
       );
-         toast.error("operation failed, check your network connection");
+      toast.error("operation failed, check your network connection");
     }
   };
 
