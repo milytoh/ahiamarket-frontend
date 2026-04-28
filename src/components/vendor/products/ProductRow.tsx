@@ -19,12 +19,14 @@ interface ProductRowProps {
   product: Product;
   onRowClick?: (product: Product) => void;
   onTogglePod: (id: number, value: boolean) => void;
+  onToggleVisibility: (id: number, value: boolean) => void;
 }
 
 export default function ProductRow({
   product,
   onRowClick,
   onTogglePod,
+  onToggleVisibility
 }: ProductRowProps) {
   const handleRowClick = () => {
     if (onRowClick) onRowClick(product);
@@ -41,7 +43,7 @@ export default function ProductRow({
     e.stopPropagation();
     const newValue = e.target.checked;
     console.log(newValue)
-    onTogglePod(product.id, newValue);
+    onToggleVisibility(product.id, newValue);
   };
 
   return (

@@ -53,6 +53,12 @@ export default function Products() {
     error: podError,
   } = useApi("/vendor/product/pod/update");
 
+  const {
+    patch: visibilityPatch,
+    loading: visibilityLoading,
+    error: visibilityError,
+  } = useApi("/vendor/product/visibility/update");
+
   const handleFilter = (filters: Filters) => {
     setFilters(filters);
   };
@@ -68,20 +74,41 @@ export default function Products() {
       console.log(productId, value);
 
       // send to backend
-     const response = await patch({
-       pod: value,
-       id: productId,
-     });
-      
+      const response = await patch({
+        pod: value,
+        id: productId,
+      });
     } catch (err) {
-      console.log(err);
-
       // rollback if failed
       setProducts((prev) =>
-        prev.map((p) =>
-          p.id === productId ? { ...p, podEnabled: !value } : p,
-        ),
+        prev.map((p) => (p.id === productId ? { ...p, pod: !value } : p)),
       );
+
+        toast.error("operation failed, check your network connection");
+    }
+  };
+
+  //for visibility toggle - needs to be moved to ProductRow and lifted up
+  const handleVisibilityToggle = async (productId: number, value: boolean) => {
+    try {
+      // optimistic UI update
+      setProducts((prev) =>
+        prev.map((p) => (p.id === productId ? { ...p, visible: value } : p)),
+      );
+
+      console.log(productId, value);
+
+      // send to backend
+      const response = await visibilityPatch({
+        visible: value,
+        id: productId,
+      });
+    } catch (err) {
+      // rollback if failed
+      setProducts((prev) =>
+        prev.map((p) => (p.id === productId ? { ...p, visible: !value } : p)),
+      );
+         toast.error("operation failed, check your network connection");
     }
   };
 
@@ -145,18 +172,16 @@ export default function Products() {
       toast.error("something went wrong, check your network connection");
     }
   }, [error]);
-  
 
-
-   if (error) {
-     return (
-       <ErrorState
-         title="Failed to load products"
-         message={error.message}
-         onRetry={get}
-       />
-     );
-   }
+  if (error) {
+    return (
+      <ErrorState
+        title="Failed to load products"
+        message={error.message}
+        onRetry={get}
+      />
+    );
+  }
 
   return (
     <div className="bg-background-light min-h-screen p-6 md:p-10 max-w-7xl mx-auto">
@@ -171,6 +196,7 @@ export default function Products() {
           totalPages={totalPages}
           onPageChange={setPage}
           onTogglePod={handleTogglePod}
+          onToggleVisibility={handleVisibilityToggle}
         />
       )}
       <ProductsSummary />
