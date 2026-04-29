@@ -20,13 +20,15 @@ interface ProductRowProps {
   onRowClick?: (product: Product) => void;
   onTogglePod: (id: number, value: boolean) => void;
   onToggleVisibility: (id: number, value: boolean) => void;
+  onEditProduct: (id: number) => void
 }
 
 export default function ProductRow({
   product,
   onRowClick,
   onTogglePod,
-  onToggleVisibility
+  onToggleVisibility,
+  onEditProduct
 }: ProductRowProps) {
   const handleRowClick = () => {
     if (onRowClick) onRowClick(product);
@@ -45,6 +47,10 @@ export default function ProductRow({
     console.log(newValue)
     onToggleVisibility(product.id, newValue);
   };
+
+  const handleEditProduct = () => {
+    onEditProduct(product.id)
+  }
 
   return (
     <tr
@@ -133,7 +139,7 @@ export default function ProductRow({
           <button
             className="p-3 hover:bg-emerald-100 rounded-xl transition-colors"
             title="Edit"
-            onClick={() => alert(`Edit ${product.name}`)}
+            onClick={handleEditProduct}
           >
             <MdEdit size={20} />
           </button>

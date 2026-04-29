@@ -21,6 +21,7 @@ interface ProductRowProps {
   onPageChange: (page: number) => void;
   onTogglePod: (id: number, value: boolean) => void;
   onToggleVisibility: (id: number, value: boolean) => void;
+  onEditProduct: (id: number) => void;
 }
 
 export default function ProductsTable({
@@ -29,7 +30,8 @@ export default function ProductsTable({
   totalPages,
   onPageChange,
   onTogglePod,
-  onToggleVisibility
+  onToggleVisibility,
+  onEditProduct
 }: ProductRowProps) {
   
   const getVisiblePages = () => {
@@ -102,6 +104,7 @@ export default function ProductsTable({
                 product={product}
                 onTogglePod={onTogglePod}
                 onToggleVisibility={onToggleVisibility}
+                onEditProduct = {onEditProduct}
               />
             ))
           )}

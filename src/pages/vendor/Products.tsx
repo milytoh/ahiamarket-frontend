@@ -2,6 +2,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 import { useApi } from "@/hooks/useApi";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import ProductsHeader from "@/components/vendor/products/ProductsHeader";
 import ProductsFilters from "@/components/vendor/products/ProductsFilters";
@@ -37,6 +38,8 @@ export default function Products() {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
+
+  const navigate = useNavigate();
 
   const [filters, setFilters] = useState<Filters>({
     status: "active",
@@ -109,10 +112,14 @@ export default function Products() {
     }
   };
 
+  //edit product handler
+  const handleEditProdcut = (id: number) => {
+    console.log(id)
+    navigate(`/vendor/dashboard/edit-product/${id}`);
+  }
+
   useEffect(() => {
     const params = new URLSearchParams();
-
-    console.log(filters);
 
     if (filters.startDate)
       params.append("startDate", filters.startDate.toISOString());
@@ -134,8 +141,6 @@ export default function Products() {
     const fetchDashboard = async () => {
       try {
         const response = await get();
-
-        console.log(response);
 
         const mappedProducts: Product[] = response.products.map(
           (item: any) => ({
@@ -166,7 +171,7 @@ export default function Products() {
 
   useEffect(() => {
     if (error) {
-      toast.error("something went wrong, check your network connection");
+      toast.error("something went wrong, check your network connection!!!");
     }
   }, [error]);
 
@@ -194,6 +199,7 @@ export default function Products() {
           onPageChange={setPage}
           onTogglePod={handleTogglePod}
           onToggleVisibility={handleVisibilityToggle}
+          onEditProduct={handleEditProdcut}
         />
       )}
       <ProductsSummary />

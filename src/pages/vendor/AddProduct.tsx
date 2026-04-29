@@ -6,7 +6,7 @@ import AddProductHeader from "@/components/vendor/products/AddProductHeader";
 
 import AddProductInsight from "@/components/vendor/products/AddProductInsight";
 
-import EditProductForm from "@/components/vendor/products/editProductForm";
+import AddProductForm from "@/components/vendor/products/AddProductForm";
 
 export default function AddProduct() {
   return (
@@ -14,7 +14,7 @@ export default function AddProduct() {
       <div className="max-w-6xl mx-auto p-6 md:p-10">
         <AddProductHeader />
 
-        <EditProductForm />
+        <AddProductForm />
 
         <AddProductInsight />
       </div>
