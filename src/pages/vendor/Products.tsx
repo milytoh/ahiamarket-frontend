@@ -148,7 +148,7 @@ export default function Products() {
             name: item.name,
             sku: item._id.slice(-6).toUpperCase(),
             image: item.images?.[0]
-              ? `http://localhost:3000/uploads/products/${item.images[0]}`
+              ? `${API_URL}/uploads/products/${item.images[0]}`
               : "/placeholder.png",
             price: item.price,
             stock: item.stock,

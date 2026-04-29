@@ -46,15 +46,21 @@ const fullSchema = editProductSchema.extend({
 
 type EditProductFormData = z.infer<typeof editProductSchema>;
 
-export default function EditProductForm() {
+interface Props {
+  product?: any;
+  loading?: boolean;
+}
+
+export default function EditProductForm({ product, loading: productLoading }: Props) {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
-  const { post, loading, error } = useApi(`${API_URL}/vendor/create-product`);
+  const { put, loading, error } = useApi(`${API_URL}/vendor/create-product`);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(editProductSchema),
@@ -84,42 +90,52 @@ export default function EditProductForm() {
     setImagePreviews(newPreviews);
   };
 
-  const onSubmit = async (data: EditProductFormData) => {
-    // Custom validation for images
-    if (selectedImages.length === 0) {
-      toast.warning("Please upload at least 1 product image");
-     
-      return;
-    }
+ const onSubmit = async (data: EditProductFormData) => {
+   try {
+     const formData = new FormData();
 
-    try {
-      const formData = new FormData();
+     formData.append("productName", data.productName);
+     formData.append("category", data.category);
+     formData.append("condition", data.condition);
+     formData.append("description", data.description);
+     formData.append("unitPrice", data.unitPrice.toString());
+     formData.append("stock", data.stock.toString());
+     formData.append("podEnabled", data.podEnabled.toString());
 
-      formData.append("productName", data.productName);
-      formData.append("category", data.category);
-      formData.append("condition", data.condition);
-      formData.append("description", data.description);
-      formData.append("unitPrice", data.unitPrice.toString());
-      formData.append("stock", data.stock.toString());
-      formData.append("podEnabled", data.podEnabled.toString());
+     selectedImages.forEach((file) => {
+       formData.append("images", file);
+     });
 
-      selectedImages.forEach((file) => {
-        formData.append("images", file);
+     await put(formData); 
+
+     toast.success("Product updated successfully!");
+   } catch (err) {
+     console.log(err);
+   }
+ };
+
+  useEffect(() => {
+    if (product) {
+      reset({
+        productName: product.name,
+        category: product.category,
+        condition: product.condition,
+        description: product.description,
+        unitPrice: product.price,
+        stock: product.stock,
+        podEnabled: product.pod, 
       });
 
-      const response = await post(formData);
-
-      console.log(response);
-      toast.success("Product created successfully!");
-
-      setSelectedImages([]);
-      setImagePreviews([]);
-    } catch (error) {
-      console.log(error);
-     
+      
+      if (product.images?.length) {
+        setImagePreviews(
+          product.images.map(
+            (img: string) => `${API_URL}/uploads/products/${img}`,
+          ),
+        );
+      }
     }
-  };
-
+  }, [product, reset]);
 
   const categories = [
     "Fashion & Apparel",
@@ -136,9 +152,7 @@ export default function EditProductForm() {
   ];
 
   
-      if (error) {
-        toast.error(`${error.message}` || "something went wrong, check your network connection");
-      }
+     
    
 
   return (
@@ -383,7 +397,7 @@ export default function EditProductForm() {
                 <Spinner />
               </div>
             ) : (
-              "Save Product"
+              "Update Product"
             )}
           </button>
 
