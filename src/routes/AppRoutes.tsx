@@ -19,6 +19,7 @@ import VendorDashboardLayout from "@/components/layout/VendorDashboardLayout";
 import OverviewPage from "@/pages/vendor/Overview";
 import Products from "@/pages/vendor/Products";
 import AddProduct from "@/pages/vendor/AddProduct";
+import EditProductForm from "@/components/vendor/products/editProductForm";
 
 
 const AppRoutes = () => {
@@ -67,6 +68,7 @@ const AppRoutes = () => {
           <Route index element={<OverviewPage />} />
           <Route path="/vendor/dashboard/products" element={<Products />} />
           <Route path="/vendor/dashboard/add-product" element={<AddProduct />} />
+          <Route path="/vendor/dashboard/edit-product/:id" element={<EditProductForm />} />
         </Route>
       </Route>
     </Routes>
