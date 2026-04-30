@@ -10,6 +10,8 @@ import * as z from "zod";
 import { MdAddPhotoAlternate, MdClose } from "react-icons/md";
 
 import Spinner from "@/components/ui/Spinner";
+import EditProductFormSkeleton from "@/components/ui/skeletons/vendor/products/EditProductFormSkeleton";
+import { useParams } from "react-router-dom";
 
 import { toast } from "react-toastify";
 
@@ -63,9 +65,19 @@ export default function EditProductForm({
   // NEW uploaded images
   const [newImages, setNewImages] = useState<File[]>([]);
 
-  const { put, loading, error } = useApi(`${API_URL}/vendor/`);
+  const { id } = useParams();
 
+  const { put, loading, error } = useApi(
+    `${API_URL}/vendor/product/${id}/update`,
+  );
 
+  useEffect(() => {
+    if (error) {
+      toast.error(
+        "something went wrong, update failed, check your network connection",
+      );
+    }
+  }, [error]);
   const {
     register,
     handleSubmit,
@@ -141,7 +153,7 @@ export default function EditProductForm({
       formData.append("stock", data.stock.toString());
       formData.append("podEnabled", data.podEnabled.toString());
 
-      // IMPORTANT
+      //
       formData.append("existingImages", JSON.stringify(existingImages));
 
       //  new images
@@ -159,6 +171,7 @@ export default function EditProductForm({
 
   useEffect(() => {
     if (product) {
+      console.log("Product in form:", product);
       reset({
         productName: product.name,
         category: product.category,
@@ -194,6 +207,10 @@ export default function EditProductForm({
     "Sports & Outdoors",
     "Others",
   ];
+
+  if (productLoading) {
+    return <EditProductFormSkeleton />;
+  }
 
   return (
     <form

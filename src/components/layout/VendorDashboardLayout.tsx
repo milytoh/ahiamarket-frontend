@@ -33,7 +33,7 @@ export default function VendorDashboardLayout({
       />
 
       {/* Main Content Area */}
-      <main className="md:ml-64 min-h-screen pt-16 md:pt-0 transition-all duration-300">
+      <main className="md:ml-64 min-h-screen pt-5 md:pt-0 transition-all duration-300">
         <Outlet />
       </main>
     </div>

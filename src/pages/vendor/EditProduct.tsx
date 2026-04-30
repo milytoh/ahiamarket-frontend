@@ -11,6 +11,8 @@ import EditProductForm from "@/components/vendor/products/ProductEditForm";
 
 import { useParams } from "react-router-dom";
 
+import { toast } from "react-toastify";
+import ErrorState from "@/components/ui/Error";
 
 
 export default function EditProduct() {
@@ -18,7 +20,8 @@ export default function EditProduct() {
 
   const [product, setProduct] = useState<any>(null);
 
-  const { get, loading, error } = useApi(
+
+  const { get, loading, error} = useApi(
     `${API_URL}/vendor/product/${id}/update`, 
   );
 
@@ -26,22 +29,39 @@ export default function EditProduct() {
     const fetchProduct = async () => {
       try {
         const res = await get();
-          setProduct(res.product);
-        console.log(res)  
+          setProduct(res.product); 
       } catch (err) {
-        console.log(err);
+      
       }
     };
 
     if (id) fetchProduct();
   }, [id]);
 
+
+   useEffect(() => {
+        if (error) {
+          toast.error("something went wrong, check your network connection");
+        }
+   }, [error]);
+  
+   if (error) {
+     return (
+       <ErrorState
+         title="Failed to load"
+         message={error.message}
+         onRetry={get}
+       />
+     );
+   }
+
+
   return (
     <div className="bg-background-light min-h-screen">
       <div className="max-w-6xl mx-auto p-6 md:p-10">
         <EditProductHeader />
 
-        <EditProductForm product={product} loading={loading} />
+        <EditProductForm product={product} loading={loading}  />
 
         <AddProductInsight />
       </div>
