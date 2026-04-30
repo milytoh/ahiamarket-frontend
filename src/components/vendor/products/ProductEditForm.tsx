@@ -51,11 +51,20 @@ interface Props {
   loading?: boolean;
 }
 
-export default function EditProductForm({ product, loading: productLoading }: Props) {
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+export default function EditProductForm({
+  product,
+  loading: productLoading,
+}: Props) {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
-  const { put, loading, error } = useApi(`${API_URL}/vendor/create-product`);
+  // OLD images from DB
+  const [existingImages, setExistingImages] = useState<string[]>([]);
+
+  // NEW uploaded images
+  const [newImages, setNewImages] = useState<File[]>([]);
+
+  const { put, loading, error } = useApi(`${API_URL}/vendor/`);
+
 
   const {
     register,
@@ -74,45 +83,79 @@ export default function EditProductForm({ product, loading: productLoading }: Pr
   // Handle image selection
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    if (files.length === 0) return;
 
-    const newImages = [...selectedImages, ...files].slice(0, 3);
-    setSelectedImages(newImages);
+    if (!files.length) return;
 
-    const newPreviews = newImages.map((file) => URL.createObjectURL(file));
-    setImagePreviews(newPreviews);
+    const updatedNewImages = [...newImages, ...files].slice(0, 3);
+
+    setNewImages(updatedNewImages);
+
+    const newPreviews = updatedNewImages.map((file) =>
+      URL.createObjectURL(file),
+    );
+
+    setImagePreviews([
+      ...existingImages.map((img) => `${API_URL}/uploads/products/${img}`),
+      ...newPreviews,
+    ]);
   };
 
   const removeImage = (index: number) => {
-    const newImages = selectedImages.filter((_, i) => i !== index);
-    const newPreviews = imagePreviews.filter((_, i) => i !== index);
-    setSelectedImages(newImages);
-    setImagePreviews(newPreviews);
+    const totalExisting = existingImages.length;
+
+    if (index < totalExisting) {
+      // removing OLD image
+      const updatedExisting = existingImages.filter((_, i) => i !== index);
+      setExistingImages(updatedExisting);
+    } else {
+      // removing NEW image
+      const newIndex = index - totalExisting;
+      const updatedNew = newImages.filter((_, i) => i !== newIndex);
+      setNewImages(updatedNew);
+    }
+
+    // rebuild previews
+    const updatedPreviews = [
+      ...existingImages
+        .filter((_, i) => i !== index)
+        .map((img) => `${API_URL}/uploads/products/${img}`),
+      ...newImages.map((file) => URL.createObjectURL(file)),
+    ];
+
+    setImagePreviews(updatedPreviews);
   };
 
- const onSubmit = async (data: EditProductFormData) => {
-   try {
-     const formData = new FormData();
+  const onSubmit = async (data: EditProductFormData) => {
+    if (existingImages.length === 0 && newImages.length === 0) {
+      toast.warning("Please upload at least 1 product image");
+      return;
+    }
+    try {
+      const formData = new FormData();
 
-     formData.append("productName", data.productName);
-     formData.append("category", data.category);
-     formData.append("condition", data.condition);
-     formData.append("description", data.description);
-     formData.append("unitPrice", data.unitPrice.toString());
-     formData.append("stock", data.stock.toString());
-     formData.append("podEnabled", data.podEnabled.toString());
+      formData.append("productName", data.productName);
+      formData.append("category", data.category);
+      formData.append("condition", data.condition);
+      formData.append("description", data.description);
+      formData.append("unitPrice", data.unitPrice.toString());
+      formData.append("stock", data.stock.toString());
+      formData.append("podEnabled", data.podEnabled.toString());
 
-     selectedImages.forEach((file) => {
-       formData.append("images", file);
-     });
+      // IMPORTANT
+      formData.append("existingImages", JSON.stringify(existingImages));
 
-     await put(formData); 
+      //  new images
+      newImages.forEach((file) => {
+        formData.append("images", file);
+      });
 
-     toast.success("Product updated successfully!");
-   } catch (err) {
-     console.log(err);
-   }
- };
+      await put(formData);
+
+      toast.success("Product updated successfully!");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     if (product) {
@@ -123,11 +166,12 @@ export default function EditProductForm({ product, loading: productLoading }: Pr
         description: product.description,
         unitPrice: product.price,
         stock: product.stock,
-        podEnabled: product.pod, 
+        podEnabled: product.pod,
       });
 
-      
       if (product.images?.length) {
+        setExistingImages(product.images);
+
         setImagePreviews(
           product.images.map(
             (img: string) => `${API_URL}/uploads/products/${img}`,
@@ -150,10 +194,6 @@ export default function EditProductForm({ product, loading: productLoading }: Pr
     "Sports & Outdoors",
     "Others",
   ];
-
-  
-     
-   
 
   return (
     <form
@@ -253,7 +293,7 @@ export default function EditProductForm({ product, loading: productLoading }: Pr
               <h3 className="font-bold text-xl">Visual Assets</h3>
             </div>
             <span className="text-xs font-bold bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full">
-              {selectedImages.length}/3 • First image is main
+              {existingImages.length + newImages.length}/3 • First image is main
             </span>
           </div>
 
@@ -269,7 +309,7 @@ export default function EditProductForm({ product, loading: productLoading }: Pr
           <label
             htmlFor="images"
             className={`border-2 border-dashed rounded-3xl p-12 flex flex-col items-center justify-center cursor-pointer transition-all ${
-              selectedImages.length === 0
+              existingImages.length === 0 && newImages.length === 0
                 ? "border-red-300"
                 : "border-border-light hover:border-primary"
             }`}
@@ -308,7 +348,7 @@ export default function EditProductForm({ product, loading: productLoading }: Pr
             </div>
           )}
 
-          {selectedImages.length === 0 && (
+          {existingImages.length === 0 && newImages.length === 0 && (
             <p className="text-red-500 text-xs mt-2 text-center">
               * At least 1 image is required
             </p>
@@ -388,7 +428,10 @@ export default function EditProductForm({ product, loading: productLoading }: Pr
         <div className="flex flex-col gap-4 pt-6">
           <button
             type="submit"
-            disabled={isSubmitting || selectedImages.length === 0}
+            disabled={
+              isSubmitting ||
+              (existingImages.length === 0 && newImages.length === 0)
+            }
             className="w-full bg-primary text-white py-5 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl active:scale-[0.98] transition-all disabled:opacity-70"
           >
             {isSubmitting ? (
