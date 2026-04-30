@@ -4,7 +4,7 @@ import React from "react";
 import { MdEdit, MdContentCopy, MdDelete } from "react-icons/md";
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   sku: string;
   image: string;
@@ -18,9 +18,10 @@ interface Product {
 interface ProductRowProps {
   product: Product;
   onRowClick?: (product: Product) => void;
-  onTogglePod: (id: number, value: boolean) => void;
-  onToggleVisibility: (id: number, value: boolean) => void;
-  onEditProduct: (id: number) => void
+  onTogglePod: (id: string, value: boolean) => void;
+  onToggleVisibility: (id: string, value: boolean) => void;
+  onEditProduct: (id: string) => void;
+  onDeleteProduct: (id: string) => void;
 }
 
 export default function ProductRow({
@@ -28,7 +29,8 @@ export default function ProductRow({
   onRowClick,
   onTogglePod,
   onToggleVisibility,
-  onEditProduct
+  onEditProduct,
+  onDeleteProduct,
 }: ProductRowProps) {
   const handleRowClick = () => {
     if (onRowClick) onRowClick(product);
@@ -40,17 +42,20 @@ export default function ProductRow({
     onTogglePod(product.id, newValue);
   };
 
-
   const toggleVisibility = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
     const newValue = e.target.checked;
-    console.log(newValue)
+    console.log(newValue);
     onToggleVisibility(product.id, newValue);
   };
 
   const handleEditProduct = () => {
-    onEditProduct(product.id)
-  }
+    onEditProduct(product.id);
+  };
+
+  const handleDeleteProduct = () => {
+    onDeleteProduct(product.id);
+  };
 
   return (
     <tr
@@ -153,7 +158,7 @@ export default function ProductRow({
           <button
             className="p-3 hover:bg-red-100 text-red-600 rounded-xl transition-colors"
             title="Delete"
-            onClick={() => alert(`Delete ${product.name}`)}
+            onClick={handleDeleteProduct}
           >
             <MdDelete size={20} />
           </button>

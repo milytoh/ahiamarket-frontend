@@ -3,7 +3,7 @@ import ProductRow from "./ProductRow";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   sku: string;
   image: string;
@@ -19,9 +19,10 @@ interface ProductRowProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  onTogglePod: (id: number, value: boolean) => void;
-  onToggleVisibility: (id: number, value: boolean) => void;
-  onEditProduct: (id: number) => void;
+  onTogglePod: (id: string, value: boolean) => void;
+  onToggleVisibility: (id: string, value: boolean) => void;
+  onEditProduct: (id: string) => void;
+  onDeleteProduct: (id: string) => void;
 }
 
 export default function ProductsTable({
@@ -31,7 +32,8 @@ export default function ProductsTable({
   onPageChange,
   onTogglePod,
   onToggleVisibility,
-  onEditProduct
+  onEditProduct,
+  onDeleteProduct,
 }: ProductRowProps) {
   
   const getVisiblePages = () => {
@@ -105,6 +107,7 @@ export default function ProductsTable({
                 onTogglePod={onTogglePod}
                 onToggleVisibility={onToggleVisibility}
                 onEditProduct = {onEditProduct}
+                onDeleteProduct = {onDeleteProduct}
               />
             ))
           )}

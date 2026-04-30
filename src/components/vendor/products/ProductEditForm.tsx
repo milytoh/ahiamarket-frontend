@@ -67,6 +67,8 @@ export default function EditProductForm({
 
   const { id } = useParams();
 
+  const navigate = useNavigate();
+
   const { put, loading, error } = useApi(
     `${API_URL}/vendor/product/${id}/update`,
   );
@@ -164,6 +166,7 @@ export default function EditProductForm({
       await put(formData);
 
       toast.success("Product updated successfully!");
+      navigate("/vendor/dashboard/products");
     } catch (err) {
       console.log(err);
     }

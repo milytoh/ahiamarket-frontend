@@ -15,7 +15,7 @@ import ErrorState from "@/components/ui/Error";
 import { toast } from "react-toastify";
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   sku: string;
   image: string;
@@ -67,7 +67,7 @@ export default function Products() {
   };
 
   //for POD toggle - needs to be moved to ProductRow and lifted up
-  const handleTogglePod = async (productId: number, value: boolean) => {
+  const handleTogglePod = async (productId: string, value: boolean) => {
     try {
       // optimistic UI update
       setProducts((prev) =>
@@ -90,7 +90,7 @@ export default function Products() {
   };
 
   //for visibility toggle - needs to be moved to ProductRow and lifted up
-  const handleVisibilityToggle = async (productId: number, value: boolean) => {
+  const handleVisibilityToggle = async (productId: string, value: boolean) => {
     try {
       // optimistic UI update
       setProducts((prev) =>
@@ -113,10 +113,15 @@ export default function Products() {
   };
 
   //edit product handler
-  const handleEditProdcut = (id: number) => {
-    console.log(id)
+  const handleEditProdcut = (id: string) => {
     navigate(`/vendor/dashboard/edit-product/${id}`);
   }
+
+  const handleDeleteProduct = async (id: string) => { 
+    console.log("delete product with id:", id);
+  }
+
+
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -199,7 +204,8 @@ export default function Products() {
           onPageChange={setPage}
           onTogglePod={handleTogglePod}
           onToggleVisibility={handleVisibilityToggle}
-          onEditProduct={handleEditProdcut}
+            onEditProduct={handleEditProdcut}
+            onDeleteProduct={handleDeleteProduct}
         />
       )}
       <ProductsSummary />
