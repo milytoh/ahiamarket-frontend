@@ -53,14 +53,24 @@ export default function Products() {
     `${API_URL}/vendor/products?page=${page}&limit=${limit}&status=${filters.status}`,
   );
 
+  //API hooks for produucts
   const { get, loading, error } = useApi(url);
 
+  //API hooks for delete product
+  const {
+    del,
+    loading: delLoading,
+    error: delError,
+  } = useApi(`${API_URL}/product/${selectedProductId}/delete`);
+
+  // API hooks for updating product
   const {
     patch,
     loading: podLoading,
     error: podError,
   } = useApi(`${API_URL}/vendor/product/pod/update`);
 
+  // API hook for toggling visibility
   const {
     patch: visibilityPatch,
     loading: visibilityLoading,
@@ -131,8 +141,22 @@ export default function Products() {
     //  Save current state (for rollback)
     const previousProducts = products;
 
-    
-  };;
+    // Optimistically remove from UI
+    setProducts((prev) => prev.filter((p) => p.id !== selectedProductId));
+
+    setIsDeleteModalOpen(false);
+
+    try {
+      const res = await del();
+      console.log(res);
+      toast.success("Product deleted successfully");
+    } catch (error: any) {
+      toast.error("Delete failed, rolling back...", error.message);
+
+      // Rollback UI if failed
+      setProducts(previousProducts);
+    }
+  };
 
   useEffect(() => {
     const params = new URLSearchParams();
