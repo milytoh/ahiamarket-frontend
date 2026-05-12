@@ -13,6 +13,7 @@ import ProductsTableSkeleton from "@/components/ui/skeletons/vendor/products/Pro
 
 import ErrorState from "@/components/ui/Error";
 import { toast } from "react-toastify";
+import Modal from "@/components/ui/Modal";
 
 interface Product {
   id: string;
@@ -38,6 +39,10 @@ export default function Products() {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null,
+  );
 
   const navigate = useNavigate();
 
@@ -97,7 +102,6 @@ export default function Products() {
         prev.map((p) => (p.id === productId ? { ...p, visible: value } : p)),
       );
 
-
       // send to backend
       await visibilityPatch({
         visible: value,
@@ -115,13 +119,20 @@ export default function Products() {
   //edit product handler
   const handleEditProdcut = (id: string) => {
     navigate(`/vendor/dashboard/edit-product/${id}`);
-  }
+  };
 
-  const handleDeleteProduct = async (id: string) => { 
-    console.log("delete product with id:", id);
-  }
+  //handle delete product - needs to be moved to ProductRow and lifted up
+  const handleDeleteProduct = async (id: string) => {
+    setIsDeleteModalOpen(true);
+    setSelectedProductId(id);
+  };
 
+  const handleConfirmDelete = async () => {
+    //  Save current state (for rollback)
+    const previousProducts = products;
 
+    
+  };;
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -192,6 +203,32 @@ export default function Products() {
 
   return (
     <div className="bg-background-light min-h-screen p-6 md:p-10 max-w-7xl mx-auto">
+      {/* delete modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title="Delete Product"
+        subtitle="Are you sure you want to delete this product?"
+      >
+        <div className="flex items-center justify-end gap-3 pt-2">
+          <button
+            type="button"
+            onClick={() => setIsDeleteModalOpen(false)}
+            className="px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition-all"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            onClick={handleConfirmDelete}
+            disabled={loading}
+            className="px-5 py-3 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-semibold transition-all disabled:opacity-60"
+          >
+            {loading ? "Deleting..." : "Delete Product"}
+          </button>
+        </div>
+      </Modal>
       <ProductsHeader />
       <ProductsFilters onFilter={handleFilter} />
       {loading ? (
@@ -204,8 +241,8 @@ export default function Products() {
           onPageChange={setPage}
           onTogglePod={handleTogglePod}
           onToggleVisibility={handleVisibilityToggle}
-            onEditProduct={handleEditProdcut}
-            onDeleteProduct={handleDeleteProduct}
+          onEditProduct={handleEditProdcut}
+          onDeleteProduct={handleDeleteProduct}
         />
       )}
       <ProductsSummary />

@@ -54,6 +54,7 @@ export default function ProductRow({
   };
 
   const handleDeleteProduct = () => {
+
     onDeleteProduct(product.id);
   };
 
