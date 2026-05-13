@@ -26,6 +26,8 @@ const editProductSchema = z.object({
 
   condition: z.enum(["New", "Refurbished", "Used"]),
 
+  status: z.enum(["active", "draft", "out_of_stock"]),
+
   description: z
     .string()
     .min(20, "Description must be at least 20 characters")
@@ -154,6 +156,7 @@ export default function EditProductForm({
       formData.append("unitPrice", data.unitPrice.toString());
       formData.append("stock", data.stock.toString());
       formData.append("podEnabled", data.podEnabled.toString());
+      formData.append("status", data.status);
 
       //
       formData.append("existingImages", JSON.stringify(existingImages));
@@ -183,6 +186,7 @@ export default function EditProductForm({
         unitPrice: product.price,
         stock: product.stock,
         podEnabled: product.pod,
+        status: product.status,
       });
 
       if (product.images?.length) {
@@ -282,6 +286,27 @@ export default function EditProductForm({
               {errors.condition && (
                 <p className="text-red-500 text-xs mt-1">
                   {errors.condition.message}
+                </p>
+              )}
+            </div>
+
+            {/* status */}
+
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">
+                Status
+              </label>
+              <select
+                {...register("status")}
+                className="w-full bg-background-light border border-border-light rounded-2xl p-4 focus:ring-2 focus:ring-primary outline-none"
+              >
+                <option value="active">Active</option>
+                <option value="draft">Draft</option>
+                <option value="out_of_stock">Out of Stock</option>
+              </select>
+              {errors.status && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.status.message}
                 </p>
               )}
             </div>

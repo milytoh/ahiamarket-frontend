@@ -77,6 +77,10 @@ export default function Products() {
     error: visibilityError,
   } = useApi(`${API_URL}/vendor/product/visible/update`);
 
+  const { post, loading:cloneLoading, error:cloneError } = useApi(`${API_URL}/vendor/product/clone`);
+
+
+
   const handleFilter = (filters: Filters) => {
     setFilters(filters);
   };
@@ -158,8 +162,21 @@ export default function Products() {
     }
   };
 
-  const handleProductClone = (id: string) => {
-   
+  //handle clone product - needs to be moved to ProductRow and lifted up
+  const handleProductClone = async (id: string) => {
+    console.log("clone product with id:", id);
+    setSelectedProductId(id);
+
+    try {
+      await post({
+        productId: id
+      });
+      // get()
+      toast.success("Product cloned successfully. check your drafts!!!");
+    } catch (error: any) {
+      toast.error("product cloning failed", error.message);
+    }
+
   }
 
   useEffect(() => {
@@ -206,7 +223,7 @@ export default function Products() {
 
         setTotalPages(response.totalPages);
       } catch (err) {
-        console.log(err);
+       
       }
     };
 
