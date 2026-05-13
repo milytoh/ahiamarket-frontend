@@ -22,6 +22,7 @@ interface ProductRowProps {
   onToggleVisibility: (id: string, value: boolean) => void;
   onEditProduct: (id: string) => void;
   onDeleteProduct: (id: string) => void;
+  onCloneProduct: (id: string) => void;
 }
 
 export default function ProductRow({
@@ -31,6 +32,7 @@ export default function ProductRow({
   onToggleVisibility,
   onEditProduct,
   onDeleteProduct,
+  onCloneProduct,
 }: ProductRowProps) {
   const handleRowClick = () => {
     if (onRowClick) onRowClick(product);
@@ -53,10 +55,14 @@ export default function ProductRow({
     onEditProduct(product.id);
   };
 
+  //handle delete product
   const handleDeleteProduct = () => {
-
     onDeleteProduct(product.id);
   };
+
+  const handleCloneProduct = () => { 
+    onCloneProduct(product.id);
+  }
 
   return (
     <tr
@@ -152,7 +158,7 @@ export default function ProductRow({
           <button
             className="p-3 hover:bg-amber-100 rounded-xl transition-colors"
             title="Clone"
-            onClick={() => alert(`Clone ${product.name}`)}
+            onClick={handleCloneProduct}
           >
             <MdContentCopy size={20} />
           </button>

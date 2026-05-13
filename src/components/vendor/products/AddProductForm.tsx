@@ -50,6 +50,8 @@ export default function AddProductForm() {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
+  const navigate = useNavigate();
+
   const { post, loading, error } = useApi(`${API_URL}/vendor/create-product`);
 
   const {
@@ -88,7 +90,7 @@ export default function AddProductForm() {
     // Custom validation for images
     if (selectedImages.length === 0) {
       toast.warning("Please upload at least 1 product image");
-     
+
       return;
     }
 
@@ -107,19 +109,18 @@ export default function AddProductForm() {
         formData.append("images", file);
       });
 
-      const response = await post(formData);
+      await post(formData);
 
-      console.log(response);
       toast.success("Product created successfully!");
 
       setSelectedImages([]);
       setImagePreviews([]);
+
+      navigate("/vendor/dashboard/products");
     } catch (error) {
       console.log(error);
-     
     }
   };
-
 
   const categories = [
     "Fashion & Apparel",
@@ -135,11 +136,12 @@ export default function AddProductForm() {
     "Others",
   ];
 
-  
-      if (error) {
-        toast.error(`${error.message}` || "something went wrong, check your network connection");
-      }
-   
+  if (error) {
+    toast.error(
+      `${error.message}` ||
+        "something went wrong, check your network connection",
+    );
+  }
 
   return (
     <form

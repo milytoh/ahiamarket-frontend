@@ -151,12 +151,16 @@ export default function Products() {
       console.log(res);
       toast.success("Product deleted successfully");
     } catch (error: any) {
-      toast.error("Delete failed, rolling back...", error.message);
+      toast.error("product deletion failed", error.message);
 
       // Rollback UI if failed
       setProducts(previousProducts);
     }
   };
+
+  const handleProductClone = (id: string) => {
+   
+  }
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -266,7 +270,8 @@ export default function Products() {
           onTogglePod={handleTogglePod}
           onToggleVisibility={handleVisibilityToggle}
           onEditProduct={handleEditProdcut}
-          onDeleteProduct={handleDeleteProduct}
+            onDeleteProduct={handleDeleteProduct}
+            onCloneProduct={handleProductClone}
         />
       )}
       <ProductsSummary />
