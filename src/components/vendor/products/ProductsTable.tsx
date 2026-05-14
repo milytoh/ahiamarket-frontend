@@ -1,6 +1,7 @@
 import React from "react";
 import ProductRow from "./ProductRow";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import ProductMobileCard from "./ProductMobileCard";
 
 interface Product {
   id: string;
@@ -70,7 +71,7 @@ export default function ProductsTable({
   return (
     <div className="bg-white rounded-3xl border border-border-light overflow-hidden shadow-sm">
       {/* TABLE */}
-      <table className="w-full">
+      <table className="w-full hidden lg:table">
         <thead className="bg-slate-50">
           <tr>
             <th className="py-6 px-8 text-left text-xs font-bold uppercase text-slate-500">
@@ -94,7 +95,7 @@ export default function ProductsTable({
           </tr>
         </thead>
 
-        <tbody className="divide-y">
+        <tbody className="divide-y ">
           {products.length === 0 ? (
             <tr>
               <td colSpan={6} className="text-center py-10 text-slate-400">
@@ -108,7 +109,7 @@ export default function ProductsTable({
                 product={product}
                 onTogglePod={onTogglePod}
                 onToggleVisibility={onToggleVisibility}
-                onEditProduct = {onEditProduct}
+                onEditProduct={onEditProduct}
                 onDeleteProduct={onDeleteProduct}
                 onCloneProduct={onCloneProduct}
               />
@@ -116,6 +117,20 @@ export default function ProductsTable({
           )}
         </tbody>
       </table>
+
+      <div className="lg:hidden p-4 space-y-4">
+        {products.map((product) => (
+          <ProductMobileCard
+            key={product.id}
+            product={product}
+            onTogglePod={onTogglePod}
+            onToggleVisibility={onToggleVisibility}
+            onEditProduct={onEditProduct}
+            onDeleteProduct={onDeleteProduct}
+            onCloneProduct={onCloneProduct}
+          />
+        ))}
+      </div>
 
       {/* PAGINATION */}
       <div className="p-6 bg-slate-50 flex justify-between items-center border-t">
