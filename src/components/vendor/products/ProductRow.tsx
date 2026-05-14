@@ -17,7 +17,7 @@ interface Product {
 
 interface ProductRowProps {
   product: Product;
-  onRowClick?: (product: Product) => void;
+  onProductClick: (id: string) => void;
   onTogglePod: (id: string, value: boolean) => void;
   onToggleVisibility: (id: string, value: boolean) => void;
   onEditProduct: (id: string) => void;
@@ -27,15 +27,17 @@ interface ProductRowProps {
 
 export default function ProductRow({
   product,
-  onRowClick,
+  onProductClick,
   onTogglePod,
   onToggleVisibility,
   onEditProduct,
   onDeleteProduct,
   onCloneProduct,
 }: ProductRowProps) {
-  const handleRowClick = () => {
-    if (onRowClick) onRowClick(product);
+
+
+  const handleProductClick = () => {
+    onProductClick(product.id);
   };
 
   const togglePoD = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +68,7 @@ export default function ProductRow({
 
   return (
     <tr
-      onClick={handleRowClick}
+      onClick={handleProductClick}
       className="hover:bg-emerald-50/70 transition-colors cursor-pointer group"
     >
       {/* Product Info */}

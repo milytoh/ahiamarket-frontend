@@ -25,6 +25,7 @@ interface ProductRowProps {
   onEditProduct: (id: string) => void;
   onDeleteProduct: (id: string) => void;
   onCloneProduct: (id: string) => void;
+  onProductClick: (id: string) => void;
 }
 
 export default function ProductsTable({
@@ -37,6 +38,7 @@ export default function ProductsTable({
   onEditProduct,
   onDeleteProduct,
   onCloneProduct,
+  onProductClick
 }: ProductRowProps) {
   
   const getVisiblePages = () => {
@@ -105,6 +107,7 @@ export default function ProductsTable({
           ) : (
             products.map((product) => (
               <ProductRow
+                onProductClick={onProductClick}
                 key={product.id}
                 product={product}
                 onTogglePod={onTogglePod}
@@ -128,6 +131,7 @@ export default function ProductsTable({
             onEditProduct={onEditProduct}
             onDeleteProduct={onDeleteProduct}
             onCloneProduct={onCloneProduct}
+            onProductClick={onProductClick}
           />
         ))}
       </div>

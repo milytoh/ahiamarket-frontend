@@ -77,9 +77,11 @@ export default function Products() {
     error: visibilityError,
   } = useApi(`${API_URL}/vendor/product/visible/update`);
 
-  const { post, loading:cloneLoading, error:cloneError } = useApi(`${API_URL}/vendor/product/clone`);
-
-
+  const {
+    post,
+    loading: cloneLoading,
+    error: cloneError,
+  } = useApi(`${API_URL}/vendor/product/clone`);
 
   const handleFilter = (filters: Filters) => {
     setFilters(filters);
@@ -169,15 +171,14 @@ export default function Products() {
 
     try {
       await post({
-        productId: id
+        productId: id,
       });
       // get()
       toast.success("Product cloned successfully. check your drafts!!!");
     } catch (error: any) {
       toast.error("product cloning failed", error.message);
     }
-
-  }
+  };
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -198,6 +199,9 @@ export default function Products() {
     setUrl(newUrl);
   }, [page, limit, filters]);
 
+  const handleProductClick = (id: string) => {
+    navigate(`/vendor/dashboard/product/details/${id}`);
+  };
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
@@ -222,9 +226,7 @@ export default function Products() {
         setProducts(mappedProducts);
 
         setTotalPages(response.totalPages);
-      } catch (err) {
-       
-      }
+      } catch (err) {}
     };
 
     fetchDashboard();
@@ -287,8 +289,9 @@ export default function Products() {
           onTogglePod={handleTogglePod}
           onToggleVisibility={handleVisibilityToggle}
           onEditProduct={handleEditProdcut}
-            onDeleteProduct={handleDeleteProduct}
-            onCloneProduct={handleProductClone}
+          onDeleteProduct={handleDeleteProduct}
+          onCloneProduct={handleProductClone}
+          onProductClick={handleProductClick}
         />
       )}
       <ProductsSummary />

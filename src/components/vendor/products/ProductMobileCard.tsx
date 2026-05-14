@@ -17,6 +17,7 @@ interface Product {
 
 interface ProductMobileCardProps {
   product: Product;
+  onProductClick: (id: string) => void;
   onTogglePod: (id: string, value: boolean) => void;
   onToggleVisibility: (id: string, value: boolean) => void;
   onEditProduct: (id: string) => void;
@@ -26,6 +27,7 @@ interface ProductMobileCardProps {
 
 export default function ProductMobileCard({
   product,
+  onProductClick,
   onTogglePod,
   onToggleVisibility,
   onEditProduct,
@@ -33,7 +35,8 @@ export default function ProductMobileCard({
   onCloneProduct,
 }: ProductMobileCardProps) {
   return (
-    <div className="bg-white border border-border-light rounded-3xl p-4 shadow-sm">
+    <div className="bg-white border border-border-light rounded-3xl p-4 shadow-sm hover:bg-emerald-50/70 transition-colors cursor-pointer group "
+    onClick={() => onProductClick(product.id)}>
       {/* TOP */}
       <div className="flex gap-4">
         <img
