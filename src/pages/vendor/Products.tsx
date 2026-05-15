@@ -40,6 +40,7 @@ export default function Products() {
   const [limit] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isProductCloneModalOpen, setProductCloneModalOpe] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null,
   );
@@ -170,17 +171,22 @@ export default function Products() {
     console.log("clone product with id:", id);
     setSelectedProductId(id);
 
+    setSelectedProductId(id);
+    setProductCloneModalOpe(true);
+  };
+
+  const handleConfirmClone = async () => {
     try {
       await post({
-        productId: id,
+        productId: selectedProductId,
       });
       // get()
       toast.success("Product cloned successfully. check your drafts!!!");
+      setProductCloneModalOpe(false);
     } catch (error: any) {
       toast.error("product cloning failed", error.message);
     }
   };
-
   useEffect(() => {
     const params = new URLSearchParams();
 
@@ -274,6 +280,32 @@ export default function Products() {
             className="px-5 py-3 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-semibold transition-all disabled:opacity-60"
           >
             {loading ? "Deleting..." : "Delete Product"}
+          </button>
+        </div>
+      </Modal>
+      {/* clone product modal */}
+      <Modal
+        isOpen={isProductCloneModalOpen}
+        onClose={() => setProductCloneModalOpe(false)}
+        title="Clone Product"
+        subtitle="Are you sure you want to clone this product?"
+      >
+        <div className="flex items-center justify-end gap-3 pt-2">
+          <button
+            type="button"
+            onClick={() => setProductCloneModalOpe(false)}
+            className="px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition-all"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            onClick={handleConfirmClone}
+            disabled={cloneLoading}
+            className="px-5 py-3 rounded-2xl  bg-primary  text-white font-semibold  disabled:opacity-60 hover:shadow-xl active:scale-95 transition-all"
+          >
+            {cloneLoading ? "Cloning..." : "Clone Product"}
           </button>
         </div>
       </Modal>

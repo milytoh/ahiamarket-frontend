@@ -10,6 +10,7 @@ import ProductDetails from "@/components/vendor/products/ProductDetails";
 
 export default function ProductDetail() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isProductCloneModalOpen, setProductCloneModalOpe] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null,
   );
@@ -27,13 +28,13 @@ export default function ProductDetail() {
   const handleEditProdcut = (id: string) => {
     navigate(`/vendor/dashboard/edit-product/${id}`);
   };
-  
+
   //API hooks for clone product
-    const {
-      post,
-      loading: cloneLoading,
-      error: cloneError,
-    } = useApi(`${API_URL}/vendor/product/clone`);
+  const {
+    post,
+    loading: cloneLoading,
+    error: cloneError,
+  } = useApi(`${API_URL}/vendor/product/clone`);
 
   //handle delete product - needs to be moved to ProductRow and lifted up
   const handleDeleteProduct = async (id: string) => {
@@ -41,15 +42,14 @@ export default function ProductDetail() {
     setSelectedProductId(id);
   };
 
-  
-
   const handleConfirmDelete = async () => {
-    setIsDeleteModalOpen(false);
+
 
     try {
       const res = await del();
-      console.log(res);
+       setIsDeleteModalOpen(false);
       toast.success("Product deleted successfully");
+      navigate("/vendor/dashboard/products");
     } catch (error: any) {
       toast.error("product deletion failed", error.message);
     }
@@ -57,15 +57,18 @@ export default function ProductDetail() {
 
   //handle clone product - needs to be moved to ProductRow and lifted up
   const handleProductClone = async (id: string) => {
-    console.log("clone product with id:", id);
     setSelectedProductId(id);
+    setProductCloneModalOpe(true);
+  };
 
+  const handleConfirmClone = async () => {
     try {
       await post({
-        productId: id,
+        productId: selectedProductId,
       });
       // get()
       toast.success("Product cloned successfully. check your drafts!!!");
+      setProductCloneModalOpe(false);
     } catch (error: any) {
       toast.error("product cloning failed", error.message);
     }
@@ -99,7 +102,37 @@ export default function ProductDetail() {
           </button>
         </div>
       </Modal>
-      <ProductDetails onDeleteProduct={handleDeleteProduct} onCloneProduct={handleProductClone} onEditProduct={handleEditProdcut}/>
+      {/* clone product modal */}
+      <Modal
+        isOpen={isProductCloneModalOpen}
+        onClose={() => setProductCloneModalOpe(false)}
+        title="Clone Product"
+        subtitle="Are you sure you want to clone this product?"
+      >
+        <div className="flex items-center justify-end gap-3 pt-2">
+          <button
+            type="button"
+            onClick={() => setProductCloneModalOpe(false)}
+            className="px-5 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition-all"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            onClick={handleConfirmClone}
+            disabled={cloneLoading}
+            className="px-5 py-3 rounded-2xl  bg-primary  text-white font-semibold  disabled:opacity-60 hover:shadow-xl active:scale-95 transition-all"
+          >
+            {cloneLoading ? "Cloning..." : "Clone Product"}
+          </button>
+        </div>
+      </Modal>
+      <ProductDetails
+        onDeleteProduct={handleDeleteProduct}
+        onCloneProduct={handleProductClone}
+        onEditProduct={handleEditProdcut}
+      />
     </div>
   );
 }

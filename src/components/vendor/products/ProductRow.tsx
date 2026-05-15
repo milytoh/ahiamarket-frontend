@@ -112,9 +112,13 @@ export default function ProductRow({
             POD
           </span>
 
-          <label className="relative inline-flex items-center cursor-pointer ">
+          <label
+            onClick={(e) => e.stopPropagation()}
+            className="relative inline-flex items-center cursor-pointer "
+          >
             <input
               type="checkbox"
+              onClick={(e) => e.stopPropagation()}
               checked={product.pod}
               onChange={togglePoD}
               className="sr-only peer"
@@ -131,10 +135,14 @@ export default function ProductRow({
 
       {/* Visibility Toggle */}
       <td className="py-6 px-6">
-        <label className="relative inline-flex items-center cursor-pointer">
+        <label
+          onClick={(e) => e.stopPropagation()}
+          className="relative inline-flex items-center cursor-pointer"
+        >
           <input
             type="checkbox"
             checked={product.visible}
+            onClick={(e) => e.stopPropagation()}
             onChange={toggleVisibility}
             className="sr-only peer"
           />
