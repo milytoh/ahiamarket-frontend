@@ -77,6 +77,7 @@ export default function Products() {
     error: visibilityError,
   } = useApi(`${API_URL}/vendor/product/visible/update`);
 
+  //API hook for cloning product
   const {
     post,
     loading: cloneLoading,

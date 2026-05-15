@@ -1,4 +1,44 @@
-export default function ProductDetails() {
+import { useParams } from "react-router-dom";
+
+interface Product {
+  id: string;
+  name: string;
+  sku: string;
+  image: string;
+  price: number;
+  stock: number;
+  status: string;
+  pod: boolean;
+  visible: boolean;
+}
+
+interface ProductDetailsProps {
+  onEditProduct: (id: string) => void;
+  onCloneProduct: (id: string) => void;
+  onDeleteProduct: (id: string) => void;
+  products?: Product;
+}
+
+export default function ProductDetails({
+  products,
+  onEditProduct,
+  onCloneProduct,
+  onDeleteProduct,
+}: ProductDetailsProps) {
+  const { id } = useParams();
+
+  const handleEditProduct = () => {
+    onEditProduct(id!);
+  };
+
+  const handleCloneProduct = () => {
+    onCloneProduct(id!);
+  }
+
+  const handleDeleteProduct = () => {
+    onDeleteProduct(id!);
+  }
+
   const product = {
     id: "PRD-2026-001",
     name: "Premium Leather Office Chair",
@@ -51,15 +91,15 @@ export default function ProductDetails() {
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <button className="h-12 px-6 rounded-2xl bg-primary text-white font-semibold hover:scale-[1.02] transition-all">
+              <button onClick={handleEditProduct} className="h-12 px-6 rounded-2xl bg-primary text-white font-semibold hover:scale-[1.02] transition-all">
                 Edit Product
               </button>
 
-              <button className="h-12 px-6 rounded-2xl border border-border-light bg-white font-semibold hover:bg-slate-50 transition-all">
+              <button onClick={handleCloneProduct} className="h-12 px-6 rounded-2xl border border-border-light bg-white font-semibold hover:bg-slate-50 transition-all">
                 Clone
               </button>
 
-              <button className="h-12 px-6 rounded-2xl bg-red-50 text-red-600 font-semibold hover:bg-red-100 transition-all">
+              <button onClick={handleDeleteProduct} className="h-12 px-6 rounded-2xl bg-red-50 text-red-600 font-semibold hover:bg-red-100 transition-all">
                 Delete
               </button>
             </div>
