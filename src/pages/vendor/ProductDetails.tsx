@@ -1,12 +1,33 @@
 const API_URL = import.meta.env.VITE_API_URL;
-
-import { useState } from "react";
+import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApi } from "@/hooks/useApi";
 import { toast } from "react-toastify";
 import Modal from "@/components/ui/Modal";
 
 import ProductDetails from "@/components/vendor/products/ProductDetails";
+import { number } from "zod";
+
+interface Product {
+  id: string;
+  name: string;
+  sku: string;
+  description: string;
+  category: string;
+  condition: string;
+  images: any[];
+  price: number;
+  stock: number;
+  status: string;
+  pod: boolean;
+  visible: boolean;
+  createdAt: string;
+
+  sales:number;
+  revenue: number;
+  views: number;
+}
 
 export default function ProductDetail() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -14,8 +35,12 @@ export default function ProductDetail() {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null,
   );
+  const [product, setProduct] = useState<Product >();
 
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  const { get, loading, error } = useApi(`${API_URL}/vendor/product/${id}`);
 
   //API hooks for delete product
   const {
@@ -43,11 +68,9 @@ export default function ProductDetail() {
   };
 
   const handleConfirmDelete = async () => {
-
-
     try {
       const res = await del();
-       setIsDeleteModalOpen(false);
+      setIsDeleteModalOpen(false);
       toast.success("Product deleted successfully");
       navigate("/vendor/dashboard/products");
     } catch (error: any) {
@@ -73,6 +96,56 @@ export default function ProductDetail() {
       toast.error("product cloning failed", error.message);
     }
   };
+
+ useEffect(() => {
+   const fetchDashboard = async () => {
+     try {
+       const data = await get();
+
+       console.log(data);
+
+       const productId = data.product?._id;
+
+       const prod = {
+         id: productId,
+         name: data.product?.name,
+         sku: productId?.slice(-6).toUpperCase(),
+         images: data.product?.images || [],
+         price: data.product?.price,
+         stock: data.product?.stock,
+         status: data.product?.status,
+         pod: data.product?.pod,
+         visible: data.product?.visible,
+         description: data.product?.description,
+         category: data.product?.category,
+         condition: data.product?.condition,
+
+         createdAt: new Date(data.product?.created_at).toLocaleDateString(
+           "en-US",
+           {
+             month: "short",
+             day: "numeric",
+             year: "numeric",
+           },
+         ),
+
+         sales: 43,
+         revenue: 43000,
+         views: 4300,
+       };
+
+       console.log("product details data", prod);
+
+       setProduct(prod);
+     } catch (err) {
+       console.log("FETCH ERROR:", err);
+     }
+   };
+
+   fetchDashboard();
+ }, []);
+
+
 
   return (
     <div className="bg-background-light min-h-screen p-6 md:p-10 max-w-7xl mx-auto">
@@ -132,6 +205,7 @@ export default function ProductDetail() {
         onDeleteProduct={handleDeleteProduct}
         onCloneProduct={handleProductClone}
         onEditProduct={handleEditProdcut}
+        product={product!}
       />
     </div>
   );

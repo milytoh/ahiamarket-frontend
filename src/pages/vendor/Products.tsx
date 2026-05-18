@@ -156,7 +156,6 @@ export default function Products() {
 
     try {
       const res = await del();
-      console.log(res);
       toast.success("Product deleted successfully");
     } catch (error: any) {
       toast.error("product deletion failed", error.message);
@@ -168,7 +167,6 @@ export default function Products() {
 
   //handle clone product - needs to be moved to ProductRow and lifted up
   const handleProductClone = async (id: string) => {
-    console.log("clone product with id:", id);
     setSelectedProductId(id);
 
     setSelectedProductId(id);

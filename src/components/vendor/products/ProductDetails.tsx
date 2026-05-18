@@ -1,26 +1,59 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 import { useParams } from "react-router-dom";
 
 interface Product {
   id: string;
   name: string;
   sku: string;
-  image: string;
+  description: string;
+  category: string;
+  condition: string;
+  images: any[];
   price: number;
   stock: number;
   status: string;
   pod: boolean;
   visible: boolean;
+  createdAt: string;
+
+  sales: number;
+  revenue: number;
+  views: number;
 }
+
+const products = {
+  id: "PRD-2026-001",
+  name: "Premium Leather Office Chair",
+  sku: "AHM-CH-8821",
+  description:
+    "Modern ergonomic leather office chair designed for comfort and productivity. Features adjustable height, lumbar support, premium wheels, and durable metal frame.",
+  price: 125000,
+  stock: 12,
+  category: "Furniture",
+  condition: "New",
+  pod: true,
+  visible: true,
+  createdAt: "May 14, 2026",
+  sales: 48,
+  revenue: 6000000,
+  views: 1240,
+  images: [
+    "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1549187774-b4e9b0445b41?q=80&w=1200&auto=format&fit=crop",
+  ],
+};
 
 interface ProductDetailsProps {
   onEditProduct: (id: string) => void;
   onCloneProduct: (id: string) => void;
   onDeleteProduct: (id: string) => void;
-  products?: Product;
+  product: Product;
 }
 
 export default function ProductDetails({
-  products,
+  product,
   onEditProduct,
   onCloneProduct,
   onDeleteProduct,
@@ -33,34 +66,13 @@ export default function ProductDetails({
 
   const handleCloneProduct = () => {
     onCloneProduct(id!);
-  }
+  };
 
   const handleDeleteProduct = () => {
     onDeleteProduct(id!);
-  }
-
-  const product = {
-    id: "PRD-2026-001",
-    name: "Premium Leather Office Chair",
-    sku: "AHM-CH-8821",
-    description:
-      "Modern ergonomic leather office chair designed for comfort and productivity. Features adjustable height, lumbar support, premium wheels, and durable metal frame.",
-    price: 125000,
-    stock: 12,
-    category: "Furniture",
-    condition: "New",
-    pod: true,
-    visible: true,
-    createdAt: "May 14, 2026",
-    sales: 48,
-    revenue: 6000000,
-    views: 1240,
-    images: [
-      "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1549187774-b4e9b0445b41?q=80&w=1200&auto=format&fit=crop",
-    ],
   };
+
+  const
 
   return (
     <div className="min-h-screen bg-background-light p-4 md:p-8">
@@ -75,31 +87,40 @@ export default function ProductDetails({
                 </span>
 
                 <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-bold uppercase tracking-wider">
-                  {product.category}
+                  {product?.category}
                 </span>
               </div>
 
               <h1 className="mt-4 text-3xl md:text-4xl font-black text-slate-900 leading-tight">
-                {product.name}
+                {product?.name}
               </h1>
 
               <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-slate-500">
-                <span>SKU: {product.sku}</span>
+                <span>SKU: {product?.sku}</span>
                 <span>•</span>
-                <span>Created {product.createdAt}</span>
+                <span>Created {product?.createdAt}</span>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <button onClick={handleEditProduct} className="h-12 px-6 rounded-2xl bg-primary text-white font-semibold hover:scale-[1.02] transition-all">
+              <button
+                onClick={handleEditProduct}
+                className="h-12 px-6 rounded-2xl bg-primary text-white font-semibold hover:scale-[1.02] transition-all"
+              >
                 Edit Product
               </button>
 
-              <button onClick={handleCloneProduct} className="h-12 px-6 rounded-2xl border border-border-light bg-white font-semibold hover:bg-slate-50 transition-all">
+              <button
+                onClick={handleCloneProduct}
+                className="h-12 px-6 rounded-2xl border border-border-light bg-white font-semibold hover:bg-slate-50 transition-all"
+              >
                 Clone
               </button>
 
-              <button onClick={handleDeleteProduct} className="h-12 px-6 rounded-2xl bg-red-50 text-red-600 font-semibold hover:bg-red-100 transition-all">
+              <button
+                onClick={handleDeleteProduct}
+                className="h-12 px-6 rounded-2xl bg-red-50 text-red-600 font-semibold hover:bg-red-100 transition-all"
+              >
                 Delete
               </button>
             </div>
@@ -115,18 +136,18 @@ export default function ProductDetails({
                 {/* MAIN IMAGE */}
                 <div className="md:col-span-3">
                   <img
-                    src={product.images[0]}
-                    alt={product.name}
+                    src={`${API_URL}/uploads/products/${product?.images[0]}`}
+                    alt={product?.name}
                     className="w-full h-[320px] md:h-[500px] rounded-3xl object-cover"
                   />
                 </div>
 
                 {/* SIDE IMAGES */}
                 <div className="md:col-span-2 grid grid-cols-2 md:grid-cols-1 gap-4">
-                  {product.images.slice(1).map((image, index) => (
-                    <img
+                  {product?.images.slice(1).map((image, index) => (
+                    <img onClick={}
                       key={index}
-                      src={image}
+                      src={`${API_URL}/uploads/products/${image}`}
                       alt="product"
                       className="w-full h-[150px] md:h-full rounded-3xl object-cover"
                     />
@@ -143,7 +164,7 @@ export default function ProductDetails({
               </div>
 
               <p className="text-slate-600 leading-8 text-[15px] md:text-base">
-                {product.description}
+                {product?.description}
               </p>
 
               <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -153,7 +174,7 @@ export default function ProductDetails({
                   </p>
 
                   <p className="mt-2 text-lg font-bold text-slate-900">
-                    {product.category}
+                    {product?.category}
                   </p>
                 </div>
 
@@ -163,7 +184,7 @@ export default function ProductDetails({
                   </p>
 
                   <p className="mt-2 text-lg font-bold text-slate-900">
-                    {product.condition}
+                    {product?.condition}
                   </p>
                 </div>
               </div>
@@ -179,20 +200,20 @@ export default function ProductDetails({
               </p>
 
               <h2 className="mt-3 text-4xl font-black text-slate-900">
-                ₦{product.price.toLocaleString()}
+                ₦{product?.price.toLocaleString()}
               </h2>
 
               <div className="mt-6 h-3 bg-slate-100 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-primary"
-                  style={{ width: `${Math.min(product.stock * 10, 100)}%` }}
+                  style={{ width: `${Math.min(product?.stock * 10, 100)}%` }}
                 />
               </div>
 
               <div className="mt-3 flex items-center justify-between text-sm">
                 <span className="text-slate-500">Inventory</span>
                 <span className="font-bold text-slate-900">
-                  {product.stock} Left
+                  {product?.stock} Left
                 </span>
               </div>
             </div>
@@ -210,7 +231,7 @@ export default function ProductDetails({
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={product.pod}
+                    checked={product?.pod}
                     readOnly
                     className="sr-only peer"
                   />
@@ -235,7 +256,7 @@ export default function ProductDetails({
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={product.visible}
+                    checked={product?.visible}
                     readOnly
                     className="sr-only peer"
                   />
@@ -264,7 +285,7 @@ export default function ProductDetails({
                   </p>
 
                   <h3 className="mt-2 text-3xl font-black text-slate-900">
-                    {product.sales}
+                    {product?.sales}
                   </h3>
                 </div>
 
@@ -274,7 +295,7 @@ export default function ProductDetails({
                   </p>
 
                   <h3 className="mt-2 text-3xl font-black text-slate-900">
-                    ₦{product.revenue.toLocaleString()}
+                    ₦{product?.revenue.toLocaleString()}
                   </h3>
                 </div>
 
@@ -284,7 +305,7 @@ export default function ProductDetails({
                   </p>
 
                   <h3 className="mt-2 text-3xl font-black text-slate-900">
-                    {product.views.toLocaleString()}
+                    {product?.views.toLocaleString()}
                   </h3>
                 </div>
               </div>
