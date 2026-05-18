@@ -61,18 +61,21 @@ export default function ProductDetails({
   const { id } = useParams();
 
   const handleEditProduct = () => {
-    onEditProduct(id!);
+    onEditProduct(product?.id);
   };
 
   const handleCloneProduct = () => {
-    onCloneProduct(id!);
+    onCloneProduct(product?.id);
   };
 
   const handleDeleteProduct = () => {
-    onDeleteProduct(id!);
+    onDeleteProduct(product?.id);
   };
 
-  const
+  const handleImageClick = (image: string) => {
+    // Open the clicked image in a new tab
+    window.open(image, "_blank");
+  }
 
   return (
     <div className="min-h-screen bg-background-light p-4 md:p-8">
@@ -136,20 +139,28 @@ export default function ProductDetails({
                 {/* MAIN IMAGE */}
                 <div className="md:col-span-3">
                   <img
+                    onClick={handleImageClick.bind(
+                      null,
+                      `${API_URL}/uploads/products/${product?.images[0]}`,
+                    )}
                     src={`${API_URL}/uploads/products/${product?.images[0]}`}
                     alt={product?.name}
-                    className="w-full h-[320px] md:h-[500px] rounded-3xl object-cover"
+                    className="w-full h-[320px] md:h-[500px] rounded-3xl object-cover cursor-pointer"
                   />
                 </div>
 
                 {/* SIDE IMAGES */}
                 <div className="md:col-span-2 grid grid-cols-2 md:grid-cols-1 gap-4">
                   {product?.images.slice(1).map((image, index) => (
-                    <img onClick={}
+                    <img
+                      onClick={handleImageClick.bind(
+                        null,
+                        `${API_URL}/uploads/products/${image}`,
+                      )}
                       key={index}
                       src={`${API_URL}/uploads/products/${image}`}
                       alt="product"
-                      className="w-full h-[150px] md:h-full rounded-3xl object-cover"
+                      className="w-full h-[150px] md:h-full rounded-3xl object-cover cursor-pointer"
                     />
                   ))}
                 </div>

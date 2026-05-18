@@ -9,6 +9,8 @@ import Modal from "@/components/ui/Modal";
 import ProductDetails from "@/components/vendor/products/ProductDetails";
 import { number } from "zod";
 
+import ProductDetailsSkeleton from "@/components/ui/skeletons/vendor/products/ProductDetailsSkeleton";
+
 interface Product {
   id: string;
   name: string;
@@ -51,6 +53,7 @@ export default function ProductDetail() {
 
   //handle edit product - needs to be moved to ProductRow and lifted up
   const handleEditProdcut = (id: string) => {
+    console.log(id)
     navigate(`/vendor/dashboard/edit-product/${id}`);
   };
 
@@ -134,11 +137,11 @@ export default function ProductDetail() {
          views: 4300,
        };
 
-       console.log("product details data", prod);
+      
 
        setProduct(prod);
      } catch (err) {
-       console.log("FETCH ERROR:", err);
+       
      }
    };
 
@@ -201,12 +204,16 @@ export default function ProductDetail() {
           </button>
         </div>
       </Modal>
-      <ProductDetails
-        onDeleteProduct={handleDeleteProduct}
-        onCloneProduct={handleProductClone}
-        onEditProduct={handleEditProdcut}
-        product={product!}
-      />
+
+      {loading && <ProductDetailsSkeleton />}
+      {!loading && product && (
+        <ProductDetails
+          onDeleteProduct={handleDeleteProduct}
+          onCloneProduct={handleProductClone}
+          onEditProduct={handleEditProdcut}
+          product={product!}
+        />
+      )}
     </div>
   );
 }
