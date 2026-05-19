@@ -10,6 +10,7 @@ import ProductDetails from "@/components/vendor/products/ProductDetails";
 import { number } from "zod";
 
 import ProductDetailsSkeleton from "@/components/ui/skeletons/vendor/products/ProductDetailsSkeleton";
+import ErrorState from "@/components/ui/Error";
 
 interface Product {
   id: string;
@@ -37,7 +38,7 @@ export default function ProductDetail() {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null,
   );
-  const [product, setProduct] = useState<Product >();
+  const [product, setProduct] = useState<Product>();
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -53,7 +54,7 @@ export default function ProductDetail() {
 
   //handle edit product - needs to be moved to ProductRow and lifted up
   const handleEditProdcut = (id: string) => {
-    console.log(id)
+    console.log(id);
     navigate(`/vendor/dashboard/edit-product/${id}`);
   };
 
@@ -63,6 +64,21 @@ export default function ProductDetail() {
     loading: cloneLoading,
     error: cloneError,
   } = useApi(`${API_URL}/vendor/product/clone`);
+
+  // API hook for toggling visibility
+  const {
+    patch: visibilityPatch,
+    loading: visibilityLoading,
+    error: visibilityError,
+  } = useApi(`${API_URL}/vendor/product/visible/update`);
+  
+
+  // API hooks for updating product pod status
+  const {
+    patch,
+    loading: podLoading,
+    error: podError,
+  } = useApi(`${API_URL}/vendor/product/pod/update`);
 
   //handle delete product - needs to be moved to ProductRow and lifted up
   const handleDeleteProduct = async (id: string) => {
@@ -100,55 +116,91 @@ export default function ProductDetail() {
     }
   };
 
- useEffect(() => {
-   const fetchDashboard = async () => {
-     try {
-       const data = await get();
-
-       console.log(data);
-
-       const productId = data.product?._id;
-
-       const prod = {
-         id: productId,
-         name: data.product?.name,
-         sku: productId?.slice(-6).toUpperCase(),
-         images: data.product?.images || [],
-         price: data.product?.price,
-         stock: data.product?.stock,
-         status: data.product?.status,
-         pod: data.product?.pod,
-         visible: data.product?.visible,
-         description: data.product?.description,
-         category: data.product?.category,
-         condition: data.product?.condition,
-
-         createdAt: new Date(data.product?.created_at).toLocaleDateString(
-           "en-US",
-           {
-             month: "short",
-             day: "numeric",
-             year: "numeric",
-           },
-         ),
-
-         sales: 43,
-         revenue: 43000,
-         views: 4300,
-       };
-
+  //for visibility toggle - needs to be moved to ProductRow and lifted up
+  const handleVisibilityToggle = async (productId: string, value: boolean) => {
+    
+    try {
+      // optimistic UI update
       
+      setProduct((prev) =>
+        (prev?.id === productId ? { ...prev, visible: value }: prev),
+      );
+      // send to backend
+      await visibilityPatch({
+        visible: value,
+        id: productId,
+      });
+    } catch (err) {
+      //rollback if failed
+      setProduct((prev) =>
+        (prev?.id === productId ? { ...prev, visible: !value }: prev),
+      );
+      toast.error("operation failed, check your network connection");
+    }
+  
+  }
+  //for POD toggle - needs to be moved to ProductRow and lifted up
+ 
 
-       setProduct(prod);
-     } catch (err) {
-       
-     }
-   };
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const data = await get();
 
-   fetchDashboard();
- }, []);
+        console.log(data);
 
+        const productId = data.product?._id;
 
+        const prod = {
+          id: productId,
+          name: data.product?.name,
+          sku: productId?.slice(-6).toUpperCase(),
+          images: data.product?.images || [],
+          price: data.product?.price,
+          stock: data.product?.stock,
+          status: data.product?.status,
+          pod: data.product?.pod,
+          visible: data.product?.visible,
+          description: data.product?.description,
+          category: data.product?.category,
+          condition: data.product?.condition,
+
+          createdAt: new Date(data.product?.created_at).toLocaleDateString(
+            "en-US",
+            {
+              month: "short",
+              day: "numeric",
+              year: "numeric",
+            },
+          ),
+
+          sales: 43,
+          revenue: 43000,
+          views: 4300,
+        };
+
+        setProduct(prod);
+      } catch (err) {}
+    };
+
+    fetchDashboard();
+  }, []);
+
+  useEffect(() => {
+    if (error) {
+      toast.error("something went wrong, check your network connection!!!");
+    }
+  }, [error]);
+
+  if (error) {
+    return (
+      <ErrorState
+        title="Failed to load products"
+        message={error.message}
+        onRetry={get}
+      />
+    );
+  }
 
   return (
     <div className="bg-background-light min-h-screen p-6 md:p-10 max-w-7xl mx-auto">

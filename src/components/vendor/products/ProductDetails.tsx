@@ -22,33 +22,13 @@ interface Product {
   views: number;
 }
 
-const products = {
-  id: "PRD-2026-001",
-  name: "Premium Leather Office Chair",
-  sku: "AHM-CH-8821",
-  description:
-    "Modern ergonomic leather office chair designed for comfort and productivity. Features adjustable height, lumbar support, premium wheels, and durable metal frame.",
-  price: 125000,
-  stock: 12,
-  category: "Furniture",
-  condition: "New",
-  pod: true,
-  visible: true,
-  createdAt: "May 14, 2026",
-  sales: 48,
-  revenue: 6000000,
-  views: 1240,
-  images: [
-    "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?q=80&w=1200&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?q=80&w=1200&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1549187774-b4e9b0445b41?q=80&w=1200&auto=format&fit=crop",
-  ],
-};
+
 
 interface ProductDetailsProps {
   onEditProduct: (id: string) => void;
   onCloneProduct: (id: string) => void;
   onDeleteProduct: (id: string) => void;
+  
   product: Product;
 }
 
@@ -57,6 +37,7 @@ export default function ProductDetails({
   onEditProduct,
   onCloneProduct,
   onDeleteProduct,
+
 }: ProductDetailsProps) {
   const { id } = useParams();
 
@@ -71,6 +52,10 @@ export default function ProductDetails({
   const handleDeleteProduct = () => {
     onDeleteProduct(product?.id);
   };
+
+  // const handleToggleVisible = () => {
+  //   onToggleVisible(product?.id);
+  // }
 
   const handleImageClick = (image: string) => {
     // Open the clicked image in a new tab
@@ -241,6 +226,7 @@ export default function ProductDetails({
 
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
+                  
                     type="checkbox"
                     checked={product?.pod}
                     readOnly

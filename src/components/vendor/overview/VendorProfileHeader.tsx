@@ -30,10 +30,10 @@ export default function VendorProfileHeader({
   reviewCount = 128,
 }: VendorProfileHeaderProps) {
 
-  const storeName = vendor.store_name || "Lagos Fashion Hub";
-  const city = vendor.location?.city || "Lagos";
-  const state = vendor.location?.state || "Nigeria";
-  const isVerified = vendor.verificationStatus || "verified";
+  const storeName = vendor.store_name ;
+  const city = vendor.location?.city ;
+  const state = vendor.location?.state ;
+  const isVerified = vendor.verificationStatus ;
   const category = vendor.category
 
   return (

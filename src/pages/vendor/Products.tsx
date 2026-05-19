@@ -44,6 +44,7 @@ export default function Products() {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null,
   );
+ const [callGet, setCallGet] = useState(false)
 
   const navigate = useNavigate();
 
@@ -64,7 +65,7 @@ export default function Products() {
     error: delError,
   } = useApi(`${API_URL}/product/${selectedProductId}/delete`);
 
-  // API hooks for updating product
+  // API hooks for updating product pod status
   const {
     patch,
     loading: podLoading,
@@ -235,7 +236,7 @@ export default function Products() {
     };
 
     fetchDashboard();
-  }, [url]);
+  }, [url,callGet]);
 
   useEffect(() => {
     if (error) {
@@ -243,12 +244,16 @@ export default function Products() {
     }
   }, [error]);
 
+ const  handleGet = () => {
+  setCallGet(prev => !prev)
+ }
+
   if (error) {
     return (
       <ErrorState
         title="Failed to load products"
         message={error.message}
-        onRetry={get}
+        onRetry={handleGet}
       />
     );
   }
