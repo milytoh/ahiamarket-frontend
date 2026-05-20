@@ -18,14 +18,68 @@ import * as z from "zod";
 
 import Spinner from "@/components/ui/Spinner";
 
+const categories = [
+  "Fashion & Look",
+  "Electronics & Gadgets",
+  "Home & Kitchen",
+  "Beauty & Personal Care",
+  "Food & Groceries",
+  "Health & Wellness",
+  "Jewelry & Accessories",
+  "Books & Stationery",
+  "Automotive",
+  "Sports & Outdoors",
+  "Others",
+];
+
+const nigeriaStates = [
+  "Abia",
+  "Adamawa",
+  "Akwa Ibom",
+  "Anambra",
+  "Bauchi",
+  "Bayelsa",
+  "Benue",
+  "Borno",
+  "Cross River",
+  "Delta",
+  "Ebonyi",
+  "Edo",
+  "Ekiti",
+  "Enugu",
+  "FCT - Abuja",
+  "Gombe",
+  "Imo",
+  "Jigawa",
+  "Kaduna",
+  "Kano",
+  "Katsina",
+  "Kebbi",
+  "Kogi",
+  "Kwara",
+  "Lagos",
+  "Nasarawa",
+  "Niger",
+  "Ogun",
+  "Ondo",
+  "Osun",
+  "Oyo",
+  "Plateau",
+  "Rivers",
+  "Sokoto",
+  "Taraba",
+  "Yobe",
+  "Zamfara",
+];
+
 const profileSchema = z.object({
   username: z
     .string()
     .min(3, "Username must be at least 3 characters")
     .max(30, "Username too long")
     .regex(
-      /^[a-z0-9-]+$/,
-      "Username can only contain lowercase letters, numbers and hyphens",
+      /^[a-z0-9_-]+$/,
+      "Username can only contain lowercase letters, numbers, hyphens and underscores",
     ),
 
   store_name: z.string().min(3, "Store name must be at least 3 characters"),
@@ -37,7 +91,7 @@ const profileSchema = z.object({
     .min(20, "Description must be at least 20 characters")
     .max(500, "Description too long"),
 
-  phone: z.string().min(7, "Phone number is invalid"),
+  // phone: z.string().min(7, "Phone number is invalid"),
 
   email: z.string().email("Invalid email address"),
 
@@ -61,9 +115,10 @@ interface VendorProfileFormProps {
     cover_url: string;
     avatar_img: string;
     username?: string;
-    description?: string;
     phone?: string;
     email?: string;
+    vendorUsername: string;
+    bio: string;
 
     location?: {
       city?: string;
@@ -85,11 +140,11 @@ export default function EditVendorProfileForm({
   loading = false,
 }: VendorProfileFormProps) {
   const [logoPreview, setLogoPreview] = useState(
-    "https://api.dicebear.com/7.x/adventurer/svg?seed=Vendor",
+    `${vendorData?.logo_url || "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop"}`,
   );
 
   const [coverPreview, setCoverPreview] = useState(
-    "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1200",
+    `${vendorData?.cover_url || vendorData?.avatar_img || "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1200"}`,
   );
 
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -108,7 +163,7 @@ export default function EditVendorProfileForm({
       store_name: "",
       category: "",
       description: "",
-      phone: "",
+      // phone: "",
       email: "",
       city: "",
       state: "",
@@ -121,11 +176,11 @@ export default function EditVendorProfileForm({
     if (!vendorData) return;
 
     reset({
-      username: vendorData.username || "",
+      username: vendorData.vendorUsername || "",
       store_name: vendorData.store_name || "",
       category: vendorData.category || "",
-      description: vendorData.description || "",
-      phone: vendorData.phone || "",
+      description: vendorData.bio || "",
+      // phone: vendorData.phone || "",
       email: vendorData.email || "",
       city: vendorData.location?.city || "",
       state: vendorData.location?.state || "",
@@ -170,7 +225,7 @@ export default function EditVendorProfileForm({
       formData.append("store_name", data.store_name);
       formData.append("category", data.category);
       formData.append("description", data.description);
-      formData.append("phone", data.phone);
+      // formData.append("phone", data.phone);
       formData.append("email", data.email);
 
       formData.append("city", data.city);
@@ -196,9 +251,6 @@ export default function EditVendorProfileForm({
       <form onSubmit={handleSubmit(submitHandler)} className="space-y-10">
         {/* HEADER */}
         <section className="bg-white rounded-3xl overflow-hidden border border-border-light shadow-sm">
-          
-        
-
           {/* Cover Image */}
           <div className="relative h-64 rounded-3xl overflow-hidden group">
             <img
@@ -302,7 +354,8 @@ export default function EditVendorProfileForm({
               <p className="text-xs text-slate-400 mt-2">
                 Public URL:
                 <span className="ml-1 font-semibold text-[#05b384]">
-                  ahiamarket.com/shop/
+                  `ahiamarket.com/$shop/
+                  {vendorData?.vendorUsername || "your-username"}`
                 </span>
               </p>
             </div>
@@ -331,7 +384,7 @@ export default function EditVendorProfileForm({
             </div>
 
             {/* CATEGORY */}
-            <div>
+            {/* <div>
               <label className="block mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">
                 Category
               </label>
@@ -351,6 +404,33 @@ export default function EditVendorProfileForm({
                   {errors.category.message}
                 </p>
               )}
+            </div> */}
+
+            <div>
+              <label className="block mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">
+                Category
+              </label>
+
+              <div className="relative">
+                <MdCategory className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 z-10" />
+
+                <select
+                  {...register("state")}
+                  className="w-full pl-12 pr-4 py-4 rounded-2xl border border-border-light bg-background-light outline-none focus:ring-2 focus:ring-[#05b384] appearance-none"
+                >
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {errors.category && (
+                <p className="text-red-500 text-sm mt-2">
+                  {errors.category.message}
+                </p>
+              )}
             </div>
 
             {/* PHONE */}
@@ -363,17 +443,18 @@ export default function EditVendorProfileForm({
                 <MdPhone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
 
                 <input
-                  {...register("phone")}
+                  // {...register("phone")}
+                  disabled
                   placeholder="+234..."
                   className="w-full pl-12 pr-4 py-4 rounded-2xl border border-border-light bg-background-light outline-none focus:ring-2 focus:ring-[#05b384]"
                 />
               </div>
 
-              {errors.phone && (
+              {/* {errors.phone && (
                 <p className="text-red-500 text-sm mt-2">
                   {errors.phone.message}
                 </p>
-              )}
+              )} */}
             </div>
 
             {/* EMAIL */}
@@ -388,6 +469,7 @@ export default function EditVendorProfileForm({
                 <input
                   {...register("email")}
                   placeholder="store@email.com"
+                  readOnly
                   className="w-full pl-12 pr-4 py-4 rounded-2xl border border-border-light bg-background-light outline-none focus:ring-2 focus:ring-[#05b384]"
                 />
               </div>
@@ -402,7 +484,7 @@ export default function EditVendorProfileForm({
             {/* DESCRIPTION */}
             <div className="md:col-span-2">
               <label className="block mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">
-                Description
+                Bio
               </label>
 
               <textarea
@@ -449,12 +531,21 @@ export default function EditVendorProfileForm({
             </div>
 
             {/* STATE */}
+            {/* STATE */}
             <div>
-              <input
+
+              <select
                 {...register("state")}
-                placeholder="State"
-                className="w-full px-4 py-4 rounded-2xl border border-border-light bg-background-light outline-none focus:ring-2 focus:ring-[#05b384]"
-              />
+                className="w-full px-4 py-4 rounded-2xl border border-border-light bg-background-light outline-none focus:ring-2 focus:ring-[#05b384] appearance-none"
+              >
+               
+
+                {nigeriaStates.map((state) => (
+                  <option key={state} value={state}>
+                    {state}
+                  </option>
+                ))}
+              </select>
 
               {errors.state && (
                 <p className="text-red-500 text-sm mt-2">
@@ -466,8 +557,10 @@ export default function EditVendorProfileForm({
             {/* COUNTRY */}
             <div>
               <input
-                {...register("country")}
+                // {...register("country")}
+                value={"Nigeria"}
                 placeholder="Country"
+                readOnly
                 className="w-full px-4 py-4 rounded-2xl border border-border-light bg-background-light outline-none focus:ring-2 focus:ring-[#05b384]"
               />
 

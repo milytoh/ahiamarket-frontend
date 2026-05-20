@@ -53,7 +53,7 @@ export default function StoreIdentityForm({
   };
 
   const categories = [
-    "Fashion & Apparel",
+    "Fashion & Look",
     "Electronics & Gadgets",
     "Home & Kitchen",
     "Beauty & Personal Care",
