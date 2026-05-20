@@ -1,5 +1,6 @@
 "use client";
 
+import { useNavigate } from "react-router-dom";
 import React from "react";
 import {
   MdLocationOn,
@@ -9,10 +10,14 @@ import {
   MdVerified,
 } from "react-icons/md";
 interface VendorProfileHeaderProps {
+ 
   vendor: {
-    store_name?: string;
-    logo_url?: string;
-    category?: string
+    _id: string;
+    store_name: string;
+    logo_url: string;
+    category: string;
+    cover_url: string;
+    avatar_img: string;
     location?: {
       city?: string;
       state?: string;
@@ -29,12 +34,17 @@ export default function VendorProfileHeader({
   rating = 4.2,
   reviewCount = 128,
 }: VendorProfileHeaderProps) {
+ const navigate = useNavigate();
 
-  const storeName = vendor.store_name ;
-  const city = vendor.location?.city ;
-  const state = vendor.location?.state ;
-  const isVerified = vendor.verificationStatus ;
-  const category = vendor.category
+  const storeName = vendor?.store_name;
+  const city = vendor?.location?.city;
+  const state = vendor?.location?.state;
+  const isVerified = vendor?.verificationStatus;
+  const category = vendor?.category;
+  const coverImgUrl = vendor?.cover_url || vendor?.avatar_img;
+  const handleVendorProfileEdit = () => {
+    navigate(`/vendor/dashboard/profile/edit/${vendor._id}`);
+  };
 
   return (
     <section className="relative rounded-3xl overflow-hidden bg-white shadow-sm border border-border-light">
@@ -42,7 +52,7 @@ export default function VendorProfileHeader({
       <div
         className="h-52 w-full bg-cover bg-center"
         style={{
-          backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuDkZX6fj0vcXsAqQao5S-eBI1RPDFwoUk8zp3uzm-AapVwMOHwmz-GaQh-DyMQ4PnXx8m2K_BMqsv8qyWUXRsOuu4cxX3-CksI8Zmz8eY-IGZ4RbTjUzcsRXyVKIF-3mWKUZChcYcC4mem-bJpPU8UugRgc74oMI8o7isNmF41kSbYXKKdOf-X8Jy1mvlVxxDYO9MSSqDbfblPF2dWEimdh2aH6tBE1GXi7_5G84BYyL4qeKvCeNcqLhmDkj8vxaX6FbelJK-tiGaSu')`,
+          backgroundImage: `url('${coverImgUrl}')`,
         }}
       />
 
@@ -51,7 +61,7 @@ export default function VendorProfileHeader({
         <div className="relative">
           <img
             src={
-              vendor.logo_url ||
+              vendor?.logo_url ||
               "https://lh3.googleusercontent.com/aida-public/AB6AXuCZ3deY2Hqh8qBkrhjSCIckY8zRDYoG-7bP691haOLoONjO_Gyi_H_IP7LXejheIHWKZrh_RowutO-EfhalaqSXtFqE-_nvLyWtkvHeZXUVPUJy6MXb0yM035t2S6a0mnLXfMLds7DpMaxr1xB4PiX3E0Ng69l8Sma_9RWSTnU-xlQmX99GbKK1KrCqAzojIXaLZdwjbyEjdBSIFZu1okHXfQpgqhUFBZV15VY34AzxNlU9vc7z2f1kgaQu7kPN_tiM9279MNAu66nS"
             }
             alt={storeName}
@@ -70,7 +80,10 @@ export default function VendorProfileHeader({
             <h2 className="text-3xl font-extrabold tracking-tight text-text-main">
               {storeName}
             </h2>
-            <button className="flex items-center gap-2 text-sm font-bold text-[#05b384] hover:text-brand-green transition-colors">
+            <button 
+              className="flex items-center gap-2 text-sm font-bold text-[#05b384] hover:text-brand-green transition-colors"
+              onClick={handleVendorProfileEdit}
+            >
               <MdEdit size={18} /> Edit Profile
             </button>
           </div>
@@ -83,7 +96,7 @@ export default function VendorProfileHeader({
             <div className="w-1 h-1 bg-slate-300 rounded-full" />
             <div className="flex items-center gap-1">
               <MdCategory className="text-[#05b384]" />
-            {category}
+              {category}
             </div>
           </div>
 

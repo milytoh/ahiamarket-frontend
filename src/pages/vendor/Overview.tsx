@@ -27,9 +27,12 @@ import { toast } from "react-toastify";
 
 export interface VendorDashboardOverview {
   vendor: {
+    _id: string;
     store_name: string;
-    logo_url?: string;
-    category?: string;
+    logo_url: string;
+    category: string;
+    cover_url: string;
+    avatar_img: string;
     location?: {
       city: string;
       state: string;
@@ -80,8 +83,6 @@ export interface VendorDashboardOverview {
   }>;
 }
 
-
-
 export default function OverviewPage() {
   const [vendorDashboardOverview, setVendorDashboardOverview] =
     useState<VendorDashboardOverview | null>(null);
@@ -102,21 +103,21 @@ export default function OverviewPage() {
     fetchDashboard();
   }, []);
 
-   useEffect(() => {
-      if (error) {
-        toast.error("something went wrong, check your network connection");
-      }
-    }, [error]);
-  
- if (error) {
-   return (
-     <ErrorState
-       title="Failed to load"
-       message={error.message}
-       onRetry={get}
-     />
-   );
- }
+  useEffect(() => {
+    if (error) {
+      toast.error("something went wrong, check your network connection");
+    }
+  }, [error]);
+
+  if (error) {
+    return (
+      <ErrorState
+        title="Failed to load"
+        message={error.message}
+        onRetry={get}
+      />
+    );
+  }
 
   return (
     <div className="p-6 md:p-8 space-y-8">
@@ -124,7 +125,7 @@ export default function OverviewPage() {
         <VendorProfileHeaderSkeleton />
       ) : (
         <VendorProfileHeader
-          vendor={vendorDashboardOverview?.vendor || {}}
+          vendor={vendorDashboardOverview?.vendor!}
           rating={4.2} // You can pull from stats if you add it later
           reviewCount={128}
         />

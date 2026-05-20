@@ -21,7 +21,7 @@ import Products from "@/pages/vendor/Products";
 import AddProduct from "@/pages/vendor/AddProduct";
 import EditProduct from "@/pages/vendor/EditProduct";
 import ProductDetails from "@/pages/vendor/ProductDetails";
-
+import EditVendorProfile from "@/pages/vendor/EditVendorProfile";
 
 const AppRoutes = () => {
   return (
@@ -67,10 +67,23 @@ const AppRoutes = () => {
       <Route element={<ProtectedRoute />}>
         <Route path="/vendor/dashboard" element={<VendorDashboardLayout />}>
           <Route index element={<OverviewPage />} />
+          <Route
+            path="/vendor/dashboard/profile/edit/:id"
+            element={<EditVendorProfile />}
+          />
           <Route path="/vendor/dashboard/products" element={<Products />} />
-          <Route path="/vendor/dashboard/add-product" element={<AddProduct />} />
-          <Route path="/vendor/dashboard/edit-product/:id" element={<EditProduct />} />
-          <Route path="/vendor/dashboard/product/details/:id" element={<ProductDetails />} />
+          <Route
+            path="/vendor/dashboard/add-product"
+            element={<AddProduct />}
+          />
+          <Route
+            path="/vendor/dashboard/edit-product/:id"
+            element={<EditProduct />}
+          />
+          <Route
+            path="/vendor/dashboard/product/details/:id"
+            element={<ProductDetails />}
+          />
         </Route>
       </Route>
     </Routes>
