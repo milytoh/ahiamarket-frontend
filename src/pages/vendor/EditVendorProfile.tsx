@@ -34,6 +34,7 @@ interface VendorProfilePro {
 export default function EditVendorProfile() {
   const [vendorData, setVendorData] =
     useState<VendorProfilePro["vendorData"]>();
+  const [callGet, setCallGet] = useState(false);
 
   const { id } = useParams();
 
@@ -59,13 +60,14 @@ export default function EditVendorProfile() {
     };
 
     fetchDashboard();
-  }, []);
+  }, [callGet]);
 
   const handleProfileUpdate = async (formData: FormData): Promise<void> => {
     try {
       const response = await put(formData);
 
       toast.success("Profile updated successfully");
+      setCallGet((prev) => !prev);
     } catch (err: any) {
       toast.error(
         `${err.message || "Failed to update profile. Please try again."}`,
@@ -81,12 +83,18 @@ export default function EditVendorProfile() {
     }
   }, [error]);
 
+
+  const handleCallGet = () => {
+    setCallGet((prev) => !prev);
+  }
+
+
   if (error) {
     return (
       <ErrorState
         title="Failed to load"
         message={error.message}
-        onRetry={get}
+        onRetry={handleCallGet}
       />
     );
   }
