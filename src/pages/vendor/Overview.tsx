@@ -105,7 +105,7 @@ export default function OverviewPage() {
 
   useEffect(() => {
     if (error) {
-      toast.error("something went wrong, check your network connection");
+      toast.error(`${error.message || "something went wrong, check your network connection"}`);
     }
   }, [error]);
 

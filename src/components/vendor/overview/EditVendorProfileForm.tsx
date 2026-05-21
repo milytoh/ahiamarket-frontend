@@ -89,7 +89,7 @@ const profileSchema = z.object({
   description: z
     .string()
     .min(20, "Description must be at least 20 characters")
-    .max(500, "Description too long"),
+    .max(600, "Description too long"),
 
   // phone: z.string().min(7, "Phone number is invalid"),
 
@@ -224,14 +224,13 @@ export default function EditVendorProfileForm({
       formData.append("username", data.username);
       formData.append("store_name", data.store_name);
       formData.append("category", data.category);
-      formData.append("description", data.description);
+      formData.append("bio", data.description);
       // formData.append("phone", data.phone);
       formData.append("email", data.email);
 
       formData.append("city", data.city);
       formData.append("state", data.state);
-      formData.append("country", data.country);
-
+      
       if (logoFile) {
         formData.append("logo", logoFile);
       }
