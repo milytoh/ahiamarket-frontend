@@ -1,4 +1,5 @@
-"use client";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 import React, { useEffect, useState } from "react";
 import {
@@ -140,15 +141,17 @@ export default function EditVendorProfileForm({
   loading = false,
 }: VendorProfileFormProps) {
   const [logoPreview, setLogoPreview] = useState(
-    `${vendorData?.logo_url || "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop"}`,
+    `${API_URL}/uploads/vendors/profile/${vendorData?.logo_url} || "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop"}`,
   );
 
   const [coverPreview, setCoverPreview] = useState(
-    `${vendorData?.cover_url || vendorData?.avatar_img || "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1200"}`,
+    `${API_URL}/uploads/vendors/cover/${vendorData?.cover_url} || ${vendorData?.avatar_img}  || "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop"}`,
   );
 
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
+
+  console.log(coverPreview)
 
   const {
     register,
@@ -187,12 +190,16 @@ export default function EditVendorProfileForm({
       country: vendorData.location?.country || "Nigeria",
     });
 
-    if (vendorData.logo_url) {
-      setLogoPreview(vendorData.logo_url);
+    if (vendorData.cover_url) {
+      setCoverPreview(
+        `${API_URL}/uploads/vendors/cover/${vendorData.cover_url}`,
+      );
     }
 
-    if (vendorData.cover_url) {
-      setCoverPreview(vendorData.cover_url);
+    if (vendorData.logo_url) {
+      setLogoPreview(
+        `${API_URL}/uploads/vendors/profile/${vendorData.logo_url}`,
+      );
     }
   }, [vendorData, reset]);
 
@@ -232,11 +239,11 @@ export default function EditVendorProfileForm({
       formData.append("state", data.state);
       
       if (logoFile) {
-        formData.append("logo", logoFile);
+        formData.append("profileImage", logoFile);
       }
 
       if (coverFile) {
-        formData.append("cover", coverFile);
+        formData.append("coverImage", coverFile);
       }
 
       await onSubmit(formData);
@@ -253,11 +260,7 @@ export default function EditVendorProfileForm({
           {/* Cover Image */}
           <div className="relative h-64 rounded-3xl overflow-hidden group">
             <img
-              src={
-                coverPreview ||
-                vendorData?.cover_url ||
-                "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1600&auto=format&fit=crop"
-              }
+              src={coverPreview}
               alt="Cover"
               className="w-full h-full object-cover"
             />

@@ -34,15 +34,13 @@ interface VendorProfilePro {
 export default function EditVendorProfile() {
   const [vendorData, setVendorData] =
     useState<VendorProfilePro["vendorData"]>();
-  
+
   const { id } = useParams();
 
   //using custom hook
   const { get, loading, error } = useApi(
     `${API_URL}/vendor/dashboard/overview`,
   );
-
-
 
   const {
     put,
@@ -57,9 +55,7 @@ export default function EditVendorProfile() {
 
         setVendorData(response.data?.vendor);
         console.log(response.data?.vendor);
-      } catch (err) {
-       
-      }
+      } catch (err) {}
     };
 
     fetchDashboard();
@@ -69,30 +65,31 @@ export default function EditVendorProfile() {
     try {
       const response = await put(formData);
 
-      console.log(response);
+      toast.success("Profile updated successfully");
     } catch (err: any) {
-      toast.error(`${err.message || "Failed to update profile. Please try again."}`);
-    } 
+      toast.error(
+        `${err.message || "Failed to update profile. Please try again."}`,
+      );
+    }
   };
 
+  useEffect(() => {
+    if (error) {
+      toast.error(
+        `${error.message || "something went wrong, check your network connection"}`,
+      );
+    }
+  }, [error]);
 
-   useEffect(() => {
-     if (error) {
-       toast.error(
-         `${error.message || "something went wrong, check your network connection"}`,
-       );
-     }
-   }, [error]);
-
-   if (error) {
-     return (
-       <ErrorState
-         title="Failed to load"
-         message={error.message}
-         onRetry={get}
-       />
-     );
-   }
+  if (error) {
+    return (
+      <ErrorState
+        title="Failed to load"
+        message={error.message}
+        onRetry={get}
+      />
+    );
+  }
 
   return (
     <>
@@ -107,5 +104,3 @@ export default function EditVendorProfile() {
     </>
   );
 }
-
-
