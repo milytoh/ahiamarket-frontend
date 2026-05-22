@@ -145,7 +145,7 @@ export default function EditVendorProfileForm({
   );
 
   const [coverPreview, setCoverPreview] = useState(
-    `${API_URL}/uploads/vendors/cover/${vendorData?.cover_url} || ${vendorData?.avatar_img}  || "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop"}`,
+    `${API_URL}/uploads/vendors/cover/${vendorData?.cover_url} || ${API_URL}/uploads/vendors/cover/${vendorData?.avatar_img} || "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop"}`,
   );
 
   const [logoFile, setLogoFile] = useState<File | null>(null);

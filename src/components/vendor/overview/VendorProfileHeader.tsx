@@ -1,4 +1,4 @@
-"use client";
+const API_URL = import.meta.env.VITE_API_URL;
 
 import { useNavigate } from "react-router-dom";
 import React from "react";
@@ -10,7 +10,6 @@ import {
   MdVerified,
 } from "react-icons/md";
 interface VendorProfileHeaderProps {
- 
   vendor: {
     _id: string;
     store_name: string;
@@ -34,14 +33,23 @@ export default function VendorProfileHeader({
   rating = 4.2,
   reviewCount = 128,
 }: VendorProfileHeaderProps) {
- const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const storeName = vendor?.store_name;
   const city = vendor?.location?.city;
   const state = vendor?.location?.state;
   const isVerified = vendor?.verificationStatus;
   const category = vendor?.category;
-  const coverImgUrl = vendor?.cover_url || vendor?.avatar_img;
+  const coverImgUrl =
+    ` ${API_URL}/uploads/vendors/cover/${vendor?.cover_url} ` ||
+    ` ${API_URL}/uploads/vendors/cover/${vendor?.avatar_img} `;
+    "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop";
+  
+  
+  const logoUrl =
+    `${API_URL}/uploads/vendors/profile/${vendor?.logo_url}` ||
+    "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop";
+
   const handleVendorProfileEdit = () => {
     navigate(`/vendor/dashboard/profile/edit/${vendor._id}`);
   };
@@ -60,10 +68,7 @@ export default function VendorProfileHeader({
         {/* Profile Picture */}
         <div className="relative">
           <img
-            src={
-              vendor?.logo_url ||
-              "https://lh3.googleusercontent.com/aida-public/AB6AXuCZ3deY2Hqh8qBkrhjSCIckY8zRDYoG-7bP691haOLoONjO_Gyi_H_IP7LXejheIHWKZrh_RowutO-EfhalaqSXtFqE-_nvLyWtkvHeZXUVPUJy6MXb0yM035t2S6a0mnLXfMLds7DpMaxr1xB4PiX3E0Ng69l8Sma_9RWSTnU-xlQmX99GbKK1KrCqAzojIXaLZdwjbyEjdBSIFZu1okHXfQpgqhUFBZV15VY34AzxNlU9vc7z2f1kgaQu7kPN_tiM9279MNAu66nS"
-            }
+            src={logoUrl}
             alt={storeName}
             className="w-32 h-32 rounded-2xl border-4 border-white object-cover shadow-xl"
           />
@@ -80,7 +85,7 @@ export default function VendorProfileHeader({
             <h2 className="text-3xl font-extrabold tracking-tight text-text-main">
               {storeName}
             </h2>
-            <button 
+            <button
               className="flex items-center gap-2 text-sm font-bold text-[#05b384] hover:text-brand-green transition-colors"
               onClick={handleVendorProfileEdit}
             >

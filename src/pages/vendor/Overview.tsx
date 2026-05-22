@@ -95,7 +95,7 @@ export default function OverviewPage() {
     const fetchDashboard = async () => {
       try {
         const response = await get();
-
+        console.log(response.data);
         setVendorDashboardOverview(response.data);
       } catch (err) {}
     };
