@@ -223,7 +223,7 @@ const ProfileMobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
 
           {/* Bottom Actions */}
           <footer className="p-4 border-t border-slate-100 space-y-2">
-            {!vendor && !loading && (
+            {!vendor && !loading && !error && (
               <p className="text-sm text-charcoal/70 font-medium mb-4 leading-relaxed">
                 Sell your Products to the right people that needs it.
               </p>

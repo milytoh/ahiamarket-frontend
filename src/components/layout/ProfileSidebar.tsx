@@ -86,7 +86,7 @@ const ProfileSidebar: React.FC = () => {
   return (
     <aside
       className="
-        hidden lg:flex w-[25%] flex-col 
+        hidden lg:flex w-[20%] flex-col 
         bg-white p-6 border-r border-slate-100
         sticky top-0
         h-[calc(100vh)]
@@ -137,12 +137,12 @@ const ProfileSidebar: React.FC = () => {
       {/*  FIXED BOTTOM CTA */}
       <div className="pt-4 shrink-0">
         <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10">
-          {!vendor && !loading && (
+          {!vendor && !loading && !error && (
             <p className="text-sm text-charcoal/70 font-medium mb-4 leading-relaxed">
               Sell your Products to the right people that needs it.
             </p>
           )}
-          {!vendor && !loading && (
+          {!vendor && !loading && error && (
             <button
               onClick={handlerVendor}
               className="w-full h-10 rounded-xl bg-primary text-white text-sm font-bold hover:bg-[#00a383] transition-all shadow-md shadow-primary/20"

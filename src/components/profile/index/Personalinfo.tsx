@@ -45,7 +45,7 @@ const PersonalInfo: React.FC<InfoProp> = ({info}) => {
             <p className="text-slate-400 text-[10px] font-extrabold uppercase tracking-widest mb-1.5">
               {field.label}
             </p>
-            <p className="text-brand-orange text-sm font-bold truncate">
+            <p className="text-charcoal text-sm font-bold truncate">
               {field.value}
             </p>
           </div>

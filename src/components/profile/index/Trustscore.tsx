@@ -85,7 +85,7 @@ function getAccountTenure(timestamp: number): string {
               <div className="size-10 rounded-xl bg-primary/5 flex items-center justify-center text-primary shrink-0">
                 {item.icon}
               </div>
-              <p className="text-brand-orange/80 text-sm font-bold">{item.label}</p>
+              <p className="text-charcoal text-sm font-bold">{item.label}</p>
             </div>
             <p
               className={`text-sm font-extrabold whitespace-nowrap ${

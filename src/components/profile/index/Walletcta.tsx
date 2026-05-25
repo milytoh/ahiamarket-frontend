@@ -8,7 +8,7 @@ const WalletCTA: React.FC = () => {
         <div className="size-16 md:size-20 bg-primary/5 rounded-full flex items-center justify-center text-primary mb-6 ring-8 ring-primary/5">
           <MdAccountBalance className="text-[32px] md:text-[40px]" />
         </div>
-        <h3 className="text-brand-orange text-xl md:text-2xl font-extrabold mb-3">
+        <h3 className="text-charcoal-orange text-xl md:text-2xl font-extrabold mb-3">
           Connect Your Wallet
         </h3>
         <p className="text-charcoal/60 text-sm md:text-base font-medium mb-8 leading-relaxed">

@@ -90,9 +90,7 @@ const RecentActivities: React.FC<RecenActivitiesProp> = ({ activities }) => {
     <section className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
       {/* Header */}
       <div className="px-6 md:px-8 py-5 border-b border-slate-50">
-        <h3 className="text-brand-orange text-lg font-bold">
-          Recent Activities
-        </h3>
+        <h3 className="text-charcoal text-lg font-bold">Recent Activities</h3>
       </div>
 
       {/* Activities */}
