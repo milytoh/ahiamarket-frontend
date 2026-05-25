@@ -1,4 +1,8 @@
-import React, { useEffect } from "react";
+const API_URL = import.meta.env.VITE_API_URL;
+
+import { useApi } from "@/hooks/useApi";
+
+import React, { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store/hook";
@@ -7,7 +11,7 @@ import { logout } from "@/features/auth/authSlice";
 
 import { NavLink } from "react-router-dom";
 import { HiOutlineLogout } from "react-icons/hi";
-
+import Spinner from "../ui/Spinner";
 
 import {
   HiOutlineUser,
@@ -39,6 +43,7 @@ const MobileNavLink: React.FC<MobileNavLinkProps> = ({
   return (
     <NavLink
       to={to}
+      end
       onClick={onClick}
       className={({ isActive }) =>
         `
@@ -64,8 +69,33 @@ const ProfileMobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
 
   const logoutHandler = () => {
     dispatch(logout());
-   
+
     navigate("/login");
+  };
+
+  const [vendor, setVendor] = useState();
+
+  const { get, loading, error } = useApi(
+    `${API_URL}/vendor/dashboard/overview`,
+  );
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const response = await get();
+        setVendor(response.data.vendor);
+      } catch (err) {}
+    };
+
+    fetchDashboard();
+  }, []);
+
+  const handlerVendor = () => {
+    navigate("/profile/vendor/application");
+  };
+
+  const vendorDashboardHandler = () => {
+    navigate("/vendor/dashboard");
   };
 
   useEffect(() => {
@@ -193,12 +223,42 @@ const ProfileMobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
 
           {/* Bottom Actions */}
           <footer className="p-4 border-t border-slate-100 space-y-2">
-            <button className="w-full h-10 rounded-xl bg-primary text-white font-bold hover:bg-[#00a383] transition">
-              Appy for a Vendor
-            </button>
+            {!vendor && !loading && (
+              <p className="text-sm text-charcoal/70 font-medium mb-4 leading-relaxed">
+                Sell your Products to the right people that needs it.
+              </p>
+            )}
+            {!vendor && !loading && (
+              <button
+                onClick={handlerVendor}
+                className="w-full h-10 rounded-xl bg-primary text-white text-sm font-bold hover:bg-[#00a383] transition-all shadow-md shadow-primary/20"
+              >
+                Apply for a Vendor
+              </button>
+            )}
+            {vendor && !loading && (
+              <p className="text-sm text-charcoal/70 font-medium mb-4 leading-relaxed">
+                Manage your products, orders and sales from your vendor
+                dashboard.
+              </p>
+            )}
+            {vendor && !loading && (
+              <button
+                onClick={vendorDashboardHandler}
+                className="w-full h-10 rounded-xl bg-primary text-white text-sm font-bold hover:bg-[#00a383] transition-all shadow-md shadow-primary/20"
+              >
+                Vendor Dashboard
+              </button>
+            )}
+
+            {loading && (
+              <div className="flex items-center justify-center h-16">
+                <Spinner size="lg" />
+              </div>
+            )}
 
             <button
-              onClick={ logoutHandler}
+              onClick={logoutHandler}
               className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition"
             >
               <HiOutlineLogout className="text-xl" />

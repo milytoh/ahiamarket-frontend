@@ -1,4 +1,6 @@
-import React from "react";
+const API_URL = import.meta.env.VITE_API_URL;
+
+import { useApi } from "@/hooks/useApi";
 
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store/hook";
@@ -16,6 +18,8 @@ import {
 } from "react-icons/hi2";
 
 import { HiOutlineLogout } from "react-icons/hi";
+import { useEffect, useState } from "react";
+import Spinner from "../ui/Spinner";
 
 interface SidebarNavLinkProps {
   to: string;
@@ -24,17 +28,16 @@ interface SidebarNavLinkProps {
 }
 
 const SidebarNavLink: React.FC<SidebarNavLinkProps> = ({ to, icon, label }) => {
-
-
   return (
     <NavLink
       to={to}
+      end
       className={({ isActive }) =>
         `
         flex items-center gap-3 px-4 py-3 rounded-xl transition-all
         ${
           isActive
-            ? "text-brand-orange bg-brand-orange/10 font-bold"
+            ? "text-white bg-primary font-bold"
             : "text-slate-500 hover:text-charcoal hover:bg-slate-50 font-semibold"
         }
         `
@@ -46,10 +49,14 @@ const SidebarNavLink: React.FC<SidebarNavLinkProps> = ({ to, icon, label }) => {
   );
 };
 const ProfileSidebar: React.FC = () => {
-
+  const [vendor, setVendor] = useState();
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
+
+  const { get, loading, error } = useApi(
+    `${API_URL}/vendor/dashboard/overview`,
+  );
 
   const logoutHandler = () => {
     dispatch(logout());
@@ -57,9 +64,25 @@ const ProfileSidebar: React.FC = () => {
     navigate("/login");
   };
 
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const response = await get();
+        setVendor(response.data.vendor);
+       
+      } catch (err) {}
+    };
+
+    fetchDashboard();
+  }, []);
+
   const handlerVendor = () => {
-    navigate("/profile/vendor/application")
-  }
+    navigate("/profile/vendor/application");
+  };
+
+   const vendorDashboardHandler = () => {
+     navigate("/vendor/dashboard");
+   };
   return (
     <aside
       className="
@@ -91,12 +114,11 @@ const ProfileSidebar: React.FC = () => {
             icon={<HiOutlineWallet />}
             label="Wallet & Payments"
           />
-        
-          
+
           <SidebarNavLink
             to="/profile/transaction/history"
             icon={<HiOutlineClock />}
-             label="Transaction History"
+            label="Transaction History"
           />
 
           <SidebarNavLink
@@ -115,12 +137,38 @@ const ProfileSidebar: React.FC = () => {
       {/*  FIXED BOTTOM CTA */}
       <div className="pt-4 shrink-0">
         <div className="bg-primary/5 p-5 rounded-2xl border border-primary/10">
-          <p className="text-[11px] text-charcoal/70 font-medium mb-4 leading-relaxed">
-           Sell your Products to the right people that needs it.
-          </p>
-          <button onClick={handlerVendor} className="w-full h-10 rounded-xl bg-primary text-white text-sm font-bold hover:bg-[#00a383] transition-all shadow-md shadow-primary/20">
-            Appy for a Vendor
-          </button>
+          {!vendor && !loading && (
+            <p className="text-sm text-charcoal/70 font-medium mb-4 leading-relaxed">
+              Sell your Products to the right people that needs it.
+            </p>
+          )}
+          {!vendor && !loading && (
+            <button
+              onClick={handlerVendor}
+              className="w-full h-10 rounded-xl bg-primary text-white text-sm font-bold hover:bg-[#00a383] transition-all shadow-md shadow-primary/20"
+            >
+              Apply for a Vendor
+            </button>
+          )}
+          {vendor && !loading && (
+            <p className="text-sm text-charcoal/70 font-medium mb-4 leading-relaxed">
+              Manage your products, orders and sales from your vendor dashboard.
+            </p>
+          )}
+          {vendor && !loading && (
+            <button
+              onClick={vendorDashboardHandler}
+              className="w-full h-10 rounded-xl bg-primary text-white text-sm font-bold hover:bg-[#00a383] transition-all shadow-md shadow-primary/20"
+            >
+              Vendor Dashboard
+            </button>
+          )}
+
+          {loading && (
+            <div className="flex items-center justify-center h-16">
+              <Spinner size="lg" />
+            </div>
+          )}
         </div>
       </div>
       <button
@@ -135,7 +183,3 @@ const ProfileSidebar: React.FC = () => {
 };
 
 export default ProfileSidebar;
-
-
-
-
