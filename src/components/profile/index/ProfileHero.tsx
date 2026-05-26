@@ -12,6 +12,7 @@ const ProfileHero: React.FC<UserProfile> = ({
   email,
   memberSince,
   trustScore,
+  profileImage
 }) => {
   const formattedMemberSince = new Date(memberSince).toLocaleDateString(
     "en-US",
@@ -31,6 +32,8 @@ const ProfileHero: React.FC<UserProfile> = ({
 
   const score = clampScore(trustScore!);
 
+  const profileImageUrl = profileImage || "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop";
+
   return (
     <div className="bg-white p-6 md:p-8 rounded-2xl border border-slate-100 shadow-sm">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-8">
@@ -39,7 +42,9 @@ const ProfileHero: React.FC<UserProfile> = ({
             <div
               className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-24 md:size-32 border-4 border-white shadow-xl ring-1 ring-slate-100"
               style={{
-                backgroundImage: `url(https://lh3.googleusercontent.com/aida-public/AB6AXuDvFzdyxJox8FB7S4YntVEkfXz80VxSzKN54SyR88zhAX9QzYvqX04TYK96viHFGI3s-YnzDI6qMo_jXZR8zU595_-4j6R4w1e2-RwVq4Z3InlBp2mkAyNNiFppT1rIpeh96LM2YNniyCNwh0gOmS5TjeAbVh3PuDAID0UzcloCyzF71HVy22HJ7SRl1FY-TthWjBgFfU8Ardkhht_LTO6aMe9BZkjWbSTsCsJcEB0rIDy0J7XqFsgbdcB70IMQ5wqLErjid-b5Pvmk)`,
+                backgroundImage: profileImage
+                  ? `url(${profileImageUrl})`
+                  : `url(https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop)`,
               }}
             />
 

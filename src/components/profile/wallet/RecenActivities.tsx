@@ -124,7 +124,7 @@ const RecentActivities: React.FC<RecenActivitiesProp> = ({ activities }) => {
 
                 {/* Info */}
                 <div className="min-w-0">
-                  <p className="text-sm font-bold text-brand-orange truncate">
+                  <p className="text-sm font-bold text-charcoal truncate">
                     {activity.type}
                   </p>
                   <p className="text-xs text-slate-400 font-medium">

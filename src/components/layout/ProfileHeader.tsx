@@ -1,6 +1,10 @@
-import React from "react";
+const API_URL = import.meta.env.VITE_API_URL;
 
-import {useNavigate} from "react-router-dom"
+import { useApi } from "@/hooks/useApi";
+
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Spinner from "../ui/Spinner";
 import {
   HiOutlineBars3,
   HiOutlineMagnifyingGlass,
@@ -15,9 +19,47 @@ interface HeaderProps {
 const ProfileHeader: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const navigate = useNavigate();
 
+  const [vendor, setVendor] = useState();
+   const [profile, setProfile] = useState(null);
+   //using custom hook
+   const {
+     get: getProfile,
+     loading: loadingProfile,
+     error: errorProfile,
+   } = useApi(`${API_URL}/user/profile`);
+
+  const { get, loading, error } = useApi(
+    `${API_URL}/vendor/dashboard/overview`,
+  );
+
   const vendorDashboardHandler = () => {
-    navigate("/vendor/dashboard")
-  }
+    navigate("/vendor/dashboard");
+  };
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const response = await get();
+        setVendor(response.data.vendor);
+        // console.log(response.data);
+      } catch (err) {}
+    };
+
+    fetchDashboard();
+  }, []);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getProfile();
+        setProfile(response.profile.user);
+
+        console.log(response);
+      } catch (err) {}
+    };
+
+    fetchProfile();
+  }, []);
 
   return (
     <header className="flex items-center justify-between whitespace-nowrap border-b border-slate-100 bg-white px-4 md:px-8 py-4 sticky top-0 z-50 shadow-sm">
@@ -69,9 +111,19 @@ const ProfileHeader: React.FC<HeaderProps> = ({ onMenuClick }) => {
       {/* RIGHT */}
       <div className="flex items-center gap-3 lg:gap-6">
         <nav className="hidden xl:flex items-center gap-6">
-          <a onClick={vendorDashboardHandler} className="text-charcoal/70 text-sm font-semibold hover:text-primary transition-colors">
-            Vendor Dashboard
-          </a>
+          {vendor && !loading && (
+            <a
+              onClick={vendorDashboardHandler}
+              className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold shadow-sm hover:opacity-90 active:scale-[0.98] transition-all cursor-pointer"
+            >
+              Vendor Dashboard
+            </a>
+          )}
+          {loading && (
+            <div className="flex items-center justify-center h-10">
+              <Spinner size="md" />
+            </div>
+          )}
           <a className="text-charcoal/70 text-sm font-semibold hover:text-primary transition-colors">
             Help
           </a>
@@ -95,7 +147,7 @@ const ProfileHeader: React.FC<HeaderProps> = ({ onMenuClick }) => {
         <div
           className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-slate-100 ring-2 ring-transparent hover:ring-primary/20 transition-all cursor-pointer shrink-0"
           style={{
-            backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuAA75XtgQyy1AjVDomsbV8c-kBlcX8h4GnZZcvfGGTL5_qnFa4_x8eZ4v0oDPH_HTE9W6WzJVkzx6OL5bFVGvuPGhC3AzdK5DSxJNTVLKrhe7wqP1guu2KN0cCQikp9RH3sQ4wDbDP8pd9yZstnT34evOosHpyVUFR5AYEReteFrg7PawdC8o_ptKjjGjeQxhZLs8qx9YPSuJ0CAS4YpelZy8s-b-z5MOJMxyjgaUi5IYbbU_W1Oj2ZBpT1r8mz_HDOPu1DJH1N5Yg4")`,
+            backgroundImage: `url(https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop)`,
           }}
         />
       </div>

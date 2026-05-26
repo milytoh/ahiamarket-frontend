@@ -44,6 +44,7 @@ export interface UserProfile {
   avatar?: string;
   memberSince: string;
   trustScore?: number;
+  profileImage?: string;
 }
 
 interface ProfileStats {
@@ -90,8 +91,9 @@ const Profile: React.FC = () => {
     const fetchProfile = async () => {
       try {
         const response = await get();
-
         setProfile(response.profile);
+
+        console.log(response);
       } catch (err) {}
     };
 
