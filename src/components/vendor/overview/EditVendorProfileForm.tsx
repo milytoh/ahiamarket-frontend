@@ -157,7 +157,8 @@ export default function EditVendorProfileForm({
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
 
@@ -251,6 +252,9 @@ export default function EditVendorProfileForm({
       console.log(error);
     }
   };
+
+  const hasImageChanges = logoFile || coverFile;
+  const canSubmit = isDirty || hasImageChanges;
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-10">
@@ -535,13 +539,10 @@ export default function EditVendorProfileForm({
             {/* STATE */}
             {/* STATE */}
             <div>
-
               <select
                 {...register("state")}
                 className="w-full px-4 py-4 rounded-2xl border border-border-light bg-background-light outline-none focus:ring-2 focus:ring-[#05b384] appearance-none"
               >
-               
-
                 {nigeriaStates.map((state) => (
                   <option key={state} value={state}>
                     {state}
@@ -586,8 +587,8 @@ export default function EditVendorProfileForm({
 
           <button
             type="submit"
-            disabled={isSubmitting || loading}
-            className="px-10 py-4 rounded-2xl bg-[#05b384] hover:bg-[#04956f] transition-all text-white font-bold shadow-lg disabled:opacity-70 min-w-[180px]"
+            disabled={!isDirty || isSubmitting}
+            className="bg-[#05b384] text-white px-8 py-4 rounded-2xl font-bold disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting || loading ? (
               <div className="flex justify-center">

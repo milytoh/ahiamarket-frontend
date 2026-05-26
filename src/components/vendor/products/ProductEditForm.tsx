@@ -201,6 +201,8 @@ export default function EditProductForm({
     }
   }, [product, reset]);
 
+  
+
   const categories = [
     "Fashion & Apparel",
     "Electronics & Gadgets",

@@ -93,6 +93,24 @@ const ProfileSidebar: React.FC = () => {
         shrink-0
       "
     >
+      {/* Profile */}
+      <section className="p-6 border-b border-slate-100">
+        <div className="flex items-center gap-4">
+          <div
+            className="size-14 rounded-full bg-cover bg-center border-2 border-primary"
+            style={{
+              backgroundImage: 'url("https://i.pravatar.cc/150?img=32")',
+            }}
+          />
+          <div>
+            <p className="font-bold text-charcoal">Alex Johnson</p>
+            <p className="text-[10px] font-bold uppercase text-primary tracking-widest">
+              Premium Member
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/*  SCROLLABLE AREA (Profile + Nav) */}
       <div className="flex-1 min-h-0 overflow-y-auto pr-1">
         {/* Navigation */}
