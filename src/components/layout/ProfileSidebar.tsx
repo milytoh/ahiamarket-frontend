@@ -50,6 +50,7 @@ const SidebarNavLink: React.FC<SidebarNavLinkProps> = ({ to, icon, label }) => {
 };
 const ProfileSidebar: React.FC = () => {
   const [vendor, setVendor] = useState();
+  const [profile, setProfile] = useState(null);
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
@@ -57,6 +58,13 @@ const ProfileSidebar: React.FC = () => {
   const { get, loading, error } = useApi(
     `${API_URL}/vendor/dashboard/overview`,
   );
+
+  //using custom hook
+  const {
+    get: getProfile,
+    loading: loadingProfile,
+    error: errorProfile,
+  } = useApi(`${API_URL}/user/profile`);
 
   const logoutHandler = () => {
     dispatch(logout());
@@ -69,20 +77,35 @@ const ProfileSidebar: React.FC = () => {
       try {
         const response = await get();
         setVendor(response.data.vendor);
-       
       } catch (err) {}
     };
 
     fetchDashboard();
   }, []);
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getProfile();
+        setProfile(response.profile.user);
+
+        console.log('ooo', response);
+
+        console.log(response);
+      } catch (err) {}
+    };
+
+    fetchProfile();
+  }, []);
+
   const handlerVendor = () => {
     navigate("/profile/vendor/application");
   };
 
-   const vendorDashboardHandler = () => {
-     navigate("/vendor/dashboard");
-   };
+  const vendorDashboardHandler = () => {
+    navigate("/vendor/dashboard");
+  };
+
   return (
     <aside
       className="
@@ -99,7 +122,8 @@ const ProfileSidebar: React.FC = () => {
           <div
             className="size-14 rounded-full bg-cover bg-center border-2 border-primary"
             style={{
-              backgroundImage: 'url("https://i.pravatar.cc/150?img=32")',
+              backgroundImage:
+                'url("https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop")',
             }}
           />
           <div>

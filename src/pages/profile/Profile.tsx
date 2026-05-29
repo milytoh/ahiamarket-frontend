@@ -131,7 +131,7 @@ const Profile: React.FC = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 md:space-y-8 mx-auto">
+    <div className="max-w-6xl mx-auto space-y-6 md:space-y-8 ">
       {loading ? (
         <ProfileHeroSkeleton />
       ) : (

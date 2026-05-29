@@ -22,6 +22,7 @@ import AddProduct from "@/pages/vendor/AddProduct";
 import EditProduct from "@/pages/vendor/EditProduct";
 import ProductDetails from "@/pages/vendor/ProductDetails";
 import EditVendorProfile from "@/pages/vendor/EditVendorProfile";
+import EditProfile from "@/pages/profile/EditProfile";
 
 const AppRoutes = () => {
   return (
@@ -59,6 +60,7 @@ const AppRoutes = () => {
             path="/profile/vendor/application"
             element={<VendorApplication />}
           />
+          <Route path="/profile/edit" element={<EditProfile />} />
         </Route>
         <Route path="/payment/verify" element={<PaymentVerify />} />
       </Route>

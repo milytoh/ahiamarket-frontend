@@ -1,5 +1,6 @@
 import React from "react";
 import { UserProfile } from "@/pages/profile/Profile";
+import { useNavigate } from "react-router-dom";
 
 import {
   HiCheckBadge,
@@ -33,6 +34,13 @@ const ProfileHero: React.FC<UserProfile> = ({
   const score = clampScore(trustScore!);
 
   const profileImageUrl = profileImage || "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop";
+
+  const navigate = useNavigate();
+
+  const handleNavigation = () => {
+    console.log('ggggg')
+    navigate("/profile/edit");
+  };
 
   return (
     <div className="bg-white p-6 md:p-8 rounded-2xl border border-slate-100 shadow-sm">
@@ -93,7 +101,10 @@ const ProfileHero: React.FC<UserProfile> = ({
 
         {/* Action buttons */}
         <div className="flex flex-wrap gap-3 sm:gap-4 w-full md:w-auto">
-          <button className="flex-1 md:flex-none flex items-center justify-center gap-2 rounded-xl h-11 px-6 bg-white text-charcoal text-sm font-bold hover:bg-slate-50 transition-all border border-slate-200">
+          <button
+            onClick={handleNavigation}
+            className="flex-1 md:flex-none flex items-center justify-center gap-2 rounded-xl h-11 px-6 bg-white text-charcoal text-sm font-bold hover:bg-slate-50 transition-all border border-slate-200"
+          >
             <HiOutlinePencilSquare className="w-5 h-5" />
             Edit Profile
           </button>
