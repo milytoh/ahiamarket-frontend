@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 import React from "react";
 import { UserProfile } from "@/pages/profile/Profile";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +15,7 @@ const ProfileHero: React.FC<UserProfile> = ({
   email,
   memberSince,
   trustScore,
-  profileImage
+  profileImage,
 }) => {
   const formattedMemberSince = new Date(memberSince).toLocaleDateString(
     "en-US",
@@ -33,12 +35,14 @@ const ProfileHero: React.FC<UserProfile> = ({
 
   const score = clampScore(trustScore!);
 
-  const profileImageUrl = profileImage || "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop";
+  const profileImageUrl =
+    profileImage ||
+    "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop";
 
   const navigate = useNavigate();
 
   const handleNavigation = () => {
-    console.log('ggggg')
+    console.log("ggggg");
     navigate("/profile/edit");
   };
 
@@ -51,7 +55,7 @@ const ProfileHero: React.FC<UserProfile> = ({
               className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-24 md:size-32 border-4 border-white shadow-xl ring-1 ring-slate-100"
               style={{
                 backgroundImage: profileImage
-                  ? `url(${profileImageUrl})`
+                  ? `url(${API_URL}/uploads/users/profile/${profileImage})`
                   : `url(https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop)`,
               }}
             />

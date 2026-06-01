@@ -44,7 +44,7 @@ export interface UserProfile {
   avatar?: string;
   memberSince: string;
   trustScore?: number;
-  profileImage?: string;
+  profileImage: string;
 }
 
 interface ProfileStats {
@@ -141,6 +141,7 @@ const Profile: React.FC = () => {
           id={profile?.user.id!}
           memberSince={profile?.user.memberSince!}
           trustScore={profile?.trustScore!.value!}
+          profileImage={profile?.user.profileImage!}
         />
       )}
       {loading ? (

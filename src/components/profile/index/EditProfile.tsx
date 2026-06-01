@@ -18,7 +18,7 @@ const profileSchema = z.object({
 type ProfileFormData = z.infer<typeof profileSchema>;
 
 interface UserProfile {
-  fullname: string;
+  fullName: string;
   email: string;
   profileImage?: string | null;
 }
@@ -56,7 +56,7 @@ export default function EditProfileForm({
     if (!userData) return;
 
     reset({
-      fullname: userData.fullname || "",
+      fullname: userData.fullName || "",
       email: userData.email || "",
     });
 

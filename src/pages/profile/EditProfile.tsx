@@ -7,20 +7,39 @@ import { useState, useEffect } from "react";
 
 import EditProfileForm from "@/components/profile/index/EditProfile";
 import EditProfileFormSkeleton from "@/components/ui/skeletons/profile/index/EditProfileFormSkeleton";
+import ErrorState from "@/components/ui/Error";
+import { toast } from "react-toastify";
 
 interface UserProfile {
-  fullname: string;
+  fullName: string;
   email: string;
   profileImage?: string | null;
 }
-
-const handleProfileUpdate = async (formData: FormData): Promise<void> => {};
 
 export default function EditProfile() {
   const { get, loading, error } = useApi<UserProfile>(
     `${API_URL}/user/profile`,
   );
-  const [userData, setUserData] = useState<UserProfile | null>(null);
+
+  const {
+    put,
+    loading: isUpdating,
+    error: updateError,
+  } = useApi(`${API_URL}/user/profile/update`);
+    const [userData, setUserData] = useState<UserProfile | null>(null);
+     const [callGet, setCallGet] = useState(false);
+
+    // Function to handle profile update
+    const handleProfileUpdate = async (formData: FormData): Promise<void> => {
+    try {
+        await put(formData);
+        toast.success("Profile updated successfully");
+        handleCallGet()
+    } catch (err) {
+        console.error("Error updating user profile:", err);
+        toast.error("Failed to update profile. Please try again.");
+    }
+  };
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -33,12 +52,23 @@ export default function EditProfile() {
     };
 
     fetchUserProfile();
-  }, []);
+  }, [callGet]);
+    
+    const handleCallGet = () => {
+      setCallGet((prev) => !prev);
+    };
 
-  if (loading) {
-    return <EditProfileFormSkeleton />;
-  }
-
+ 
+ if (error) {
+   return (
+     <ErrorState
+       title="Failed to load"
+       message={error.message}
+       onRetry={handleCallGet}
+     />
+   );
+    }
+    
   return (
     <>
       {loading ? (
