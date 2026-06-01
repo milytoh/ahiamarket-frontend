@@ -144,12 +144,12 @@ const ProfileHeader: React.FC<HeaderProps> = ({ onMenuClick }) => {
         </div>
 
         {/* AVATAR */}
-        <div
+        {/* <div
           className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-slate-100 ring-2 ring-transparent hover:ring-primary/20 transition-all cursor-pointer shrink-0"
           style={{
             backgroundImage: `url(https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop)`,
           }}
-        />
+        /> */}
       </div>
     </header>
   );

@@ -34,6 +34,16 @@ interface MobileNavLinkProps {
   onClick?: () => void;
 }
 
+interface UserProfile {
+  id: string;
+  fullName: string;
+  email: string;
+  avatar?: string;
+  memberSince: string;
+  trustScore?: number;
+  profileImage: string;
+}
+
 const MobileNavLink: React.FC<MobileNavLinkProps> = ({
   to,
   icon,
@@ -64,7 +74,7 @@ const MobileNavLink: React.FC<MobileNavLinkProps> = ({
 
 const ProfileMobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
-
+  const [profile, setProfile] = useState<UserProfile>();
   const dispatch = useAppDispatch();
 
   const logoutHandler = () => {
@@ -78,6 +88,12 @@ const ProfileMobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
   const { get, loading, error } = useApi(
     `${API_URL}/vendor/dashboard/overview`,
   );
+  //using custom hook
+  const {
+    get: getProfile,
+    loading: loadingProfile,
+    error: errorProfile,
+  } = useApi(`${API_URL}/user/profile`);
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -88,6 +104,18 @@ const ProfileMobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
     };
 
     fetchDashboard();
+  }, []);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getProfile();
+        setProfile(response.profile.user);
+
+      } catch (err) {}
+    };
+
+    fetchProfile();
   }, []);
 
   const handlerVendor = () => {
@@ -169,16 +197,23 @@ const ProfileMobileNav: React.FC<MobileNavProps> = ({ isOpen, onClose }) => {
           {/* Profile */}
           <section className="p-6 border-b border-slate-100">
             <div className="flex items-center gap-4">
-              <div
-                className="size-14 rounded-full bg-cover bg-center border-2 border-primary"
-                style={{
-                  backgroundImage: 'url("https://i.pravatar.cc/150?img=32")',
-                }}
-              />
+              {loadingProfile ? (
+                <Spinner size="md" />
+              ) : (
+                <div
+                  className="size-14 rounded-full bg-cover bg-center border-2 border-primary"
+                  style={{
+                    backgroundImage: profile?.profileImage
+                      ? `url(${API_URL}/uploads/users/profile/${profile.profileImage})`
+                      : 'url("https://i.pravatar.cc/150?img=32")',
+                  }}
+                />
+              )}
+
               <div>
-                <p className="font-bold text-charcoal">Alex Johnson</p>
+                <p className="font-bold text-charcoal">{profile?.fullName}</p>
                 <p className="text-[10px] font-bold uppercase text-primary tracking-widest">
-                  Premium Member
+                  Member
                 </p>
               </div>
             </div>

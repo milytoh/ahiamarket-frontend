@@ -129,19 +129,23 @@ const ProfileSidebar: React.FC = () => {
       {/* Profile */}
       <section className="p-6 border-b border-slate-100">
         <div className="flex items-center gap-4">
-          <div
-            className="size-14 rounded-full bg-cover bg-center border-2 border-primary"
-            style={{
-              backgroundImage:  profile
-                ? `url(${API_URL}/uploads/users/profile/${profile.profileImage})`
-                 :
-                'url("https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop")',
-            }}
-          />
+          {loadingProfile ? (
+            <Spinner />
+          ) : (
+            <div
+              className="size-14 rounded-full bg-cover bg-center border-2 border-primary"
+              style={{
+                backgroundImage: profile
+                  ? `url(${API_URL}/uploads/users/profile/${profile.profileImage})`
+                  : 'url("https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop")',
+              }}
+            />
+          )}
+
           <div>
-            <p className="font-bold text-charcoal">Alex Johnson</p>
+            <p className="font-bold text-charcoal">{profile?.fullName}</p>
             <p className="text-[10px] font-bold uppercase text-primary tracking-widest">
-              Premium Member
+              Member
             </p>
           </div>
         </div>
@@ -180,8 +184,6 @@ const ProfileSidebar: React.FC = () => {
             icon={<HiOutlineCog6Tooth />}
             label="Settings"
           />
-
-          
         </nav>
       </div>
 
