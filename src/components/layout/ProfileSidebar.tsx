@@ -27,6 +27,16 @@ interface SidebarNavLinkProps {
   label: string;
 }
 
+ interface UserProfile {
+  id: string;
+  fullName: string;
+  email: string;
+  avatar?: string;
+  memberSince: string;
+  trustScore?: number;
+  profileImage: string;
+}
+
 const SidebarNavLink: React.FC<SidebarNavLinkProps> = ({ to, icon, label }) => {
   return (
     <NavLink
@@ -50,7 +60,7 @@ const SidebarNavLink: React.FC<SidebarNavLinkProps> = ({ to, icon, label }) => {
 };
 const ProfileSidebar: React.FC = () => {
   const [vendor, setVendor] = useState();
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState<UserProfile>();
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
@@ -122,7 +132,9 @@ const ProfileSidebar: React.FC = () => {
           <div
             className="size-14 rounded-full bg-cover bg-center border-2 border-primary"
             style={{
-              backgroundImage:
+              backgroundImage:  profile
+                ? `url(${API_URL}/uploads/users/profile/${profile.profileImage})`
+                 :
                 'url("https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1600&auto=format&fit=crop")',
             }}
           />
@@ -169,10 +181,7 @@ const ProfileSidebar: React.FC = () => {
             label="Settings"
           />
 
-          {/*  extra items just to prove scrolling works */}
-          {/* <SidebarLink icon={<HiOutlineUser />} label="Security" />
-          <SidebarLink icon={<HiOutlineUser />} label="Notifications" />
-          <SidebarLink icon={<HiOutlineUser />} label="Addresses" /> */}
+          
         </nav>
       </div>
 

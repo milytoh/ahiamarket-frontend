@@ -20,8 +20,8 @@ import ErrorState from "@/components/ui/Error";
 import { toast } from "react-toastify";
 
 //format transaction data
-const formatTransactions = (data: any) => {
-  return data?.map((tx: any) => {
+const formatTransactions = (data: any[] = []) => {
+  return data.map((tx: any) => {
     const dateObj = new Date(tx.createdAt);
 
     const date = dateObj.toLocaleDateString("en-US", {
@@ -40,6 +40,9 @@ const formatTransactions = (data: any) => {
       time,
       id: tx._id,
       desc: tx.type === "deposit" ? "Wallet Top-up" : "Wallet Withdrawal",
+      type: tx.type,
+      reference: tx.reference,
+      createdAt: tx.createdAt,
 
       method:
         tx.channel === "card"
@@ -70,11 +73,24 @@ const defaultFilters: Filters = {
   endDate: undefined,
   type: "all",
 };
+type TransactionStatus = "Success" | "Pending" | "Failed";
+export type Transaction = {
+  type: "deposit" | "withdrawal" | "purchase";
+  id: string;
+  date: string;
+  time: string;
+  desc: string;
+  method: string;
+  amount: string;
+  status: TransactionStatus;
+  reference: string;
+  createdAt: string;
+};
 
 export default function TransactionHistory() {
-  const [transactionData, setTransactionData] = useState([]);
-  const [trans, setTrans] = useState([]);
-  const [transDetail, setTransDetail] = useState();
+  const [transactionData, setTransactionData] = useState<Transaction[]>([]);
+  const [trans, setTrans] = useState<Transaction[]>([]);
+  const [transDetail, setTransDetail] = useState<Transaction | undefined>();
   const [page, setPage] = useState(1);
   const [limit] = useState(5);
   const [total, setTotal] = useState(0);
@@ -124,16 +140,18 @@ export default function TransactionHistory() {
     const fetchData = async () => {
       try {
         const response = await get();
-        setTrans(response.transactions);
-        setTotal(response.total);
-        //  setTransactionData(formatTransactions(response.transactions))
+        setTrans(response?.transactions);
+        setTotal(response?.total);
+       
         setTransactionData((prev) =>
           page === 1
-            ? formatTransactions(response.transactions)
-            : [...prev, ...formatTransactions(response.transactions)],
+            ? formatTransactions(response?.transactions || [])
+            : [...prev, ...formatTransactions(response?.transactions || [])],
         );
-        setHasMore(page < response.totalPages);
-      } catch (err) {}
+        setHasMore(page < response?.totalPages);
+      } catch (err) {
+        console.log('transaction history error', err);
+      }
     };
 
     fetchData();
@@ -148,6 +166,14 @@ export default function TransactionHistory() {
     setPage(next);
   };
 
+  
+  useEffect(() => {
+    if (error) {
+      toast.error("something went wrong, check your network connection");
+    }
+  }, [error]);
+
+
   // for error
   if (error) {
     return (
@@ -159,14 +185,9 @@ export default function TransactionHistory() {
     );
   }
 
-  useEffect(() => {
-    if (error) {
-      toast.error("something went wrong, check your network connection");
-    }
-  }, [error]);
 
-  const handlerModalOpen = (id: any) => {
-    setTransDetail((trans as any[]).find((tr: any) => tr?._id === id));
+  const handlerModalOpen = (id: string) => {
+    setTransDetail((trans as Transaction[]).find((tr: Transaction) => tr?.id === id));
 
     setIsTransDetailOpen(true);
   };

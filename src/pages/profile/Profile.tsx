@@ -92,8 +92,6 @@ const Profile: React.FC = () => {
       try {
         const response = await get();
         setProfile(response.profile);
-
-        console.log(response);
       } catch (err) {}
     };
 
