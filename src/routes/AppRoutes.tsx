@@ -23,6 +23,7 @@ import EditProduct from "@/pages/vendor/EditProduct";
 import ProductDetails from "@/pages/vendor/ProductDetails";
 import EditVendorProfile from "@/pages/vendor/EditVendorProfile";
 import EditProfile from "@/pages/profile/EditProfile";
+import Orders from "@/pages/vendor/Orders";
 
 const AppRoutes = () => {
   return (
@@ -85,6 +86,11 @@ const AppRoutes = () => {
           <Route
             path="/vendor/dashboard/product/details/:id"
             element={<ProductDetails />}
+          />
+
+          <Route
+            path="/vendor/dashboard/orders"
+            element={<Orders />}
           />
         </Route>
       </Route>

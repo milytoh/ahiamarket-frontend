@@ -42,7 +42,6 @@ const ProfileHero: React.FC<UserProfile> = ({
   const navigate = useNavigate();
 
   const handleNavigation = () => {
-    console.log("ggggg");
     navigate("/profile/edit");
   };
 

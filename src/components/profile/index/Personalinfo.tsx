@@ -1,4 +1,6 @@
 import React from "react";
+
+import { useNavigate } from "react-router-dom";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import { type UserProfile } from "@/pages/profile/Profile";
 
@@ -21,6 +23,12 @@ const PersonalInfo: React.FC<InfoProp> = ({info}) => {
     { label: "Preferred Language", value: "English (US)" },
   ];
 
+  const navigate = useNavigate();
+
+  const handleNavigation = () => {
+    navigate("/profile/edit");
+  };
+
   return (
     <section className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
       {/* Header */}
@@ -30,6 +38,7 @@ const PersonalInfo: React.FC<InfoProp> = ({info}) => {
         </h3>
 
         <button
+          onClick={handleNavigation}
           className="flex items-center gap-2 text-primary text-sm font-bold
           hover:underline hover:opacity-90 transition"
         >
