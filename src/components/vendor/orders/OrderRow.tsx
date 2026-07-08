@@ -7,7 +7,7 @@ interface Order {
   customer: string;
   products: string;
   amount: string;
-  payment: "Paid" | "Unpaid";
+  payment: string
   deliveryStatus: string;
   orderStatus: "Shipped" | "Pending" | "Processing";
   date: string;

@@ -65,8 +65,54 @@ const sampleOrders: Order[] = [
   },
 ];
 
-const OrdersTable: React.FC = () => {
+
+
+interface Props {
+  orders: any[];
+  loading: boolean;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+  onPageChange: (page: number) => void;
+}
+
+export default function OrderTable({ orders, loading, pagination, onPageChange }: Props) {
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
+
+
+  console.log("Orders in OrderTable:", orders);
+  
+  const formattedOrders = orders.map((order: any) => ({
+    _id: order._id,
+
+    id: order.order_number,
+
+    parentId: order.parent_order_number,
+
+    customer: order.buyer?.fullname || "Unknown Customer",
+
+    products: `${order.productsCount} item${
+      order.productsCount > 1 ? "s" : ""
+    }`,
+
+    amount: `₦${order.total.toLocaleString()}`,
+
+    payment: order.payment.status === "paid" ? "Paid" : "Unpaid",
+
+    deliveryStatus: order.delivery.status,
+
+    orderStatus:
+      order.order_status.charAt(0).toUpperCase() + order.order_status.slice(1),
+
+    date: new Date(order.created_at).toLocaleDateString("en-NG", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }),
+  }));
 
   return (
     <div className="bg-white rounded-3xl border border-[#bbcac1] shadow-sm overflow-hidden flex flex-col">
@@ -77,7 +123,7 @@ const OrdersTable: React.FC = () => {
         <table className="w-full text-left border-collapse">
           <OrderTableHeader />
           <tbody className="divide-y divide-[#bbcac1]/50 text-sm text-[#0b1c30]">
-            {sampleOrders.map((order) => (
+            {formattedOrders.map((order) => (
               <OrderRow
                 key={order.id}
                 order={order}
@@ -122,4 +168,4 @@ const OrdersTable: React.FC = () => {
   );
 };
 
-export default OrdersTable;
+
