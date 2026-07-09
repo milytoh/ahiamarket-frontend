@@ -9,7 +9,19 @@ import {
   MdCancel,
 } from "react-icons/md";
 
-const StatsGrid: React.FC = () => {
+
+interface Stats {
+  pending: number;
+  processing: number;
+  packed: number;
+  shipped: number;
+  completed: number;
+  cancelled: number;
+  totalOrders: number;
+  totalRevenue: number;
+}
+
+export default function StatsGrid({ stats }: { stats: Stats | null }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {/* Pending */}
@@ -20,7 +32,9 @@ const StatsGrid: React.FC = () => {
             +5%
           </span>
         </div>
-        <h3 className="text-4xl font-semibold text-[#0b1c30]">42</h3>
+        <h3 className="text-4xl font-semibold text-[#0b1c30]">
+          {stats?.pending ?? 0}
+        </h3>
         <p className="uppercase text-xs font-semibold text-[#3c4a43] mt-1 tracking-widest">
           Pending
         </p>
@@ -31,7 +45,9 @@ const StatsGrid: React.FC = () => {
         <div className="flex justify-between items-start mb-4">
           <MdAutorenew className="text-blue-500 text-3xl" />
         </div>
-        <h3 className="text-4xl font-semibold text-[#0b1c30]">18</h3>
+        <h3 className="text-4xl font-semibold text-[#0b1c30]">
+          {stats?.processing ?? 0}
+        </h3>
         <p className="uppercase text-xs font-semibold text-[#3c4a43] mt-1 tracking-widest">
           Processing
         </p>
@@ -42,7 +58,9 @@ const StatsGrid: React.FC = () => {
         <div className="flex justify-between items-start mb-4">
           <MdInventory className="text-indigo-500 text-3xl" />
         </div>
-        <h3 className="text-4xl font-semibold text-[#0b1c30]">24</h3>
+        <h3 className="text-4xl font-semibold text-[#0b1c30]">
+          {stats?.packed ?? 0}
+        </h3>
         <p className="uppercase text-xs font-semibold text-[#3c4a43] mt-1 tracking-widest">
           Packed
         </p>
@@ -53,7 +71,9 @@ const StatsGrid: React.FC = () => {
         <div className="flex justify-between items-start mb-4">
           <MdLocalShipping className="text-emerald-500 text-3xl" />
         </div>
-        <h3 className="text-4xl font-semibold text-[#0b1c30]">156</h3>
+        <h3 className="text-4xl font-semibold text-[#0b1c30]">
+          {stats?.shipped ?? 0}
+        </h3>
         <p className="uppercase text-xs font-semibold text-[#3c4a43] mt-1 tracking-widest">
           Shipped
         </p>
@@ -67,7 +87,7 @@ const StatsGrid: React.FC = () => {
             +12.5%
           </span>
         </div>
-        <h3 className="text-4xl font-semibold mt-6">₦1,245,000</h3>
+        <h3 className="text-4xl font-semibold mt-6">₦ {stats?.totalRevenue?.toLocaleString() ?? 0}</h3>
         <p className="uppercase text-xs font-semibold mt-1 opacity-90">
           Total Revenue
         </p>
@@ -78,7 +98,9 @@ const StatsGrid: React.FC = () => {
         <div className="flex justify-between items-start mb-4">
           <MdTaskAlt className="text-[#006c4e] text-3xl" />
         </div>
-        <h3 className="text-4xl font-semibold text-[#0b1c30]">892</h3>
+        <h3 className="text-4xl font-semibold text-[#0b1c30]">
+          {stats?.completed ?? 0}
+        </h3>
         <p className="uppercase text-xs font-semibold text-[#3c4a43] mt-1 tracking-widest">
           Delivered
         </p>
@@ -89,7 +111,9 @@ const StatsGrid: React.FC = () => {
         <div className="flex justify-between items-start mb-4">
           <MdCancel className="text-red-600 text-3xl" />
         </div>
-        <h3 className="text-4xl font-semibold text-[#0b1c30]">12</h3>
+        <h3 className="text-4xl font-semibold text-[#0b1c30]">
+          {stats?.cancelled ?? 0}
+        </h3>
         <p className="uppercase text-xs font-semibold text-[#3c4a43] mt-1 tracking-widest">
           Cancelled
         </p>
@@ -98,4 +122,4 @@ const StatsGrid: React.FC = () => {
   );
 };
 
-export default StatsGrid;
+

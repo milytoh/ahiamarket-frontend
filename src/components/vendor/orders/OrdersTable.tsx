@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import FiltersBar from "./FiltersBar";
+import FiltersBar, { OrderFilters } from "./FiltersBar";
 import BulkActionsBar from "./BulkActionsBar";
 import OrderTableHeader from "./OrderTableHeader";
 import OrderRow from "./OrderRow";
+
 
 interface Order {
   id: string;
@@ -18,72 +19,23 @@ interface Order {
   date: string;
 }
 
-const sampleOrders: Order[] = [
-  {
-    id: "#AHM-1001-A",
-    parentId: "#AHM-1001",
-    customer: "Chinedu Okafor",
-    products: "3 items",
-    amount: "₦45,000",
-    payment: "Paid",
-    deliveryStatus: "In Transit",
-    orderStatus: "Shipped",
-    date: "Oct 24, 2023",
-  },
-  {
-    id: "#AHM-1002-B",
-    parentId: "#AHM-1002",
-    customer: "Amina Bello",
-    products: "1 item",
-    amount: "₦12,500",
-    payment: "Unpaid",
-    deliveryStatus: "Awaiting Pickup",
-    orderStatus: "Pending",
-    date: "Oct 24, 2023",
-  },
-  {
-    id: "#AHM-0998-A",
-    parentId: "#AHM-0998",
-    customer: "Oluwaseun Adeyemi",
-    products: "5 items",
-    amount: "₦150,000",
-    payment: "Paid",
-    deliveryStatus: "Delivered to Hub",
-    orderStatus: "Processing",
-    date: "Oct 23, 2023",
-  },
-  {
-    id: "#AHM-0997-C",
-    parentId: "#AHM-0997",
-    customer: "Fatima Yusuf",
-    products: "2 items",
-    amount: "₦78,900",
-    payment: "Paid",
-    deliveryStatus: "Delivered",
-    orderStatus: "Shipped",
-    date: "Oct 22, 2023",
-  },
-];
 
 
-
-interface Props {
-  orders: any[];
+interface OrdersTableProps {
+  orders: Order[];
   loading: boolean;
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
+  pagination: Pagination;
+  filters: OrderFilters;
+  onFilterChange: React.Dispatch<React.SetStateAction<OrderFilters>>;
   onPageChange: (page: number) => void;
 }
 
-export default function OrderTable({ orders, loading, pagination, onPageChange }: Props) {
+
+
+
+export default function OrderTable({ orders, loading, pagination, filters, onFilterChange, onPageChange }: OrdersTableProps) {
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
 
-
-  console.log("Orders in OrderTable:", orders);
   
   const formattedOrders = orders.map((order: any) => ({
     _id: order._id,
@@ -114,9 +66,13 @@ export default function OrderTable({ orders, loading, pagination, onPageChange }
     }),
   }));
 
+
+ 
+
   return (
     <div className="bg-white rounded-3xl border border-[#bbcac1] shadow-sm overflow-hidden flex flex-col">
-      <FiltersBar />
+      <FiltersBar filters={filters} onChange={onFilterChange} />
+
       <BulkActionsBar selectedCount={selectedOrders.length} />
 
       <div className="overflow-x-auto">
