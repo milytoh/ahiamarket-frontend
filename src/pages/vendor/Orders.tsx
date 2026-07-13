@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 const API_URL = import.meta.env.VITE_API_URL;
 
-import { useApi } from "@/hooks/useApi"; 
+import { useApi } from "@/hooks/useApi";
 
 import useDebounce from "@/hooks/useDebounce";
 
@@ -17,7 +17,6 @@ import ErrorState from "@/components/ui/Error";
 import { toast } from "react-toastify";
 
 export default function Order() {
-
   const [orders, setOrders] = useState([]);
   const [stats, setStats] = useState<any>(null);
   const [pagination, setPagination] = useState({
@@ -70,22 +69,19 @@ export default function Order() {
   //    `${API_URL}/vendor/test/create-orders`,
   //  );
 
-
   // useEffect(() => {
   //   const fetchDashboard = async () => {
   //     try {
   //       const response = await post();
 
   //       console.log(response.data);
-     
+
   //     } catch (err) {}
   //   };
 
   //   fetchDashboard();
   // }, []);
 
-
-  
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -94,7 +90,7 @@ export default function Order() {
         setOrders(response.orders);
         setStats(response.stats);
 
-        console.log(response.orders)
+        console.log(response.orders);
 
         setPagination((prev) => ({
           ...prev,
@@ -117,15 +113,13 @@ export default function Order() {
     debouncedSearch,
   ]);
 
-
-   useEffect(() => {
-     if (error) {
-       toast.error(
-         `${error.message || "something went wrong, check your network connection"}`,
-       );
-     }
-   }, [error]);
-
+  useEffect(() => {
+    if (error) {
+      toast.error(
+        `${error.message || "something went wrong, check your network connection"}`,
+      );
+    }
+  }, [error]);
 
   return (
     <div className="max-w-[77rem]  space-y-6 mx-3 sm:mx-auto">
@@ -134,6 +128,7 @@ export default function Order() {
       {loading ? <StatsGridSkeleton /> : <StatsGrid stats={stats} />}
 
       {loading ? (
+        
         <OrdersTableSkeleton />
       ) : (
         <OrdersTable
@@ -151,5 +146,5 @@ export default function Order() {
         />
       )}
     </div>
-  ); 
+  );
 }
