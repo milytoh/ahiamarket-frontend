@@ -10,6 +10,12 @@ import PageHeader from "@/components/vendor/orders/OrderPageHeader";
 import StatsGrid from "@/components/vendor/orders/StatsGrid";
 import OrdersTable from "@/components/vendor/orders/OrdersTable";
 
+import StatsGridSkeleton from "@/components/ui/skeletons/vendor/order/StatsGridSkeleton";
+import OrdersTableSkeleton from "@/components/ui/skeletons/vendor/order/OrdersTableSkeleton";
+
+import ErrorState from "@/components/ui/Error";
+import { toast } from "react-toastify";
+
 export default function Order() {
 
   const [orders, setOrders] = useState([]);
@@ -21,7 +27,6 @@ export default function Order() {
     totalPages: 0,
   });
 
-  const [loadin, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     search: "",
     orderStatus: "all",
@@ -111,25 +116,38 @@ export default function Order() {
   ]);
 
 
+   useEffect(() => {
+     if (error) {
+       toast.error(
+         `${error.message || "something went wrong, check your network connection"}`,
+       );
+     }
+   }, [error]);
 
 
   return (
     <div className="max-w-[77rem]  space-y-6 mx-3 sm:mx-auto">
       <PageHeader />
-      <StatsGrid stats={stats} />
-      <OrdersTable
-        orders={orders}
-        loading={loading}
-        pagination={pagination}
-        filters={filters}
-        onFilterChange={setFilters}
-        onPageChange={(page) =>
-          setPagination((prev) => ({
-            ...prev,
-            page,
-          }))
-        }
-      />
+
+      {loading ? <StatsGridSkeleton /> : <StatsGrid stats={stats} />}
+
+      {loading ? (
+        <OrdersTableSkeleton />
+      ) : (
+        <OrdersTable
+          orders={orders}
+          loading={loading}
+          pagination={pagination}
+          filters={filters}
+          onFilterChange={setFilters}
+          onPageChange={(page) =>
+            setPagination((prev) => ({
+              ...prev,
+              page,
+            }))
+          }
+        />
+      )}
     </div>
-  );
+  ); 
 }

@@ -109,7 +109,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ filters, onChange }) => {
 
           <DatePicker
             selected={filters.startDate}
-            onChange={(date) =>
+            onChange={(date: Date | null) =>
               onChange((prev) => ({
                 ...prev,
                 startDate: date,
@@ -127,7 +127,7 @@ const FiltersBar: React.FC<FiltersBarProps> = ({ filters, onChange }) => {
 
           <DatePicker
             selected={filters.endDate}
-            onChange={(date) =>
+            onChange={(date: Date | null) =>
               onChange((prev) => ({
                 ...prev,
                 endDate: date,

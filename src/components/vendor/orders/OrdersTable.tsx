@@ -24,7 +24,12 @@ interface Order {
 interface OrdersTableProps {
   orders: Order[];
   loading: boolean;
-  pagination: Pagination;
+  pagination:  {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
   filters: OrderFilters;
   onFilterChange: React.Dispatch<React.SetStateAction<OrderFilters>>;
   onPageChange: (page: number) => void;
@@ -35,6 +40,44 @@ interface OrdersTableProps {
 
 export default function OrderTable({ orders, loading, pagination, filters, onFilterChange, onPageChange }: OrdersTableProps) {
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
+
+
+  // pagination 
+  const start = (pagination.page - 1) * pagination.limit + 1;
+  const end = Math.min(pagination.page * pagination.limit, pagination.total);
+
+
+  //add smart pagination logic
+  const getPageNumbers = () => {
+    const { page, totalPages } = pagination;
+
+    const pages: (number | "...")[] = [];
+
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    pages.push(1);
+
+    if (page > 3) {
+      pages.push("...");
+    }
+
+    const start = Math.max(2, page - 1);
+    const end = Math.min(totalPages - 1, page + 1);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (page < totalPages - 2) {
+      pages.push("...");
+    }
+
+    pages.push(totalPages);
+
+    return pages;
+  };
 
   
   const formattedOrders = orders.map((order: any) => ({
@@ -100,22 +143,50 @@ export default function OrderTable({ orders, loading, pagination, filters, onFil
       {/* Pagination */}
       <div className="p-4 border-t border-[#bbcac1] flex items-center justify-between bg-[#f8f9ff]">
         <span className="text-sm text-[#6c7a72]">
-          Showing 1 to 4 of 42 entries
+          Showing {start} to {end} of {pagination.total} entries
         </span>
+
         <div className="flex gap-2">
           <button
-            className="px-4 py-2 border border-[#bbcac1] rounded-lg text-sm text-[#6c7a72] hover:bg-[#eff4ff] transition-colors"
-            disabled
+            onClick={() => onPageChange(pagination.page - 1)}
+            disabled={pagination.page === 1}
+            className="px-4 py-2 border border-[#bbcac1] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#eff4ff]"
           >
             Previous
           </button>
-          <button className="px-4 py-2 border border-[#bbcac1] bg-white rounded-lg text-sm text-[#0b1c30]">
-            1
-          </button>
-          <button className="px-4 py-2 border border-[#bbcac1] rounded-lg text-sm text-[#6c7a72] hover:bg-[#eff4ff] transition-colors">
-            2
-          </button>
-          <button className="px-4 py-2 border border-[#bbcac1] rounded-lg text-sm text-[#6c7a72] hover:bg-[#eff4ff] transition-colors">
+
+          {getPageNumbers().map((item, index) => {
+            if (item === "...") {
+              return (
+                <span
+                  key={`ellipsis-${index}`}
+                  className="px-2 flex items-center text-[#6c7a72]"
+                >
+                  ...
+                </span>
+              );
+            }
+
+            return (
+              <button
+                key={item}
+                onClick={() => onPageChange(item)}
+                className={`w-10 h-10 rounded-lg border text-sm transition-all ${
+                  pagination.page === item
+                    ? "bg-[#05b384] text-white border-[#05b384]"
+                    : "border-[#bbcac1] hover:bg-[#eff4ff]"
+                }`}
+              >
+                {item}
+              </button>
+            );
+          })}
+
+          <button
+            onClick={() => onPageChange(pagination.page + 1)}
+            disabled={pagination.page === pagination.totalPages}
+            className="px-4 py-2 border border-[#bbcac1] rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#eff4ff]"
+          >
             Next
           </button>
         </div>
