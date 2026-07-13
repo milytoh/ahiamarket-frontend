@@ -5,6 +5,7 @@ import FiltersBar, { OrderFilters } from "./FiltersBar";
 import BulkActionsBar from "./BulkActionsBar";
 import OrderTableHeader from "./OrderTableHeader";
 import OrderRow from "./OrderRow";
+import OrderCardMobile from "./OrderCardMobile";
 
 
 interface Order {
@@ -119,25 +120,37 @@ export default function OrderTable({ orders, loading, pagination, filters, onFil
       <BulkActionsBar selectedCount={selectedOrders.length} />
 
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <OrderTableHeader />
-          <tbody className="divide-y divide-[#bbcac1]/50 text-sm text-[#0b1c30]">
-            {formattedOrders.map((order) => (
-              <OrderRow
-                key={order.id}
-                order={order}
-                isSelected={selectedOrders.includes(order.id)}
-                onToggleSelect={(id) =>
-                  setSelectedOrders((prev) =>
-                    prev.includes(id)
-                      ? prev.filter((o) => o !== id)
-                      : [...prev, id],
-                  )
-                }
-              />
-            ))}
-          </tbody>
-        </table>
+
+        {/* Mobile */}
+
+        <div className="lg:hidden space-y-4 p-4">
+          {formattedOrders.map((order) => (
+            <OrderCardMobile key={order.id} order={order} />
+          ))}
+        </div>
+        {/* desktop table orders */}
+        <div className="hidden lg:block overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <OrderTableHeader />
+
+            <tbody className="divide-y divide-[#bbcac1]/50 text-sm text-[#0b1c30]">
+              {formattedOrders.map((order) => (
+                <OrderRow
+                  key={order.id}
+                  order={order}
+                  isSelected={selectedOrders.includes(order.id)}
+                  onToggleSelect={(id) =>
+                    setSelectedOrders((prev) =>
+                      prev.includes(id)
+                        ? prev.filter((o) => o !== id)
+                        : [...prev, id],
+                    )
+                  }
+                />
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Pagination */}

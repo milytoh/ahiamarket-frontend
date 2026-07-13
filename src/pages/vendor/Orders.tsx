@@ -94,6 +94,8 @@ export default function Order() {
         setOrders(response.orders);
         setStats(response.stats);
 
+        console.log(response.orders)
+
         setPagination((prev) => ({
           ...prev,
           total: response.pagination.total,
