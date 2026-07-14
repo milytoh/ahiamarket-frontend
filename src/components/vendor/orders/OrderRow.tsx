@@ -1,7 +1,9 @@
 import React from "react";
 import { MdVisibility, MdPrint } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 interface Order {
+  _id: string;
   id: string;
   parentId: string;
   customer: string;
@@ -66,12 +68,12 @@ const OrderRow: React.FC<OrderRowProps> = ({
       </td>
       <td className="p-4 text-[#6c7a72] whitespace-nowrap">{order.date}</td>
       <td className="p-4 flex gap-2 justify-center">
-        <button
+        <Link
+          to={`/vendor/dashboard/orders/${order._id}`}
           className="p-2 text-[#6c7a72] hover:text-[#006c4e] hover:bg-[#eff4ff] rounded-md transition-colors"
-          title="View Details"
         >
           <MdVisibility size={20} />
-        </button>
+        </Link>
         <button
           className="p-2 text-[#6c7a72] hover:text-[#006c4e] hover:bg-[#eff4ff] rounded-md transition-colors"
           title="Print Invoice"

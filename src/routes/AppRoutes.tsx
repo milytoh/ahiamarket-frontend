@@ -24,6 +24,7 @@ import ProductDetails from "@/pages/vendor/ProductDetails";
 import EditVendorProfile from "@/pages/vendor/EditVendorProfile";
 import EditProfile from "@/pages/profile/EditProfile";
 import Orders from "@/pages/vendor/Orders";
+import OrderDetails from "@/pages/vendor/OrderDetails";
 
 const AppRoutes = () => {
   return (
@@ -88,10 +89,8 @@ const AppRoutes = () => {
             element={<ProductDetails />}
           />
 
-          <Route
-            path="/vendor/dashboard/orders"
-            element={<Orders />}
-          />
+          <Route path="/vendor/dashboard/orders" element={<Orders />} />
+          <Route path="/vendor/dashboard/orders/:orderId" element={<OrderDetails />} />
         </Route>
       </Route>
     </Routes>

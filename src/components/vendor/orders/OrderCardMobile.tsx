@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   MdVisibility,
   MdPrint,
@@ -10,6 +11,7 @@ import {
 } from "react-icons/md";
 
 interface Order {
+  _id: string;
   id: string;
   parentId: string;
   customer: string;
@@ -122,10 +124,15 @@ const OrderCardMobile: React.FC<Props> = ({ order }) => {
 
       {/* Footer */}
       <div className="border-t border-[#bbcac1] p-3 bg-gray-50 flex gap-2">
-        <button className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl bg-[#05b384] text-white font-medium hover:bg-[#04956f] transition">
-          <MdVisibility />
+      
+
+        <Link
+          to={`/vendor/dashboard/orders/${order._id}`}
+          className="flex-1 flex items-center justify-center gap-2 py-2 rounded-xl bg-[#05b384] text-white font-medium hover:bg-[#04956f] transition"
+        >
+          <MdVisibility size={20} />
           Details
-        </button>
+        </Link>
 
         <button className="w-12 flex justify-center items-center rounded-xl border border-[#bbcac1] hover:bg-white">
           <MdPrint />

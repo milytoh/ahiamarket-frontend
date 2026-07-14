@@ -9,6 +9,7 @@ import OrderCardMobile from "./OrderCardMobile";
 
 
 interface Order {
+  _id: string;
   id: string;
   parentId: string;
   customer: string;
@@ -110,9 +111,7 @@ export default function OrderTable({ orders, loading, pagination, filters, onFil
     }),
   }));
 
-
  
-
   return (
     <div className="bg-white rounded-3xl border border-[#bbcac1] shadow-sm overflow-hidden flex flex-col">
       <FiltersBar filters={filters} onChange={onFilterChange} />
@@ -136,7 +135,7 @@ export default function OrderTable({ orders, loading, pagination, filters, onFil
             <tbody className="divide-y divide-[#bbcac1]/50 text-sm text-[#0b1c30]">
               {formattedOrders.map((order) => (
                 <OrderRow
-                  key={order.id}
+                  key={order._id}
                   order={order}
                   isSelected={selectedOrders.includes(order.id)}
                   onToggleSelect={(id) =>
