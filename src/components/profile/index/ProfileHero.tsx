@@ -45,6 +45,8 @@ const ProfileHero: React.FC<UserProfile> = ({
     navigate("/profile/edit");
   };
 
+
+
   return (
     <div className="bg-white p-6 md:p-8 rounded-2xl border border-slate-100 shadow-sm">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-8">
