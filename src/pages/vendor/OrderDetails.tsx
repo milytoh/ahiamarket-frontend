@@ -6,6 +6,9 @@ import { useApi } from "@/hooks/useApi";
 import OrderHeader from "@/components/vendor/orders/orderDetails/OrderHeader";
 import DeliveryCard from "@/components/vendor/orders/orderDetails/DeliveryCard";
 import CustomerCard from "@/components/vendor/orders/orderDetails/CustomerCard";
+import ProductsCard from "@/components/vendor/orders/orderDetails/ProductsCard";
+import OrderTimeline from "@/components/vendor/orders/orderDetails/OrderTimeline";
+import UpdateOrderStatus from "@/components/vendor/orders/orderDetails/UpdateOrderStatus";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -47,6 +50,16 @@ export default function OrderDetails() {
       <CustomerCard buyer={order?.buyer} />
 
       <DeliveryCard delivery={order?.delivery} />
+      <ProductsCard products={order?.products} />
+      <OrderTimeline currentStatus={order?.order_status} />
+      <UpdateOrderStatus
+        order={order}
+        onUpdate={(status, note) => {
+          console.log(status, note);
+
+          // We'll replace this with the API call later
+        }}
+      />
     </div>
   );
 }

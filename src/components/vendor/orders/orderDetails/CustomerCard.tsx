@@ -28,7 +28,7 @@ const CustomerCard: React.FC<Props> = ({ buyer }) => {
                   console.error("Image failed to load:", e.currentTarget.src);
                   e.currentTarget.style.display = "none";
                 }}
-                onLoad={() => console.log("Image loaded successfully")}
+              
               />
               {/* Temporary debug text */}
               <div className="absolute text-[10px] text-red-500 hidden">
