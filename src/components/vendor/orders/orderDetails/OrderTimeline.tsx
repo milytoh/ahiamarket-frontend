@@ -1,5 +1,3 @@
-
-
 import React from "react";
 import {
   MdCheckCircle,
@@ -9,8 +7,17 @@ import {
   MdStickyNote2,
 } from "react-icons/md";
 
+// interface HistoryItem {
+//   status: string;
+//   note?: string;
+//   created_at: string;
+// }
+
 interface HistoryItem {
   status: string;
+  action: string;
+  actor: string;
+  actor_id: string;
   note?: string;
   created_at: string;
 }
@@ -29,6 +36,13 @@ const steps = [
   { key: "buyer_confirmed", label: "Buyer Confirmed" },
   { key: "completed", label: "Completed" },
 ];
+
+const actorLabels = {
+  vendor: "Vendor",
+  buyer: "Customer",
+  admin: "Admin",
+  system: "System",
+};
 
 const OrderTimeline: React.FC<Props> = ({ currentStatus, history }) => {
   const currentIndex = steps.findIndex((step) => step.key === currentStatus);
@@ -106,22 +120,48 @@ const OrderTimeline: React.FC<Props> = ({ currentStatus, history }) => {
                 </p>
 
                 {item && (
-                  <div className="mt-3 space-y-2">
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <MdAccessTime />
-
-                      {new Date(item.created_at).toLocaleString()}
+                  <div className="mt-4 space-y-3">
+                    {/* Action */}
+                    <div className="inline-flex items-center rounded-full bg-[#05b384]/10 text-[#006c4e] px-3 py-1 text-xs font-semibold">
+                      {item.action}
                     </div>
 
-                    {item.note && (
-                      <div className="flex items-start gap-2 bg-[#f8f9ff] border border-[#bbcac1] rounded-xl px-3 py-2">
-                        <MdStickyNote2 className="text-[#05b384] mt-0.5" />
+                    {/* Time + Actor */}
+                    <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+                      <div className="flex items-center gap-1">
+                        <MdAccessTime />
+                        {new Date(item.created_at).toLocaleString()}
+                      </div>
 
-                        <p className="text-sm text-[#3c4a43]">{item.note}</p>
+                      <div className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-700">
+                        {actorLabels[item.actor as keyof typeof actorLabels] ||
+                          item.actor}
+                      </div>
+                    </div>
+
+                    {/* Note */}
+                    {item.note && (
+                      <div className="flex gap-3 rounded-2xl border border-[#bbcac1] bg-[#f8f9ff] p-3">
+                        <MdStickyNote2
+                          className="mt-1 text-[#05b384]"
+                          size={18}
+                        />
+
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-[#006c4e]">
+                            Note
+                          </p>
+
+                          <p className="mt-1 text-sm leading-relaxed text-[#3c4a43]">
+                            {item.note}
+                          </p>
+                        </div>
                       </div>
                     )}
                   </div>
                 )}
+
+                
               </div>
             </div>
           );

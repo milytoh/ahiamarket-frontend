@@ -18,25 +18,32 @@ import DeliveryCardSkeleton from "@/components/ui/skeletons/vendor/order/orderDe
 import ProductsCardSkeleton from "@/components/ui/skeletons/vendor/order/orderDetails/ProductsCardSkeleton";
 import OrderTimelineSkeleton from "@/components/ui/skeletons/vendor/order/orderDetails/OrderTimelineSkeleton";
 import UpdateOrderStatusSkeleton from "@/components/ui/skeletons/vendor/order/orderDetails/UpdateOrderStatusSkeleton";
-
+import PaymentCardSkeleton from "@/components/ui/skeletons/vendor/order/orderDetails/PaymentCardSkeleton";
+import CancelOrderModal from "@/components/vendor/orders/orderDetails/CancelOrderModal";
 
 import { toast } from "react-toastify";
+import PaymentCard from "@/components/vendor/orders/orderDetails/PaymentCard";
 
 export default function OrderDetails() {
   const { orderId } = useParams();
   const [order, setOrder] = useState<any>(null);
   const [urlChange, setUrlChange] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
 
-  const { get, loading, error} = useApi(`${API_URL}/vendor/orders/${orderId}`);
+  const { get, loading, error } = useApi(`${API_URL}/vendor/orders/${orderId}`);
   const { patch, loading: updatingStatusLoading } = useApi(
     `${API_URL}/vendor/orders/${order?._id}/status`,
+  );
+
+  const { patch: cancelOrder, loading: cancelLoading } = useApi(
+    `${API_URL}/vendor/orders/${order?._id}/cancel`,
   );
 
   useEffect(() => {
     const fetchOrder = async () => {
       try {
         const response = await get();
-console.log(response.order);
+        console.log(response.order);
         setOrder(response.order);
       } catch (err) {
         console.log(err);
@@ -62,12 +69,33 @@ console.log(response.order);
   };
 
   useEffect(() => {
-      if (error) {
-        toast.error(
-          `${ "something went wrong, check your network connection"}`,
-        );
-      }
-    }, [error]);
+    if (error) {
+      toast.error(`${"something went wrong, check your network connection"}`);
+    }
+  }, [error]);
+
+
+  const handleCancelOrder = async (reason: string) => {
+    try {
+      await cancelOrder({
+        reason,
+      });
+
+      setShowCancelModal(false);
+
+      // Refresh the order
+      const response = await get();
+      setOrder(response.order);
+
+      // Or call your existing fetchOrder() if you already have one
+
+      toast.success("Order cancelled successfully");
+    } catch (err) {
+      console.error(err);
+
+       toast.error( "Unable to cancel order");
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
@@ -91,6 +119,18 @@ console.log(response.order);
       )}
 
       {loading ? (
+        <PaymentCardSkeleton />
+      ) : (
+        <PaymentCard
+          payment={order?.payment}
+          subtotal={order?.subtotal}
+          shippingFee={order?.shipping_fee}
+          total={order?.total}
+        />
+      )}
+
+
+      {loading ? (
         <DeliveryCardSkeleton />
       ) : (
         <DeliveryCard delivery={order?.delivery} />
@@ -101,7 +141,6 @@ console.log(response.order);
       ) : (
         <ProductsCard products={order?.products} />
       )}
-
 
       {loading ? (
         <OrderTimelineSkeleton />
@@ -119,8 +158,16 @@ console.log(response.order);
           order={order}
           loading={updatingStatusLoading}
           onUpdate={handleUpdateStatus}
+          onCancel={() => setShowCancelModal(true)}
         />
       )}
+
+      <CancelOrderModal
+        isOpen={showCancelModal}
+        onClose={() => setShowCancelModal(false)}
+        loading={cancelLoading}
+        onConfirm={handleCancelOrder}
+      />
     </div>
   );
 }

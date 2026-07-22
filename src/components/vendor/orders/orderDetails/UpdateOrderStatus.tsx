@@ -2,14 +2,10 @@ import React, { useMemo, useState } from "react";
 import { MdAutorenew, MdNotes, MdSave, MdInfo } from "react-icons/md";
 
 interface Props {
-  order: {
-    _id: string;
-    order_status: string;
-  };
-
+  order: any;
   loading?: boolean;
-
-  onUpdate: (status: string, note: string) => void;
+  onUpdate: (status: string, note: string) => Promise<void>;
+  onCancel: () => void;
 }
 
 const statusFlow = [
@@ -35,8 +31,9 @@ const statusLabels: Record<string, string> = {
 
 const UpdateOrderStatus: React.FC<Props> = ({
   order,
-  loading = false,
+  loading,
   onUpdate,
+  onCancel,
 }) => {
   const [note, setNote] = useState("");
 
@@ -134,6 +131,25 @@ const UpdateOrderStatus: React.FC<Props> = ({
           <MdSave />
         </button>
       </div>
+
+      {/* Danger Zone */}
+
+      {["pending", "processing", "packed"].includes(order?.order_status) && (
+        <div className="mt-8 border-t border-red-200 pt-6">
+          <h3 className="text-red-600 font-semibold">Danger Zone</h3>
+
+          <p className="text-sm text-gray-500 mt-2">
+            Cancelling an order will stop fulfillment permanently.
+          </p>
+
+          <button
+            onClick={onCancel}
+            className="mt-4 w-full rounded-xl bg-red-600 hover:bg-red-700 text-white py-3 transition"
+          >
+            Cancel Order
+          </button>
+        </div>
+      )}
     </div>
   );
 };

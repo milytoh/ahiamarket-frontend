@@ -26,6 +26,15 @@ const OrderRow: React.FC<OrderRowProps> = ({
   isSelected,
   onToggleSelect,
 }) => {
+
+  const orderColor = {
+    pending: "bg-yellow-100 text-yellow-700",
+    processing: "bg-blue-100 text-blue-700",
+    packed: "bg-purple-100 text-purple-700",
+    shipped: "bg-[#3cb088]/10 text-[#006c4f]",
+    completed: "bg-green-100 text-green-700",
+    cancelled: "bg-red-100 text-red-700",
+  };
   return (
     <tr className="hover:bg-[#eff4ff]/70 transition-colors">
       <td className="p-4 w-12">
@@ -56,11 +65,9 @@ const OrderRow: React.FC<OrderRowProps> = ({
       <td className="p-4">
         <span
           className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
-            order.orderStatus === "Shipped"
-              ? "bg-emerald-100 text-emerald-700"
-              : order.orderStatus === "Pending"
-                ? "bg-[#fd9923]/10 text-[#8c4f00]"
-                : "bg-blue-100 text-blue-700"
+            orderColor[
+              order?.orderStatus?.toLowerCase() as keyof typeof orderColor
+            ] || "bg-gray-100 text-gray-700"
           }`}
         >
           {order.orderStatus}
