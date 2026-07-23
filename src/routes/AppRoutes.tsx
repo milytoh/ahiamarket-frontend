@@ -25,6 +25,7 @@ import EditVendorProfile from "@/pages/vendor/EditVendorProfile";
 import EditProfile from "@/pages/profile/EditProfile";
 import Orders from "@/pages/vendor/Orders";
 import OrderDetails from "@/pages/vendor/OrderDetails";
+import Invoice from "@/pages/vendor/Invoice";
 
 const AppRoutes = () => {
   return (
@@ -90,7 +91,15 @@ const AppRoutes = () => {
           />
 
           <Route path="/vendor/dashboard/orders" element={<Orders />} />
-          <Route path="/vendor/dashboard/orders/:orderId" element={<OrderDetails />} />
+          <Route
+            path="/vendor/dashboard/orders/:orderId"
+            element={<OrderDetails />}
+          />
+          <Route
+            path="/vendor/dashboard/orders/:id/invoice"
+            element={<Invoice />}
+          />
+          
         </Route>
       </Route>
     </Routes>

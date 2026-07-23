@@ -1,9 +1,11 @@
 import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { MdArrowBack, MdPrint, MdDownload, MdAccessTime } from "react-icons/md";
-import { Link } from "react-router-dom";
+
 import StatusBadge from "./StatusBadge";
 
 interface Props {
+  orderId: string;
   orderNumber: string;
   parentOrderNumber: string;
   createdAt: string;
@@ -11,11 +13,14 @@ interface Props {
 }
 
 const OrderHeader: React.FC<Props> = ({
+  orderId,
   orderNumber,
   parentOrderNumber,
   createdAt,
   status,
 }) => {
+
+ const navigate = useNavigate();
   return (
     <div className="bg-white rounded-3xl border border-[#bbcac1] shadow-sm p-6 animate-fade-in">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
@@ -61,7 +66,12 @@ const OrderHeader: React.FC<Props> = ({
             Print
           </button>
 
-          <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#05b384] text-white hover:bg-[#04956f] transition-all duration-300 hover:scale-105 active:scale-95">
+          <button
+            onClick={() =>
+              navigate(`/vendor/dashboard/orders/${orderId}/invoice`)
+            }
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#05b384] text-white hover:bg-[#04956f] transition-all duration-300 hover:scale-105 active:scale-95"
+          >
             <MdDownload />
             Invoice
           </button>

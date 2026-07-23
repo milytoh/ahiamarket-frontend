@@ -102,7 +102,8 @@ export default function OrderDetails() {
       {loading ? (
         <OrderHeaderSkeleton />
       ) : (
-        <OrderHeader
+          <OrderHeader
+            orderId={order?._id}
           orderNumber={order?.order_number}
           parentOrderNumber={order?.parent_order_number}
           createdAt={
